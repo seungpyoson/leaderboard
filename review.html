@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Review — Polymarket Discovery</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+        .container { max-width: 1600px; margin: 0 auto; padding: 24px 16px; }
+        header { margin-bottom: 24px; }
+        h1 { font-size: 24px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .updated { font-size: 12px; color: #444; margin-top: 8px; }
+
+        .stats-bar {
+            display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;
+        }
+        .stat {
+            padding: 8px 16px; border-radius: 6px; border: 1px solid #222;
+            background: #111; font-size: 13px; color: #888;
+        }
+        .stat strong { color: #e0e0e0; font-size: 16px; margin-right: 4px; }
+
+        .filters {
+            display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;
+            align-items: center;
+        }
+        .filter-btn {
+            padding: 6px 14px; border-radius: 6px; border: 1px solid #222;
+            background: #111; color: #888; font-size: 13px; cursor: pointer;
+            transition: all 0.15s;
+        }
+        .filter-btn:hover { border-color: #444; color: #ccc; }
+        .filter-btn.active { border-color: #4ade80; color: #4ade80; background: #0a1f0a; }
+        .filter-label { font-size: 12px; color: #555; margin-right: 4px; }
+
+        .actions-bar {
+            display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;
+        }
+        .action-btn {
+            padding: 8px 16px; border-radius: 6px; border: 1px solid #333;
+            background: #1a1a1a; color: #ccc; font-size: 13px; cursor: pointer;
+            transition: all 0.15s; font-weight: 500;
+        }
+        .action-btn:hover { border-color: #555; color: #fff; }
+        .action-btn.primary { border-color: #4ade80; color: #4ade80; background: #0a1f0a; }
+        .action-btn.primary:hover { background: #0f2f0f; }
+        .action-btn.danger { border-color: #ef4444; color: #ef4444; background: #1f0a0a; }
+        .action-btn.danger:hover { background: #2f0f0f; }
+
+        .table-wrap { overflow-x: auto; border-radius: 8px; border: 1px solid #1a1a1a; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        thead { position: sticky; top: 0; z-index: 1; }
+        th {
+            background: #111; padding: 8px 10px; text-align: right; font-weight: 500;
+            color: #666; border-bottom: 1px solid #222; cursor: pointer;
+            user-select: none; white-space: nowrap;
+        }
+        th:first-child { text-align: center; width: 40px; }
+        th:nth-child(2), th:nth-child(3) { text-align: left; }
+        th:hover { color: #aaa; }
+        th.sorted-asc::after { content: ' \25B2'; color: #4ade80; }
+        th.sorted-desc::after { content: ' \25BC'; color: #4ade80; }
+        td {
+            padding: 7px 10px; border-bottom: 1px solid #141414;
+            text-align: right; white-space: nowrap;
+        }
+        td:first-child { text-align: center; }
+        td:nth-child(2), td:nth-child(3) { text-align: left; }
+        tr:hover td { background: #111; }
+        tr.row-approved td { background: #0a1a0a; }
+        tr.row-auto-approved td { background: #0a1a0a; }
+        tr.row-rejected td { background: #1a0a0a; }
+        tr.row-auto-rejected td { background: #1a0f0a; }
+        tr.row-promoted td { background: #0a0a1a; opacity: 0.5; }
+
+        .name-link { color: #e0e0e0; text-decoration: none; font-weight: 500; }
+        .name-link:hover { color: #4ade80; }
+
+        .score-bar {
+            display: inline-block; width: 50px; height: 8px; background: #222;
+            border-radius: 4px; overflow: hidden; vertical-align: middle; margin-right: 4px;
+        }
+        .score-fill { height: 100%; border-radius: 4px; }
+
+        .status-badge {
+            display: inline-block; padding: 2px 8px; border-radius: 3px;
+            font-size: 10px; font-weight: 600; letter-spacing: 0.3px; text-transform: uppercase;
+        }
+        .status-pending { background: #1a1a2e; color: #818cf8; }
+        .status-approved, .status-auto-approved { background: #0a2e0a; color: #4ade80; }
+        .status-rejected, .status-auto-rejected { background: #2e0a0a; color: #ef4444; }
+        .status-promoted { background: #0a0a2e; color: #60a5fa; }
+
+        .new-badge {
+            display: inline-block; padding: 1px 5px; border-radius: 3px;
+            font-size: 9px; font-weight: 700; background: #2e2e0a; color: #fbbf24;
+            margin-left: 4px; letter-spacing: 0.5px;
+        }
+        .rank-change { font-size: 10px; margin-left: 4px; }
+        .rank-up { color: #4ade80; }
+        .rank-down { color: #ef4444; }
+
+        .row-actions { display: flex; gap: 4px; justify-content: center; }
+        .row-btn {
+            padding: 3px 8px; border-radius: 4px; border: 1px solid #333;
+            background: transparent; font-size: 10px; cursor: pointer;
+            transition: all 0.1s; font-weight: 600;
+        }
+        .row-btn:hover { border-color: #555; }
+        .btn-approve { color: #4ade80; }
+        .btn-approve:hover { background: #0a1f0a; border-color: #4ade80; }
+        .btn-reject { color: #ef4444; }
+        .btn-reject:hover { background: #1f0a0a; border-color: #ef4444; }
+        .btn-pending { color: #818cf8; }
+        .btn-pending:hover { background: #0a0a1f; border-color: #818cf8; }
+
+        .change-count {
+            position: fixed; bottom: 24px; right: 24px; padding: 12px 20px;
+            background: #1a1a1a; border: 1px solid #333; border-radius: 8px;
+            font-size: 14px; color: #ccc; display: none; z-index: 10;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+        .change-count.visible { display: flex; gap: 12px; align-items: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Candidate Review</h1>
+            <p class="subtitle">Polymarket Trader Discovery — review, approve, reject</p>
+            <p class="updated" id="updated"></p>
+        </header>
+
+        <div class="stats-bar" id="stats-bar"></div>
+
+        <div class="filters">
+            <span class="filter-label">Status:</span>
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="pending">Pending</button>
+            <button class="filter-btn" data-filter="auto-approved">Auto-Approved</button>
+            <button class="filter-btn" data-filter="auto-rejected">Auto-Rejected</button>
+            <button class="filter-btn" data-filter="approved">Approved</button>
+            <button class="filter-btn" data-filter="rejected">Rejected</button>
+            <button class="filter-btn" data-filter="promoted">Promoted</button>
+            <button class="filter-btn" data-filter="new">New</button>
+        </div>
+
+        <div class="actions-bar">
+            <button class="action-btn primary" id="btn-accept-auto">Accept All Auto-Approved</button>
+            <button class="action-btn danger" id="btn-reject-auto">Accept All Auto-Rejected</button>
+            <button class="action-btn" id="btn-export">Export JSON</button>
+            <button class="action-btn" id="btn-reset">Reset Changes</button>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th data-key="action">Action</th>
+                        <th data-key="username" data-type="string">Name</th>
+                        <th data-key="status" data-type="string">Status</th>
+                        <th data-key="confidence_score" data-type="number">Score</th>
+                        <th data-key="leaderboard_rank" data-type="number">Rank</th>
+                        <th data-key="pnl" data-type="number">PnL</th>
+                        <th data-key="volume" data-type="number">Volume</th>
+                        <th data-key="efficiency" data-type="number">Eff %</th>
+                        <th data-key="trades" data-type="number">Trades</th>
+                        <th data-key="markets" data-type="number">Markets</th>
+                        <th data-key="style_guess" data-type="string">Style</th>
+                        <th data-key="first_seen" data-type="string">First Seen</th>
+                    </tr>
+                </thead>
+                <tbody id="candidates-body"></tbody>
+            </table>
+        </div>
+
+        <div class="change-count" id="change-count">
+            <span id="change-text"></span>
+            <button class="action-btn primary" id="btn-export-float">Export</button>
+        </div>
+    </div>
+
+    <script>
+    let candidates = [];
+    let changes = {};  // wallet -> new status
+    let currentFilter = 'all';
+    let sortKey = 'confidence_score';
+    let sortDir = 'desc';
+
+    function esc(s) {
+        if (s == null) return '';
+        const d = document.createElement('div');
+        d.textContent = String(s);
+        return d.innerHTML;
+    }
+
+    function fmtMoney(v) {
+        if (v == null) return '\u2014';
+        const abs = Math.abs(v);
+        const sign = v < 0 ? '-' : '';
+        if (abs >= 1e6) return sign + '$' + (abs/1e6).toFixed(2) + 'M';
+        if (abs >= 1e3) return sign + '$' + (abs/1e3).toFixed(1) + 'K';
+        return sign + '$' + abs.toFixed(2);
+    }
+
+    function fmtPct(v) { return v == null ? '\u2014' : v.toFixed(2) + '%'; }
+
+    function scoreColor(s) {
+        if (s >= 0.75) return '#4ade80';
+        if (s >= 0.5) return '#fbbf24';
+        if (s >= 0.3) return '#f97316';
+        return '#ef4444';
+    }
+
+    function getStatus(c) {
+        return changes[c.wallet] || c.status;
+    }
+
+    function setStatus(wallet, status) {
+        const orig = candidates.find(c => c.wallet === wallet);
+        if (orig && orig.status === status) {
+            delete changes[wallet];
+        } else {
+            changes[wallet] = status;
+        }
+        render();
+        updateChangeCount();
+    }
+
+    function updateChangeCount() {
+        const count = Object.keys(changes).length;
+        const el = document.getElementById('change-count');
+        const text = document.getElementById('change-text');
+        if (count > 0) {
+            text.textContent = count + ' change' + (count > 1 ? 's' : '') + ' pending';
+            el.classList.add('visible');
+        } else {
+            el.classList.remove('visible');
+        }
+    }
+
+    function render() {
+        let filtered;
+        if (currentFilter === 'new') {
+            filtered = candidates.filter(c => c.is_new);
+        } else if (currentFilter !== 'all') {
+            filtered = candidates.filter(c => getStatus(c) === currentFilter);
+        } else {
+            filtered = candidates.slice();
+        }
+
+        // Sort (on copy, never mutates original)
+        filtered.sort((a, b) => {
+            let av = a[sortKey], bv = b[sortKey];
+            if (sortKey === 'status') { av = getStatus(a); bv = getStatus(b); }
+            if (av == null && bv == null) return 0;
+            if (av == null) return 1;
+            if (bv == null) return -1;
+            let cmp = typeof av === 'string' ? av.localeCompare(bv) : av - bv;
+            return sortDir === 'desc' ? -cmp : cmp;
+        });
+
+        const tbody = document.getElementById('candidates-body');
+        tbody.innerHTML = filtered.map(c => {
+            const st = getStatus(c);
+            const score = c.confidence_score || 0;
+            const pnl = c.pnl;
+            const rank = c.leaderboard_rank;
+            const prevRank = c.prev_rank;
+            let rankHtml = rank != null ? '#' + rank : '\u2014';
+            if (prevRank != null && rank != null && prevRank !== rank) {
+                const delta = rank - prevRank;
+                if (delta < 0) rankHtml += '<span class="rank-change rank-up">\u2191' + Math.abs(delta) + '</span>';
+                else rankHtml += '<span class="rank-change rank-down">\u2193' + delta + '</span>';
+            }
+
+            const safeName = esc(c.username || c.wallet.slice(0,10));
+            const safeWallet = esc(c.wallet);
+            const safeUrl = c.profile_url && c.profile_url.startsWith('https://polymarket.com/')
+                ? esc(c.profile_url) : '';
+            const nameHtml = safeUrl
+                ? '<a class="name-link" href="' + safeUrl + '" target="_blank" rel="noopener">' + safeName + '</a>'
+                : safeName;
+
+            const newBadge = c.is_new ? '<span class="new-badge">NEW</span>' : '';
+
+            const statusCls = 'status-' + esc(st);
+            const scoreFill = '<span class="score-bar"><span class="score-fill" style="width:' + (score*100) + '%;background:' + scoreColor(score) + '"></span></span>' + score.toFixed(2);
+
+            return '<tr class="row-' + esc(st) + '">' +
+                '<td><div class="row-actions">' +
+                    '<button class="row-btn btn-approve" data-wallet="' + safeWallet + '" data-action="approved" title="Approve">\u2713</button>' +
+                    '<button class="row-btn btn-reject" data-wallet="' + safeWallet + '" data-action="rejected" title="Reject">\u2717</button>' +
+                    '<button class="row-btn btn-pending" data-wallet="' + safeWallet + '" data-action="pending" title="Reset">?</button>' +
+                '</div></td>' +
+                '<td>' + nameHtml + newBadge + '</td>' +
+                '<td><span class="status-badge ' + statusCls + '">' + esc(st) + '</span></td>' +
+                '<td>' + scoreFill + '</td>' +
+                '<td>' + rankHtml + '</td>' +
+                '<td>' + fmtMoney(pnl) + '</td>' +
+                '<td>' + fmtMoney(c.volume) + '</td>' +
+                '<td>' + fmtPct(c.efficiency) + '</td>' +
+                '<td>' + (c.trades != null ? c.trades.toLocaleString() : '\u2014') + '</td>' +
+                '<td>' + (c.markets != null ? c.markets : '\u2014') + '</td>' +
+                '<td>' + esc(c.style_guess || '\u2014') + '</td>' +
+                '<td>' + esc(c.first_seen || '\u2014') + '</td>' +
+                '</tr>';
+        }).join('');
+
+        updateStats();
+    }
+
+    function updateStats() {
+        const total = candidates.length;
+        const counts = {};
+        candidates.forEach(c => {
+            const st = getStatus(c);
+            counts[st] = (counts[st] || 0) + 1;
+        });
+        const newCount = candidates.filter(c => c.is_new).length;
+
+        document.getElementById('stats-bar').innerHTML =
+            '<div class="stat"><strong>' + total + '</strong> total</div>' +
+            '<div class="stat"><strong>' + (counts['pending'] || 0) + '</strong> pending</div>' +
+            '<div class="stat"><strong>' + (counts['auto-approved'] || 0) + '</strong> auto-approved</div>' +
+            '<div class="stat"><strong>' + (counts['approved'] || 0) + '</strong> approved</div>' +
+            '<div class="stat"><strong>' + (counts['auto-rejected'] || 0) + '</strong> auto-rejected</div>' +
+            '<div class="stat"><strong>' + (counts['rejected'] || 0) + '</strong> rejected</div>' +
+            '<div class="stat"><strong>' + (counts['promoted'] || 0) + '</strong> promoted</div>' +
+            (newCount > 0 ? '<div class="stat"><strong>' + newCount + '</strong> new this run</div>' : '');
+    }
+
+    function exportJSON() {
+        // Apply changes to a copy of candidates
+        const output = {
+            updated: document.getElementById('updated').textContent.replace('Updated: ', ''),
+            candidates: candidates.map(c => {
+                const copy = Object.assign({}, c);
+                if (changes[c.wallet]) copy.status = changes[c.wallet];
+                // Remove UI-only fields
+                delete copy.is_new;
+                delete copy.prev_rank;
+                return copy;
+            })
+        };
+        const blob = new Blob([JSON.stringify(output, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'candidates.json';
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    // Init
+    fetch('data/candidates.json')
+        .then(r => r.json())
+        .then(data => {
+            document.getElementById('updated').textContent = 'Updated: ' + (data.updated || 'unknown');
+            candidates = data.candidates || [];
+            render();
+        })
+        .catch(e => {
+            document.getElementById('candidates-body').innerHTML =
+                '<tr><td colspan="12" style="text-align:center;padding:40px;color:#666">' +
+                'Failed to load candidates.json. Run discover.py first, or serve this page via HTTP.' +
+                '</td></tr>';
+        });
+
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentFilter = btn.dataset.filter;
+            render();
+        });
+    });
+
+    // Row action buttons (event delegation — no inline onclick)
+    document.getElementById('candidates-body').addEventListener('click', e => {
+        const btn = e.target.closest('[data-wallet][data-action]');
+        if (btn) setStatus(btn.dataset.wallet, btn.dataset.action);
+    });
+
+    // Sort headers
+    document.querySelectorAll('th[data-key]').forEach(th => {
+        if (th.dataset.key === 'action') return;
+        th.addEventListener('click', () => {
+            const key = th.dataset.key;
+            if (sortKey === key) {
+                sortDir = sortDir === 'desc' ? 'asc' : 'desc';
+            } else {
+                sortKey = key;
+                sortDir = th.dataset.type === 'string' ? 'asc' : 'desc';
+            }
+            document.querySelectorAll('th').forEach(t => t.classList.remove('sorted-asc', 'sorted-desc'));
+            th.classList.add('sorted-' + sortDir);
+            render();
+        });
+    });
+
+    // Bulk actions
+    document.getElementById('btn-accept-auto').addEventListener('click', () => {
+        candidates.forEach(c => {
+            if (getStatus(c) === 'auto-approved') setStatus(c.wallet, 'approved');
+        });
+    });
+    document.getElementById('btn-reject-auto').addEventListener('click', () => {
+        candidates.forEach(c => {
+            if (getStatus(c) === 'auto-rejected') setStatus(c.wallet, 'rejected');
+        });
+    });
+    document.getElementById('btn-export').addEventListener('click', exportJSON);
+    document.getElementById('btn-export-float').addEventListener('click', exportJSON);
+    document.getElementById('btn-reset').addEventListener('click', () => {
+        changes = {};
+        render();
+        updateChangeCount();
+    });
+    </script>
+</body>
+</html>

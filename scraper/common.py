@@ -124,12 +124,18 @@ def fetch_profile(label: str, profile_url: str) -> dict | None:
         return None
 
     try:
-        resp = SESSION.get(url, timeout=30, allow_redirects=True)
+        resp = SESSION.get(url, timeout=30, allow_redirects=False)
+        # Follow redirects manually — only if they stay on polymarket.com
+        redirects = 0
+        while resp.status_code in (301, 302, 303, 307, 308) and redirects < 5:
+            location = resp.headers.get("Location", "")
+            if not _is_polymarket_host(location):
+                print(f"  WARN: {label} redirected to non-polymarket host: {location}")
+                return None
+            resp = SESSION.get(location, timeout=30, allow_redirects=False)
+            redirects += 1
         if resp.status_code != 200:
             print(f"  WARN: {label} HTTP {resp.status_code}")
-            return None
-        if not _is_polymarket_host(resp.url):
-            print(f"  WARN: {label} redirected to {resp.url}")
             return None
         return extract_profile_data(resp.text)
     except requests.RequestException as e:

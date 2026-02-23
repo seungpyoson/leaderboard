@@ -237,6 +237,72 @@ def classify_style(trades: int | None, volume: float | None) -> str:
         return "Hybrid"
 
 
+# ── Auto-scoring ─────────────────────────────────────────────────────────────
+
+# Confidence thresholds — candidates above AUTO_APPROVE are set to "approved",
+# below AUTO_REJECT are set to "rejected", between stays "pending" for review.
+AUTO_APPROVE_THRESHOLD = 0.75
+AUTO_REJECT_THRESHOLD = 0.30
+
+
+def score_candidate(candidate: dict) -> float:
+    """Composite confidence score (0.0–1.0) from available signals.
+
+    Weights:
+      PnL magnitude   30%  — raw profitability
+      Efficiency       25%  — skill signal (PnL/volume)
+      Trade count      20%  — filters lucky one-shot traders
+      Markets          15%  — diversification = systematic, not one lucky bet
+      Profile success  10%  — enrichment worked = real, active profile
+    """
+    score = 0.0
+
+    # PnL magnitude (30%) — log scale, $50K=0.0, $500K+=1.0
+    pnl = candidate.get("pnl")
+    if pnl is not None and pnl > 0:
+        # Map $50K→0, $100K→0.3, $200K→0.6, $500K+→1.0
+        pnl_ratio = min(pnl / 500_000, 1.0)
+        score += 0.30 * pnl_ratio
+
+    # Efficiency (25%) — PnL/volume percentage
+    eff = candidate.get("efficiency")
+    if eff is not None and eff > 0:
+        # Map 0%→0, 2%→0.5, 5%+→1.0
+        eff_ratio = min(eff / 5.0, 1.0)
+        score += 0.25 * eff_ratio
+
+    # Trade count (20%) — more trades = more data = more confidence
+    trades = candidate.get("trades")
+    if trades is not None and trades > 0:
+        # Map 1→0, 50→0.5, 200+→1.0
+        trade_ratio = min(trades / 200, 1.0)
+        score += 0.20 * trade_ratio
+
+    # Markets diversification (15%)
+    markets = candidate.get("markets")
+    if markets is not None and markets > 0:
+        # Map 1→0, 5→0.5, 20+→1.0
+        market_ratio = min(markets / 20, 1.0)
+        score += 0.15 * market_ratio
+
+    # Profile enrichment success (10%) — binary
+    if trades is not None:
+        score += 0.10
+
+    return round(score, 3)
+
+
+def auto_status(score: float, current_status: str) -> str:
+    """Determine status based on confidence score. Never overrides human decisions."""
+    if current_status in ("promoted", "rejected", "approved"):
+        return current_status
+    if score >= AUTO_APPROVE_THRESHOLD:
+        return "auto-approved"
+    if score <= AUTO_REJECT_THRESHOLD:
+        return "auto-rejected"
+    return "pending"
+
+
 # ── Main ─────────────────────────────────────────────────────────────────────
 
 
@@ -325,6 +391,7 @@ def main():
 
         style = classify_style(trades, volume)
         first_seen = prev.get("first_seen", today) if prev else today
+        prev_rank = prev.get("leaderboard_rank") if prev else None
 
         candidate = {
             "wallet": wallet,
@@ -332,6 +399,7 @@ def main():
             "profile_url": profile_url,
             "discovery_source": "leaderboard",
             "leaderboard_rank": rank,
+            "prev_rank": prev_rank,
             "pnl": pnl,
             "volume": volume,
             "efficiency": efficiency,
@@ -339,8 +407,14 @@ def main():
             "markets": markets,
             "style_guess": style,
             "first_seen": first_seen,
+            "is_new": prev is None,
             "status": prev.get("status", "pending") if prev else "pending",
         }
+
+        # Auto-score and set status
+        candidate["confidence_score"] = score_candidate(candidate)
+        candidate["status"] = auto_status(candidate["confidence_score"], candidate["status"])
+
         new_candidates.append(candidate)
 
         time.sleep(REQUEST_DELAY)
@@ -384,13 +458,45 @@ def main():
         fcntl.flock(lock_fd, fcntl.LOCK_UN)
         lock_fd.close()
 
+    # Summary stats
+    auto_approved = sum(1 for c in new_candidates if c.get("status") == "auto-approved")
+    auto_rejected = sum(1 for c in new_candidates if c.get("status") == "auto-rejected")
+    pending = sum(1 for c in new_candidates if c.get("status") == "pending")
+    new_this_run = sum(1 for c in new_candidates if c.get("is_new"))
+
     print(f"\n=== Results ===")
     print(f"Candidates written: {len(new_candidates)}")
     print(f"Skipped (known): {skipped_known}")
     print(f"Skipped (PnL < ${PNL_THRESHOLD:,}): {skipped_pnl}")
     if skipped_slug:
         print(f"Skipped enrichment (invalid slug): {skipped_slug}")
-    print(f"Output: {CANDIDATES_FILE}")
+
+    print(f"\n--- Scoring ---")
+    print(f"Auto-approved (score >= {AUTO_APPROVE_THRESHOLD}): {auto_approved}")
+    print(f"Auto-rejected (score <= {AUTO_REJECT_THRESHOLD}): {auto_rejected}")
+    print(f"Pending review: {pending}")
+
+    if new_this_run:
+        print(f"\n--- New This Run ---")
+        for c in new_candidates:
+            if c.get("is_new"):
+                print(f"  NEW: {c['username']} — PnL: {fmt_money(c.get('pnl'))}, score: {c.get('confidence_score', 0):.2f}")
+
+    # Rank movers (candidates that were previously tracked)
+    movers = []
+    for c in new_candidates:
+        prev_r = c.get("prev_rank")
+        curr_r = c.get("leaderboard_rank")
+        if prev_r is not None and curr_r is not None and prev_r != curr_r:
+            movers.append((c["username"], prev_r, curr_r, curr_r - prev_r))
+    if movers:
+        movers.sort(key=lambda m: m[3])  # best movers first (negative = improved)
+        print(f"\n--- Rank Changes ---")
+        for name, prev_r, curr_r, delta in movers[:10]:
+            arrow = "↑" if delta < 0 else "↓"
+            print(f"  {arrow} {name}: #{prev_r} → #{curr_r} ({delta:+d})")
+
+    print(f"\nOutput: {CANDIDATES_FILE}")
 
 
 if __name__ == "__main__":

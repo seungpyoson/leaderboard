@@ -74,7 +74,7 @@ def _run_promotion():
         print(f"ERROR: {CANDIDATES_FILE} 'candidates' is not a list")
         raise SystemExit(1)
 
-    approved = [c for c in candidates if isinstance(c, dict) and c.get("status") == "approved"]
+    approved = [c for c in candidates if isinstance(c, dict) and c.get("status") in ("approved", "auto-approved")]
     if not approved:
         print("No candidates with status 'approved' — nothing to promote.")
         return
