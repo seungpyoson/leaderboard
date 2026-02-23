@@ -12,7 +12,7 @@
             color: #e0e0e0;
             min-height: 100vh;
         }
-        .container { max-width: 1400px; margin: 0 auto; padding: 24px 16px; }
+        .container { max-width: 1800px; margin: 0 auto; padding: 24px 16px; }
         header { margin-bottom: 32px; }
         h1 { font-size: 24px; font-weight: 600; color: #fff; margin-bottom: 4px; }
         .subtitle { font-size: 14px; color: #666; }
@@ -28,22 +28,23 @@
         .filter-btn:hover { border-color: #444; color: #ccc; }
         .filter-btn.active { border-color: #4ade80; color: #4ade80; background: #0a1f0a; }
         .table-wrap { overflow-x: auto; border-radius: 8px; border: 1px solid #1a1a1a; }
-        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; }
         thead { position: sticky; top: 0; z-index: 1; }
         th {
-            background: #111; padding: 10px 12px; text-align: right; font-weight: 500;
+            background: #111; padding: 8px 10px; text-align: right; font-weight: 500;
             color: #666; border-bottom: 1px solid #222; cursor: pointer;
-            user-select: none; white-space: nowrap;
+            user-select: none; white-space: nowrap; position: relative;
         }
         th:first-child, th:nth-child(2) { text-align: left; }
         th:hover { color: #aaa; }
         th.sorted-asc::after { content: ' \25B2'; color: #4ade80; }
         th.sorted-desc::after { content: ' \25BC'; color: #4ade80; }
+        th[title] { border-bottom: 1px dashed #333; }
         td {
-            padding: 10px 12px; border-bottom: 1px solid #141414;
+            padding: 8px 10px; border-bottom: 1px solid #141414;
             text-align: right; white-space: nowrap;
         }
-        td:first-child { text-align: center; color: #444; font-size: 12px; }
+        td:first-child { text-align: center; color: #444; font-size: 11px; }
         td:nth-child(2) { text-align: left; }
         tr:hover td { background: #111; }
         .name-cell { display: flex; align-items: center; gap: 8px; }
@@ -60,16 +61,17 @@
         .style-hyb { background: #2e2a1a; color: #fbbf24; }
         .positive { color: #4ade80; }
         .negative { color: #f87171; }
-        .muted { color: #444; }
-        .note-cell {
-            max-width: 280px; overflow: hidden; text-overflow: ellipsis;
-            white-space: nowrap; color: #555; font-size: 12px; text-align: left;
+        .muted { color: #333; }
+        .col-group { border-left: 1px solid #222; }
+        .group-label {
+            font-size: 10px; color: #444; text-transform: uppercase;
+            letter-spacing: 0.5px; padding: 4px 10px; background: #0d0d0d;
+            border-bottom: 1px solid #1a1a1a; text-align: center;
         }
         @media (max-width: 768px) {
             .container { padding: 16px 8px; }
-            table { font-size: 12px; }
-            th, td { padding: 8px 6px; }
-            .note-cell { display: none; }
+            table { font-size: 11px; }
+            th, td { padding: 6px 4px; }
         }
     </style>
 </head>
@@ -77,7 +79,7 @@
     <div class="container">
         <header>
             <h1>Polymarket Crypto Leaderboard</h1>
-            <div class="subtitle">Top crypto interval traders — PnL, volume, and efficiency from Polymarket profiles</div>
+            <div class="subtitle">Top crypto interval traders — performance metrics from Polymarket profiles + on-chain data</div>
             <div class="updated" id="updated"></div>
         </header>
 
@@ -91,18 +93,42 @@
         <div class="table-wrap">
             <table>
                 <thead>
+                    <tr class="group-row">
+                        <td colspan="2"></td>
+                        <td class="group-label" colspan="5">Profile</td>
+                        <td class="group-label" colspan="3">Activity</td>
+                        <td class="group-label" colspan="4">Fills</td>
+                        <td class="group-label" colspan="4">Performance</td>
+                        <td class="group-label" colspan="4">Capital</td>
+                    </tr>
                     <tr>
                         <th data-col="rank">#</th>
                         <th data-col="name">Name</th>
-                        <th data-col="pnl">PnL</th>
-                        <th data-col="volume">Volume</th>
-                        <th data-col="efficiency">Efficiency</th>
-                        <th data-col="positions_value">Positions</th>
-                        <th data-col="biggest_win">Biggest Win</th>
-                        <th data-col="markets">Markets</th>
-                        <th data-col="trades">Trades</th>
-                        <th data-col="join_date">Joined</th>
-                        <th data-col="note">Notes</th>
+                        <!-- Profile -->
+                        <th data-col="pnl" title="Total profit and loss from all trades (Polymarket API)">PnL</th>
+                        <th data-col="volume" title="Total USDC volume traded across all markets (Polymarket API)">Volume</th>
+                        <th data-col="efficiency" title="PnL / Volume * 100 — how much profit per dollar traded">Efficiency</th>
+                        <th data-col="positions_value" title="Current value of all open positions in USDC">Positions</th>
+                        <th data-col="biggest_win" title="Largest single winning trade in USDC">Best Win</th>
+                        <!-- Activity -->
+                        <th data-col="markets" title="Number of unique markets traded (Polymarket API)">Markets</th>
+                        <th data-col="trades" title="Total number of trades placed (Polymarket API)">Trades</th>
+                        <th data-col="join_date" title="Date the account was created on Polymarket">Joined</th>
+                        <!-- Fills (on-chain) -->
+                        <th data-col="total_fills" class="col-group" title="Total OrderFilled events on-chain (Goldsky). Includes both maker and taker fills.">Fills</th>
+                        <th data-col="fills_sent" title="Fills where this account was the maker (placed limit order that got filled)">Maker</th>
+                        <th data-col="fills_received" title="Fills where this account was the taker (hit an existing order)">Taker</th>
+                        <th data-col="trading_days" title="Number of distinct calendar days with at least one fill">Days</th>
+                        <!-- Performance (on-chain) -->
+                        <th data-col="win_rate_pct" class="col-group" title="Percentage of fills that were profitable">Win %</th>
+                        <th data-col="sharpe" title="Sharpe ratio — risk-adjusted return calculated from fill-level PnL">Sharpe</th>
+                        <th data-col="pnl_per_fill_cents" title="Average profit per fill in cents">PnL/Fill</th>
+                        <th data-col="trading_hours" title="Cumulative hours this account had open positions">Hours</th>
+                        <!-- Capital (Dune) -->
+                        <th data-col="initial_deposit" class="col-group" title="First USDC transfer into Polymarket from external wallet (Dune)">1st Dep</th>
+                        <th data-col="cumul_deposits" title="Total USDC deposited into Polymarket over all time (Dune)">Deposits</th>
+                        <th data-col="total_withdrawn" title="Total USDC withdrawn from Polymarket (Dune)">Withdrawn</th>
+                        <th data-col="roic_pct" title="Return on invested capital: PnL / Cumulative Deposits * 100 (Dune)">ROIC</th>
                     </tr>
                 </thead>
                 <tbody id="tbody"></tbody>
@@ -147,6 +173,11 @@
         return Number(val).toLocaleString();
     }
 
+    function fmtDec(val, dp) {
+        if (val == null) return '<span class="muted">\u2014</span>';
+        return Number(val).toFixed(dp);
+    }
+
     function styleTag(style) {
         const cls = style === 'HFT/MM' ? 'style-hft' : style === 'Directional' ? 'style-dir' : 'style-hyb';
         const label = style === 'HFT/MM' ? 'HFT' : style === 'Directional' ? 'DIR' : 'HYB';
@@ -161,8 +192,7 @@
 
     function getSortVal(p, col) {
         if (col === 'name') return (p.name || '').toLowerCase();
-        if (col === 'join_date') return p.join_date || '9999';
-        if (col === 'note') return (p.note || '').toLowerCase();
+        if (col === 'join_date' || col === 'first_trade' || col === 'last_trade') return p[col] || '9999';
         return p[col] != null ? Number(p[col]) : -Infinity;
     }
 
@@ -178,6 +208,7 @@
             return sortDir === 'asc' ? cmp : -cmp;
         });
 
+        const m = '<span class="muted">\u2014</span>';
         const tbody = document.getElementById('tbody');
         tbody.innerHTML = sorted.map((p, i) => `
             <tr>
@@ -195,8 +226,19 @@
                 <td>${fmtMoney(p.biggest_win)}</td>
                 <td>${fmtNum(p.markets)}</td>
                 <td>${fmtNum(p.trades)}</td>
-                <td>${p.join_date || '<span class="muted">\u2014</span>'}</td>
-                <td class="note-cell" title="${escHtml(p.note)}">${escHtml(p.note)}</td>
+                <td>${p.join_date || m}</td>
+                <td class="col-group">${fmtNum(p.total_fills)}</td>
+                <td>${fmtNum(p.fills_sent)}</td>
+                <td>${fmtNum(p.fills_received)}</td>
+                <td>${fmtNum(p.trading_days)}</td>
+                <td class="col-group">${fmtPct(p.win_rate_pct)}</td>
+                <td>${fmtDec(p.sharpe, 2)}</td>
+                <td>${fmtDec(p.pnl_per_fill_cents, 1)}</td>
+                <td>${fmtNum(p.trading_hours)}</td>
+                <td class="col-group">${fmtMoney(p.initial_deposit)}</td>
+                <td>${fmtMoney(p.cumul_deposits)}</td>
+                <td>${fmtMoney(p.total_withdrawn)}</td>
+                <td>${fmtPct(p.roic_pct)}</td>
             </tr>
         `).join('');
 
