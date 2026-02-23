@@ -148,6 +148,7 @@ DUNE_FIELDS = [
     "initial_deposit", "cumul_deposits", "total_withdrawn", "net_invested",
     "realized_pnl", "total_profit", "total_loss", "win_rate_pct",
     "pnl_per_fill_cents", "pnl_per_fill_pct", "sharpe", "usdc_balance", "roic_pct",
+    "maker_taker_ratio", "top_market",
 ]
 
 
@@ -175,6 +176,8 @@ def parse_dune_data(path: Path) -> dict:
             raw = row.get(field, "").strip()
             if field in ("first_trade", "last_trade"):
                 entry[field] = raw[:19] if raw else None  # trim " UTC"
+            elif field == "top_market":
+                entry[field] = raw if raw else None
             else:
                 entry[field] = to_float(raw)
         dune[name.lower()] = entry
