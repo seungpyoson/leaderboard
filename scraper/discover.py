@@ -392,7 +392,8 @@ def main():
 
         style = classify_style(trades, volume)
         first_seen = prev.get("first_seen", today) if prev else today
-        prev_rank = prev.get("leaderboard_rank") if prev else None
+        raw_prev_rank = prev.get("leaderboard_rank") if prev else None
+        prev_rank = int(raw_prev_rank) if raw_prev_rank is not None else None
 
         candidate = {
             "wallet": wallet,
