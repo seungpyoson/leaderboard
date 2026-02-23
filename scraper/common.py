@@ -14,7 +14,7 @@ import json
 import re
 import tempfile
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
 
 import requests
 
@@ -129,10 +129,13 @@ def fetch_profile(label: str, profile_url: str) -> dict | None:
         redirects = 0
         while resp.status_code in (301, 302, 303, 307, 308) and redirects < 5:
             location = resp.headers.get("Location", "")
-            if not _is_polymarket_host(location):
+            # Resolve relative redirects (e.g. /profile/...) against current URL
+            resolved = urljoin(url, location)
+            if not _is_polymarket_host(resolved):
                 print(f"  WARN: {label} redirected to non-polymarket host: {location}")
                 return None
-            resp = SESSION.get(location, timeout=30, allow_redirects=False)
+            url = resolved
+            resp = SESSION.get(url, timeout=30, allow_redirects=False)
             redirects += 1
         if resp.status_code != 200:
             print(f"  WARN: {label} HTTP {resp.status_code}")

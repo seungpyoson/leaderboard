@@ -353,7 +353,8 @@ def main():
             continue
 
         raw_username = trader.get("userName") or ""
-        rank = trader.get("rank")
+        raw_rank = trader.get("rank")
+        rank = int(raw_rank) if raw_rank is not None else None
         volume = to_float(trader.get("vol"))
 
         # TB2: Validate slug before URL construction — refuse rather than sanitize
