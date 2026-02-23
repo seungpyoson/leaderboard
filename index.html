@@ -97,9 +97,9 @@
                         <td colspan="2"></td>
                         <td class="group-label" colspan="5">Profile</td>
                         <td class="group-label" colspan="3">Activity</td>
-                        <td class="group-label" colspan="4">Fills</td>
+                        <td class="group-label" colspan="5">Fills</td>
                         <td class="group-label" colspan="4">Performance</td>
-                        <td class="group-label" colspan="4">Capital</td>
+                        <td class="group-label" colspan="5">Capital</td>
                     </tr>
                     <tr>
                         <th data-col="rank">#</th>
@@ -118,6 +118,7 @@
                         <th data-col="total_fills" class="col-group" title="Total OrderFilled events on-chain (Goldsky). Includes both maker and taker fills.">Fills</th>
                         <th data-col="fills_sent" title="Fills where this account was the maker (placed limit order that got filled)">Maker</th>
                         <th data-col="fills_received" title="Fills where this account was the taker (hit an existing order)">Taker</th>
+                        <th data-col="maker_taker_ratio" title="Ratio of maker fills to taker fills. M badge = ratio > 2 (market maker), T badge = ratio < 0.5 (taker)">M/T</th>
                         <th data-col="trading_days" title="Number of distinct calendar days with at least one fill">Days</th>
                         <!-- Performance (on-chain) -->
                         <th data-col="win_rate_pct" class="col-group" title="Percentage of fills that were profitable">Win %</th>
@@ -129,6 +130,7 @@
                         <th data-col="cumul_deposits" title="Total USDC deposited into Polymarket over all time (Dune)">Deposits</th>
                         <th data-col="total_withdrawn" title="Total USDC withdrawn from Polymarket (Dune)">Withdrawn</th>
                         <th data-col="roic_pct" title="Return on invested capital: PnL / Cumulative Deposits * 100 (Dune)">ROIC</th>
+                        <th data-col="top_market" title="Market with highest absolute PnL for this account (Goldsky)">Top Mkt</th>
                     </tr>
                 </thead>
                 <tbody id="tbody"></tbody>
@@ -178,6 +180,15 @@
         return Number(val).toFixed(dp);
     }
 
+    function fmtMT(val) {
+        if (val == null) return '<span class="muted">\u2014</span>';
+        const v = Number(val);
+        const badge = v > 2 ? ' <span class="style-tag style-hft">M</span>'
+                    : v < 0.5 ? ' <span class="style-tag style-dir">T</span>'
+                    : '';
+        return v.toFixed(1) + badge;
+    }
+
     function styleTag(style) {
         const cls = style === 'HFT/MM' ? 'style-hft' : style === 'Directional' ? 'style-dir' : 'style-hyb';
         const label = style === 'HFT/MM' ? 'HFT' : style === 'Directional' ? 'DIR' : 'HYB';
@@ -192,7 +203,7 @@
 
     function getSortVal(p, col) {
         if (col === 'name') return (p.name || '').toLowerCase();
-        if (col === 'join_date' || col === 'first_trade' || col === 'last_trade') return p[col] || '9999';
+        if (col === 'join_date' || col === 'first_trade' || col === 'last_trade' || col === 'top_market') return p[col] || '9999';
         return p[col] != null ? Number(p[col]) : -Infinity;
     }
 
@@ -230,6 +241,7 @@
                 <td class="col-group">${fmtNum(p.total_fills)}</td>
                 <td>${fmtNum(p.fills_sent)}</td>
                 <td>${fmtNum(p.fills_received)}</td>
+                <td>${fmtMT(p.maker_taker_ratio)}</td>
                 <td>${fmtNum(p.trading_days)}</td>
                 <td class="col-group">${fmtPct(p.win_rate_pct)}</td>
                 <td>${fmtDec(p.sharpe, 2)}</td>
@@ -239,6 +251,7 @@
                 <td>${fmtMoney(p.cumul_deposits)}</td>
                 <td>${fmtMoney(p.total_withdrawn)}</td>
                 <td>${fmtPct(p.roic_pct)}</td>
+                <td>${escHtml(p.top_market) || m}</td>
             </tr>
         `).join('');
 
