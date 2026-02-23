@@ -194,6 +194,13 @@
     let sortKey = 'confidence_score';
     let sortDir = 'desc';
 
+    function esc(s) {
+        if (s == null) return '';
+        const d = document.createElement('div');
+        d.textContent = String(s);
+        return d.innerHTML;
+    }
+
     function fmtMoney(v) {
         if (v == null) return '\u2014';
         const abs = Math.abs(v);
@@ -240,14 +247,16 @@
     }
 
     function render() {
-        let filtered = candidates;
+        let filtered;
         if (currentFilter === 'new') {
             filtered = candidates.filter(c => c.is_new);
         } else if (currentFilter !== 'all') {
             filtered = candidates.filter(c => getStatus(c) === currentFilter);
+        } else {
+            filtered = candidates.slice();
         }
 
-        // Sort
+        // Sort (on copy, never mutates original)
         filtered.sort((a, b) => {
             let av = a[sortKey], bv = b[sortKey];
             if (sortKey === 'status') { av = getStatus(a); bv = getStatus(b); }
@@ -272,23 +281,27 @@
                 else rankHtml += '<span class="rank-change rank-down">\u2193' + delta + '</span>';
             }
 
-            const nameHtml = c.profile_url
-                ? '<a class="name-link" href="' + c.profile_url + '" target="_blank">' + (c.username || c.wallet.slice(0,10)) + '</a>'
-                : (c.username || c.wallet.slice(0,10));
+            const safeName = esc(c.username || c.wallet.slice(0,10));
+            const safeWallet = esc(c.wallet);
+            const safeUrl = c.profile_url && c.profile_url.startsWith('https://polymarket.com/')
+                ? esc(c.profile_url) : '';
+            const nameHtml = safeUrl
+                ? '<a class="name-link" href="' + safeUrl + '" target="_blank" rel="noopener">' + safeName + '</a>'
+                : safeName;
 
             const newBadge = c.is_new ? '<span class="new-badge">NEW</span>' : '';
 
-            const statusCls = 'status-' + st.replace('auto-', 'auto-');
+            const statusCls = 'status-' + esc(st);
             const scoreFill = '<span class="score-bar"><span class="score-fill" style="width:' + (score*100) + '%;background:' + scoreColor(score) + '"></span></span>' + score.toFixed(2);
 
-            return '<tr class="row-' + st + '">' +
+            return '<tr class="row-' + esc(st) + '">' +
                 '<td><div class="row-actions">' +
-                    '<button class="row-btn btn-approve" onclick="setStatus(\'' + c.wallet + '\',\'approved\')" title="Approve">\u2713</button>' +
-                    '<button class="row-btn btn-reject" onclick="setStatus(\'' + c.wallet + '\',\'rejected\')" title="Reject">\u2717</button>' +
-                    '<button class="row-btn btn-pending" onclick="setStatus(\'' + c.wallet + '\',\'pending\')" title="Reset">?</button>' +
+                    '<button class="row-btn btn-approve" data-wallet="' + safeWallet + '" data-action="approved" title="Approve">\u2713</button>' +
+                    '<button class="row-btn btn-reject" data-wallet="' + safeWallet + '" data-action="rejected" title="Reject">\u2717</button>' +
+                    '<button class="row-btn btn-pending" data-wallet="' + safeWallet + '" data-action="pending" title="Reset">?</button>' +
                 '</div></td>' +
                 '<td>' + nameHtml + newBadge + '</td>' +
-                '<td><span class="status-badge ' + statusCls + '">' + st + '</span></td>' +
+                '<td><span class="status-badge ' + statusCls + '">' + esc(st) + '</span></td>' +
                 '<td>' + scoreFill + '</td>' +
                 '<td>' + rankHtml + '</td>' +
                 '<td>' + fmtMoney(pnl) + '</td>' +
@@ -296,8 +309,8 @@
                 '<td>' + fmtPct(c.efficiency) + '</td>' +
                 '<td>' + (c.trades != null ? c.trades.toLocaleString() : '\u2014') + '</td>' +
                 '<td>' + (c.markets != null ? c.markets : '\u2014') + '</td>' +
-                '<td>' + (c.style_guess || '\u2014') + '</td>' +
-                '<td>' + (c.first_seen || '\u2014') + '</td>' +
+                '<td>' + esc(c.style_guess || '\u2014') + '</td>' +
+                '<td>' + esc(c.first_seen || '\u2014') + '</td>' +
                 '</tr>';
         }).join('');
 
@@ -369,6 +382,12 @@
             currentFilter = btn.dataset.filter;
             render();
         });
+    });
+
+    // Row action buttons (event delegation — no inline onclick)
+    document.getElementById('candidates-body').addEventListener('click', e => {
+        const btn = e.target.closest('[data-wallet][data-action]');
+        if (btn) setStatus(btn.dataset.wallet, btn.dataset.action);
     });
 
     // Sort headers
