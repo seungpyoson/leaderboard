@@ -34,7 +34,7 @@ GOLDSKY_URL = (
 )
 GAMMA_URL = "https://gamma-api.polymarket.com/markets"
 
-BATCH_SIZE = 200
+BATCH_SIZE = 1000
 MAX_RETRIES = 10
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -127,7 +127,7 @@ def fetch_fills(wallet: str, role: str, last_id: str = ""):
         if len(events) < BATCH_SIZE:
             break
 
-        time.sleep(0.8)
+        time.sleep(0.3)
 
 
 # ---------------------------------------------------------------------------
@@ -620,16 +620,31 @@ def run_pipeline(max_minutes: int | None = None, account_filter: str | None = No
     print(f"Pipeline: {len(work_order)} accounts | max_minutes={max_minutes}")
     print(f"Order: {', '.join(a['name'] for a in work_order[:5])}{'…' if len(work_order) > 5 else ''}")
 
-    for acct in work_order:
-        if time.time() >= deadline:
-            print(f"\nTime budget exhausted ({(time.time() - start) / 60:.1f} min)")
+    for i, acct in enumerate(work_order):
+        now = time.time()
+        if now >= deadline:
+            print(f"\nTime budget exhausted ({(now - start) / 60:.1f} min)")
             break
 
         print(f"\n{'=' * 60}")
         print(f"  {acct['name']} ({acct['wallet'][:12]}…)")
+
+        if deadline == float("inf"):
+            # Unbounded run — no per-account cap
+            account_deadline = deadline
+            print(f"  Budget: unlimited")
+        else:
+            # Fair-share time cap: split remaining budget across remaining accounts
+            remaining_accounts = len(work_order) - i
+            remaining_budget = deadline - now
+            fair_share = remaining_budget / remaining_accounts
+            account_budget = min(max(120, min(fair_share, 3600)), remaining_budget)
+            account_deadline = now + account_budget
+            print(f"  Budget: {account_budget / 60:.1f} min (fair share of {remaining_budget / 60:.1f} min for {remaining_accounts} accounts)")
+
         print(f"{'=' * 60}")
 
-        process_account(acct["name"], acct["wallet"], state, deadline)
+        process_account(acct["name"], acct["wallet"], state, account_deadline)
 
     # Write CSV with all accounts (not just filtered)
     all_accounts: list[dict] = json.loads(ACCOUNTS_FILE.read_text())
