@@ -204,67 +204,67 @@ def update_position(positions: dict, fill: dict) -> None:
 # Gamma API — market resolution
 # ---------------------------------------------------------------------------
 
-def resolve_markets(token_ids: list[str], cache: dict) -> dict:
-    """Query Gamma API for resolved markets. Returns updated cache.
+GAMMA_BATCH = 50  # token IDs per Gamma request (confirmed to work via empirical test)
+
+
+def resolve_markets(
+    token_ids: list[str], cache: dict, deadline: float = float("inf")
+) -> dict:
+    """Query Gamma API in batches for resolved markets. Returns updated cache.
 
     Cache format: {token_id: {"payout": float, "cached_at": str, "question": str}}
-    Gamma API only accepts one clob_token_id per request.
+    Stops early if deadline is hit — remaining tokens stay in positions dict and
+    are retried on the next pipeline run.
     """
     uncached = [tid for tid in token_ids if tid not in cache]
     if not uncached:
         return cache
 
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    total_batches = math.ceil(len(uncached) / GAMMA_BATCH)
 
-    for i, tid in enumerate(uncached):
+    for batch_i, start in enumerate(range(0, len(uncached), GAMMA_BATCH)):
+        if time.time() >= deadline:
+            print(f"    resolution deadline — {batch_i}/{total_batches} batches done")
+            break
+
+        batch = uncached[start : start + GAMMA_BATCH]
         try:
-            resp = SESSION.get(
-                GAMMA_URL,
-                params={"clob_token_ids": tid, "closed": "true"},
-                timeout=30,
-            )
+            params = [("clob_token_ids", tid) for tid in batch]
+            params.append(("closed", "true"))
+            resp = SESSION.get(GAMMA_URL, params=params, timeout=30)
+
             if resp.status_code == 429:
-                wait = min(5 * 2 ** (i % 5), 60)
+                wait = min(5 * 2 ** (batch_i % 5), 60)
                 print(f"    Gamma 429 — backoff {wait}s")
                 time.sleep(wait)
                 continue
             if resp.status_code != 200:
                 continue
 
-            markets = resp.json()
-            if not markets:
-                continue
-
-            market = markets[0]
-            outcome_prices_raw = market.get("outcomePrices", "")
-            clob_ids_raw = market.get("clobTokenIds", "")
-            if not outcome_prices_raw or not clob_ids_raw:
-                continue
-
-            try:
-                prices = json.loads(outcome_prices_raw) if isinstance(outcome_prices_raw, str) else outcome_prices_raw
-                clob_ids = json.loads(clob_ids_raw) if isinstance(clob_ids_raw, str) else clob_ids_raw
-            except (json.JSONDecodeError, TypeError):
-                continue
-
-            question = market.get("question", "")[:80]
-            for j, cid in enumerate(clob_ids):
-                if j < len(prices):
-                    payout = float(prices[j])
-                    # Validate binary resolution: payout must be 0 or 1
-                    if payout not in (0.0, 1.0):
-                        continue
-                    cache[cid] = {
-                        "payout": payout,
-                        "cached_at": today,
-                        "question": question,
-                    }
+            for market in resp.json():
+                outcome_prices_raw = market.get("outcomePrices", "")
+                clob_ids_raw = market.get("clobTokenIds", "")
+                if not outcome_prices_raw or not clob_ids_raw:
+                    continue
+                try:
+                    prices = json.loads(outcome_prices_raw) if isinstance(outcome_prices_raw, str) else outcome_prices_raw
+                    clob_ids = json.loads(clob_ids_raw) if isinstance(clob_ids_raw, str) else clob_ids_raw
+                except (json.JSONDecodeError, TypeError):
+                    continue
+                question = market.get("question", "")[:80]
+                for j, cid in enumerate(clob_ids):
+                    if j < len(prices):
+                        payout = float(prices[j])
+                        if payout not in (0.0, 1.0):
+                            continue
+                        cache[cid] = {"payout": payout, "cached_at": today, "question": question}
 
         except Exception as e:
-            print(f"    Gamma error for {tid[:20]}…: {e}")
+            print(f"    Gamma error (batch {batch_i + 1}): {e}")
 
-        # Rate limit: ~2 req/s
-        if (i + 1) % 2 == 0:
+        # Rate limit: same cadence as before (~2 req/s), but now each request covers 50 tokens
+        if (batch_i + 1) % 2 == 0:
             time.sleep(0.5)
 
     return cache
@@ -305,6 +305,8 @@ def new_account_state(wallet: str) -> dict:
         "day_bounds": {},          # {date_str: [min_ts, max_ts]}
         "positions": {},           # {token_id: {net_shares, cost_basis, fill_count}}
         "resolved_tokens": [],     # token_ids already resolved (prevent double-counting)
+        "maker_exhausted": False,  # True when maker fill cursor is fully drained
+        "taker_exhausted": False,  # True when taker fill cursor is fully drained
         "aggregates": {
             "first_trade": None,
             "last_trade": None,
@@ -444,153 +446,173 @@ def write_csv(state: dict, accounts: list[dict]) -> None:
 
 
 # ---------------------------------------------------------------------------
+# Pipeline phases
+# ---------------------------------------------------------------------------
+
+def _fetch_phase(ast: dict, wallet: str, role: str, state: dict, deadline: float) -> None:
+    """Fetch all fills for one role, advancing cursor. Sets {role}_exhausted on completion.
+
+    If the deadline is hit mid-fetch, the cursor is saved and the phase remains
+    incomplete — the next pipeline run resumes from the saved cursor.
+    """
+    cursor_key = f"{role}_last_id"
+    last_id = ast[cursor_key]
+    batch_n = 0
+    new_fills = 0
+    deadline_hit = False
+
+    print(f"  [{role}] fetching (cursor={'…' + last_id[-20:] if last_id else 'start'})…")
+
+    for events, new_last_id in fetch_fills(wallet, role, last_id):
+        batch_n += 1
+
+        for f in events:
+            fill = process_fill(f, wallet)
+            new_fills += 1
+
+            ast["fills"]["total"] += 1
+            ast["fills"][role] += 1
+
+            ts = fill["timestamp"]
+            day = datetime.fromtimestamp(ts, tz=timezone.utc).strftime("%Y-%m-%d")
+            bounds = ast["day_bounds"].get(day)
+            if bounds is None:
+                ast["day_bounds"][day] = [ts, ts]
+            else:
+                if ts < bounds[0]:
+                    bounds[0] = ts
+                if ts > bounds[1]:
+                    bounds[1] = ts
+
+            ts_str = datetime.fromtimestamp(ts, tz=timezone.utc).strftime(
+                "%Y-%m-%d %H:%M:%S.000 UTC"
+            )
+            if ast["aggregates"]["first_trade"] is None or ts_str < ast["aggregates"]["first_trade"]:
+                ast["aggregates"]["first_trade"] = ts_str
+            if ast["aggregates"]["last_trade"] is None or ts_str > ast["aggregates"]["last_trade"]:
+                ast["aggregates"]["last_trade"] = ts_str
+
+            ast["aggregates"]["total_volume"] += fill["usd_amount"]
+            update_position(ast["positions"], fill)
+
+        ast[cursor_key] = new_last_id
+
+        if batch_n % 10 == 0:
+            latest = datetime.fromtimestamp(
+                int(events[-1]["timestamp"]), tz=timezone.utc
+            ).strftime("%Y-%m-%d")
+            print(f"    batch {batch_n}: +{new_fills:,} fills (latest ~{latest})")
+
+        if batch_n % 50 == 0:
+            save_state(state)
+
+        if time.time() >= deadline:
+            print(f"    time budget hit during [{role}] fetch")
+            deadline_hit = True
+            save_state(state)
+            break
+
+    print(f"  [{role}] +{new_fills:,} new fills")
+    if not deadline_hit:
+        ast[f"{role}_exhausted"] = True
+        print(f"  [{role}] cursor exhausted")
+
+
+def _resolve_phase(ast: dict, state: dict, deadline: float) -> None:
+    """Resolve markets and compute PnL for all open positions.
+
+    Queries Gamma in batches. If deadline is hit mid-way, unresolved positions
+    remain in state and are retried on the next pipeline run.
+    """
+    positions = ast["positions"]
+    token_ids = list(positions.keys())
+    if not token_ids:
+        return
+
+    print(f"  Resolving {len(token_ids)} open positions…")
+    state["resolution_cache"] = resolve_markets(
+        token_ids, state.get("resolution_cache", {}), deadline
+    )
+
+    resolved_set = set(ast.get("resolved_tokens", []))
+    resolved_count = 0
+
+    for tid in list(positions.keys()):
+        if tid in resolved_set:
+            del positions[tid]
+            continue
+
+        entry = state["resolution_cache"].get(tid)
+        if entry is None:
+            continue
+
+        pos = positions[tid]
+        pnl = entry["payout"] * pos["net_shares"] - pos["cost_basis"]
+        resolved_count += 1
+
+        if pnl >= 0:
+            ast["aggregates"]["total_profit"] += pnl
+            ast["aggregates"]["wins"] += 1
+        else:
+            ast["aggregates"]["total_loss"] += abs(pnl)
+            ast["aggregates"]["losses"] += 1
+
+        n, mean, m2 = welford_update(
+            ast["aggregates"]["welford_n"],
+            ast["aggregates"]["welford_mean"],
+            ast["aggregates"]["welford_m2"],
+            pnl,
+        )
+        ast["aggregates"]["welford_n"] = n
+        ast["aggregates"]["welford_mean"] = mean
+        ast["aggregates"]["welford_m2"] = m2
+
+        question = entry.get("question", "")
+        if question:
+            short = question[:40]
+            tm = ast["aggregates"]["top_markets"]
+            tm[short] = tm.get(short, 0) + abs(pnl)
+
+        resolved_set.add(tid)
+        del positions[tid]
+
+    ast["resolved_tokens"] = list(resolved_set)
+
+    tm = ast["aggregates"]["top_markets"]
+    if len(tm) > 20:
+        ast["aggregates"]["top_markets"] = dict(
+            sorted(tm.items(), key=lambda x: x[1], reverse=True)[:20]
+        )
+
+    print(f"  Resolved {resolved_count} | {len(positions)} still open")
+
+
+# ---------------------------------------------------------------------------
 # Main pipeline
 # ---------------------------------------------------------------------------
 
 def process_account(name: str, wallet: str, state: dict, deadline: float) -> None:
-    """Fetch fills, update positions, resolve markets, compute PnL for one account."""
+    """Advance exactly one phase for this account: maker → taker → resolution.
+
+    Each phase gets the full account time budget. Phases cannot compete within
+    a single run — a large maker fetch cannot starve taker or resolution.
+    """
     if name not in state["accounts"]:
         state["accounts"][name] = new_account_state(wallet)
 
     ast = state["accounts"][name]
+    maker_done = ast.get("maker_exhausted", False)
+    taker_done = ast.get("taker_exhausted", False)
 
-    # --- Phase 1: Fetch & process fills ---
-    for role in ("maker", "taker"):
-        if time.time() >= deadline:
-            break
+    if not maker_done:
+        _fetch_phase(ast, wallet, "maker", state, deadline)
+    elif not taker_done:
+        _fetch_phase(ast, wallet, "taker", state, deadline)
+    elif ast["positions"]:
+        _resolve_phase(ast, state, deadline)
+    else:
+        print(f"  Fully processed — nothing to do")
 
-        cursor_key = f"{role}_last_id"
-        last_id = ast[cursor_key]
-        batch_n = 0
-        new_fills = 0
-
-        print(f"  [{role}] fetching (cursor={'…' + last_id[-20:] if last_id else 'start'})…")
-
-        for events, new_last_id in fetch_fills(wallet, role, last_id):
-            batch_n += 1
-
-            for f in events:
-                fill = process_fill(f, wallet)
-                new_fills += 1
-
-                # Counters
-                ast["fills"]["total"] += 1
-                ast["fills"][role] += 1
-
-                # Day bounds
-                ts = fill["timestamp"]
-                day = datetime.fromtimestamp(ts, tz=timezone.utc).strftime("%Y-%m-%d")
-                bounds = ast["day_bounds"].get(day)
-                if bounds is None:
-                    ast["day_bounds"][day] = [ts, ts]
-                else:
-                    if ts < bounds[0]:
-                        bounds[0] = ts
-                    if ts > bounds[1]:
-                        bounds[1] = ts
-
-                # First / last trade
-                ts_str = datetime.fromtimestamp(ts, tz=timezone.utc).strftime(
-                    "%Y-%m-%d %H:%M:%S.000 UTC"
-                )
-                if ast["aggregates"]["first_trade"] is None or ts_str < ast["aggregates"]["first_trade"]:
-                    ast["aggregates"]["first_trade"] = ts_str
-                if ast["aggregates"]["last_trade"] is None or ts_str > ast["aggregates"]["last_trade"]:
-                    ast["aggregates"]["last_trade"] = ts_str
-
-                # Volume
-                ast["aggregates"]["total_volume"] += fill["usd_amount"]
-
-                # Position
-                update_position(ast["positions"], fill)
-
-            ast[cursor_key] = new_last_id
-
-            # Progress logging
-            if batch_n % 10 == 0:
-                latest = datetime.fromtimestamp(
-                    int(events[-1]["timestamp"]), tz=timezone.utc
-                ).strftime("%Y-%m-%d")
-                print(f"    batch {batch_n}: +{new_fills:,} fills (latest ~{latest})")
-
-            # Periodic checkpoint
-            if batch_n % 50 == 0:
-                save_state(state)
-
-            if time.time() >= deadline:
-                print(f"    time budget hit during {role} fetch")
-                save_state(state)
-                break
-
-        print(f"  [{role}] +{new_fills:,} new fills")
-
-    # --- Phase 2: Resolve markets & compute PnL ---
-    positions = ast["positions"]
-    token_ids = list(positions.keys())
-
-    if token_ids and time.time() < deadline:
-        print(f"  Resolving {len(token_ids)} open positions…")
-        state["resolution_cache"] = resolve_markets(
-            token_ids, state.get("resolution_cache", {})
-        )
-
-        resolved_set = set(ast.get("resolved_tokens", []))
-
-        resolved_count = 0
-        for tid in list(positions.keys()):
-            if tid in resolved_set:
-                del positions[tid]
-                continue
-
-            entry = state["resolution_cache"].get(tid)
-            if entry is None:
-                continue
-
-            pos = positions[tid]
-            payout = entry["payout"]
-            pnl = payout * pos["net_shares"] - pos["cost_basis"]
-            resolved_count += 1
-
-            if pnl >= 0:
-                ast["aggregates"]["total_profit"] += pnl
-                ast["aggregates"]["wins"] += 1
-            else:
-                ast["aggregates"]["total_loss"] += abs(pnl)
-                ast["aggregates"]["losses"] += 1
-
-            # Welford for Sharpe
-            n, mean, m2 = welford_update(
-                ast["aggregates"]["welford_n"],
-                ast["aggregates"]["welford_mean"],
-                ast["aggregates"]["welford_m2"],
-                pnl,
-            )
-            ast["aggregates"]["welford_n"] = n
-            ast["aggregates"]["welford_mean"] = mean
-            ast["aggregates"]["welford_m2"] = m2
-
-            # Top markets
-            question = entry.get("question", "")
-            if question:
-                short = question[:40]
-                tm = ast["aggregates"]["top_markets"]
-                tm[short] = tm.get(short, 0) + abs(pnl)
-
-            resolved_set.add(tid)
-            del positions[tid]
-
-        ast["resolved_tokens"] = list(resolved_set)
-
-        # Cap top_markets at 20 entries
-        tm = ast["aggregates"]["top_markets"]
-        if len(tm) > 20:
-            ast["aggregates"]["top_markets"] = dict(
-                sorted(tm.items(), key=lambda x: x[1], reverse=True)[:20]
-            )
-
-        print(f"  Resolved {resolved_count} | {len(positions)} still open")
-
-    # Summary
     f = ast["fills"]
     agg = ast["aggregates"]
     pnl = agg["total_profit"] - agg["total_loss"]
@@ -611,11 +633,23 @@ def run_pipeline(max_minutes: int | None = None, account_filter: str | None = No
         names = {n.strip() for n in account_filter.split(",")}
         accounts = [a for a in accounts if a["name"] in names]
 
-    # Process smallest accounts first so most get data within time budget
-    def fill_count(a: dict) -> int:
-        return state.get("accounts", {}).get(a["name"], {}).get("fills", {}).get("total", 0)
+    # Phase-priority ordering: resolution > taker > maker > done
+    # Accounts closest to completion run first — maximises fully-processed accounts per CI run.
+    # Within the same phase, sort by fill count ascending (smallest accounts finish fastest).
+    def phase_key(a: dict) -> tuple:
+        ast = state.get("accounts", {}).get(a["name"], {})
+        maker_done = ast.get("maker_exhausted", False)
+        taker_done = ast.get("taker_exhausted", False)
+        fills = ast.get("fills", {}).get("total", 0)
+        if maker_done and taker_done and not ast.get("positions"):
+            return (3, fills)   # fully done — no-op, run last
+        if maker_done and taker_done:
+            return (0, fills)   # resolution phase — run first
+        if maker_done:
+            return (1, fills)   # taker phase
+        return (2, fills)       # maker phase — largest last
 
-    work_order = sorted(accounts, key=fill_count)
+    work_order = sorted(accounts, key=phase_key)
 
     print(f"Pipeline: {len(work_order)} accounts | max_minutes={max_minutes}")
     print(f"Order: {', '.join(a['name'] for a in work_order[:5])}{'…' if len(work_order) > 5 else ''}")
