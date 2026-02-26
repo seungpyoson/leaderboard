@@ -84,8 +84,18 @@ def query_goldsky(graphql_query: str) -> dict | None:
     return None
 
 
+class FetchAbortedError(Exception):
+    """Raised by fetch_fills() when 3 consecutive API failures abort the fetch.
+    Signals _fetch_phase that the cursor stopped at a failure point, not at tip.
+    """
+
+
 def fetch_fills(wallet: str, role: str, last_id: str = ""):
-    """Yield (events, new_last_id) batches via id_gt pagination."""
+    """Yield (events, new_last_id) batches via id_gt pagination.
+
+    Raises FetchAbortedError after 3 consecutive API failures.
+    Callers must wrap iteration in try/except FetchAbortedError.
+    """
     wallet = wallet.lower()
     consecutive_failures = 0
 
@@ -113,7 +123,7 @@ def fetch_fills(wallet: str, role: str, last_id: str = ""):
             consecutive_failures += 1
             if consecutive_failures >= 3:
                 print(f"    3 consecutive failures — stopping {role} fetch")
-                break
+                raise FetchAbortedError(f"3 consecutive failures for {role}")
             time.sleep(30)
             continue
 
@@ -318,6 +328,8 @@ def new_account_state(wallet: str) -> dict:
         "positions": {},           # {token_id: {net_shares, cost_basis, fill_count}}
         "maker_exhausted": False,  # True when maker fill cursor is fully drained
         "taker_exhausted": False,  # True when taker fill cursor is fully drained
+        "maker_at_tip": False,     # True only when maker cursor reached natural empty-batch end
+        "taker_at_tip": False,     # True only when taker cursor reached natural empty-batch end
         "aggregates": {
             "first_trade": None,
             "last_trade": None,
@@ -471,62 +483,71 @@ def _fetch_phase(ast: dict, wallet: str, role: str, state: dict, deadline: float
     batch_n = 0
     new_fills = 0
     deadline_hit = False
+    ast[f"{role}_at_tip"] = False  # clear stale flag — only set True on natural exit this fetch
 
     print(f"  [{role}] fetching (cursor={'…' + last_id[-20:] if last_id else 'start'})…")
 
-    for events, new_last_id in fetch_fills(wallet, role, last_id):
-        batch_n += 1
+    aborted = False
+    try:
+        for events, new_last_id in fetch_fills(wallet, role, last_id):
+            batch_n += 1
 
-        for f in events:
-            fill = process_fill(f, wallet)
-            new_fills += 1
+            for f in events:
+                fill = process_fill(f, wallet)
+                new_fills += 1
 
-            ast["fills"]["total"] += 1
-            ast["fills"][role] += 1
+                ast["fills"]["total"] += 1
+                ast["fills"][role] += 1
 
-            ts = fill["timestamp"]
-            day = datetime.fromtimestamp(ts, tz=timezone.utc).strftime("%Y-%m-%d")
-            bounds = ast["day_bounds"].get(day)
-            if bounds is None:
-                ast["day_bounds"][day] = [ts, ts]
-            else:
-                if ts < bounds[0]:
-                    bounds[0] = ts
-                if ts > bounds[1]:
-                    bounds[1] = ts
+                ts = fill["timestamp"]
+                day = datetime.fromtimestamp(ts, tz=timezone.utc).strftime("%Y-%m-%d")
+                bounds = ast["day_bounds"].get(day)
+                if bounds is None:
+                    ast["day_bounds"][day] = [ts, ts]
+                else:
+                    if ts < bounds[0]:
+                        bounds[0] = ts
+                    if ts > bounds[1]:
+                        bounds[1] = ts
 
-            ts_str = datetime.fromtimestamp(ts, tz=timezone.utc).strftime(
-                "%Y-%m-%d %H:%M:%S.000 UTC"
-            )
-            if ast["aggregates"]["first_trade"] is None or ts_str < ast["aggregates"]["first_trade"]:
-                ast["aggregates"]["first_trade"] = ts_str
-            if ast["aggregates"]["last_trade"] is None or ts_str > ast["aggregates"]["last_trade"]:
-                ast["aggregates"]["last_trade"] = ts_str
+                ts_str = datetime.fromtimestamp(ts, tz=timezone.utc).strftime(
+                    "%Y-%m-%d %H:%M:%S.000 UTC"
+                )
+                if ast["aggregates"]["first_trade"] is None or ts_str < ast["aggregates"]["first_trade"]:
+                    ast["aggregates"]["first_trade"] = ts_str
+                if ast["aggregates"]["last_trade"] is None or ts_str > ast["aggregates"]["last_trade"]:
+                    ast["aggregates"]["last_trade"] = ts_str
 
-            ast["aggregates"]["total_volume"] += fill["usd_amount"]
-            update_position(ast["positions"], fill)
+                ast["aggregates"]["total_volume"] += fill["usd_amount"]
+                update_position(ast["positions"], fill)
 
-        ast[cursor_key] = new_last_id
+            ast[cursor_key] = new_last_id
 
-        if batch_n % 10 == 0:
-            latest = datetime.fromtimestamp(
-                int(events[-1]["timestamp"]), tz=timezone.utc
-            ).strftime("%Y-%m-%d")
-            print(f"    batch {batch_n}: +{new_fills:,} fills (latest ~{latest})")
+            if batch_n % 10 == 0:
+                latest = datetime.fromtimestamp(
+                    int(events[-1]["timestamp"]), tz=timezone.utc
+                ).strftime("%Y-%m-%d")
+                print(f"    batch {batch_n}: +{new_fills:,} fills (latest ~{latest})")
 
-        if batch_n % 50 == 0:
-            save_state(state)
+            if batch_n % 50 == 0:
+                save_state(state)
 
-        if time.time() >= deadline:
-            print(f"    time budget hit during [{role}] fetch")
-            deadline_hit = True
-            save_state(state)
-            break
+            if time.time() >= deadline:
+                print(f"    time budget hit during [{role}] fetch")
+                deadline_hit = True
+                save_state(state)
+                break
+
+    except FetchAbortedError:
+        aborted = True
+        print(f"  [{role}] fetch aborted — API failures, resolution deferred to next run")
 
     print(f"  [{role}] +{new_fills:,} new fills")
     if not deadline_hit:
         ast[f"{role}_exhausted"] = True
-        print(f"  [{role}] cursor exhausted")
+        if not aborted:
+            ast[f"{role}_at_tip"] = True
+            print(f"  [{role}] cursor exhausted (at tip)")
 
 
 def _resolve_phase(ast: dict, state: dict, deadline: float) -> None:
@@ -597,6 +618,8 @@ def _resolve_phase(ast: dict, state: dict, deadline: float) -> None:
     # uncached tokens are retried next run via random.shuffle ordering.
     ast["maker_exhausted"] = False
     ast["taker_exhausted"] = False
+    ast["maker_at_tip"] = False
+    ast["taker_at_tip"] = False
 
 
 # ---------------------------------------------------------------------------
@@ -624,16 +647,26 @@ def process_account(name: str, wallet: str, state: dict, deadline: float) -> Non
             _fetch_phase(ast, wallet, "maker", state, deadline)
         elif not taker_done:
             _fetch_phase(ast, wallet, "taker", state, deadline)
-        elif ast["positions"]:
-            _resolve_phase(ast, state, deadline)
-            # Remaining positions are open markets — no point re-querying Gamma
-            # in the same run. Come back next invocation when more markets close.
-            break
         else:
-            # All phases done, no open positions — reset for next daily cycle.
-            ast["maker_exhausted"] = False
-            ast["taker_exhausted"] = False
-            print(f"  Cycle complete — reset for next refresh")
+            # Both phases done for this run — check fill completeness before resolving
+            if ast["positions"]:
+                maker_tip = ast.get("maker_at_tip", False)
+                taker_tip = ast.get("taker_at_tip", False)
+                if maker_tip and taker_tip:
+                    _resolve_phase(ast, state, deadline)
+                    # Remaining positions are open markets — no point re-querying Gamma
+                    # in the same run. Come back next invocation when more markets close.
+                else:
+                    print(f"  fills incomplete — resolution deferred to next run")
+                    ast["maker_exhausted"] = False
+                    ast["taker_exhausted"] = False
+            else:
+                # No positions to resolve — reset for next daily cycle.
+                ast["maker_exhausted"] = False
+                ast["taker_exhausted"] = False
+                ast["maker_at_tip"] = False
+                ast["taker_at_tip"] = False
+                print(f"  Cycle complete — reset for next refresh")
             break
 
         if time.time() >= deadline:
