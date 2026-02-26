@@ -17,6 +17,7 @@ import argparse
 import json
 import math
 import os
+import random
 import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -210,15 +211,18 @@ GAMMA_BATCH = 50  # token IDs per Gamma request (confirmed to work via empirical
 def resolve_markets(
     token_ids: list[str], cache: dict, deadline: float = float("inf")
 ) -> dict:
-    """Query Gamma API in batches for resolved markets. Returns updated cache.
+    """Query Gamma API in batches of GAMMA_BATCH for resolved markets.
+
+    Returns updated cache. Shuffles uncached list so all tokens are eventually
+    queried across runs, preventing starvation of late-inserted positions.
 
     Cache format: {token_id: {"payout": float, "cached_at": str, "question": str}}
-    Stops early if deadline is hit — remaining tokens stay in positions dict and
-    are retried on the next pipeline run.
     """
     uncached = [tid for tid in token_ids if tid not in cache]
     if not uncached:
         return cache
+
+    random.shuffle(uncached)
 
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     total_batches = math.ceil(len(uncached) / GAMMA_BATCH)
@@ -229,41 +233,49 @@ def resolve_markets(
             break
 
         batch = uncached[start : start + GAMMA_BATCH]
-        try:
-            params = [("clob_token_ids", tid) for tid in batch]
-            params.append(("closed", "true"))
-            resp = SESSION.get(GAMMA_URL, params=params, timeout=30)
+        retries = 0
+        while retries < 3:
+            try:
+                params = [("clob_token_ids", tid) for tid in batch]
+                params.append(("closed", "true"))
+                resp = SESSION.get(GAMMA_URL, params=params, timeout=30)
 
-            if resp.status_code == 429:
-                wait = min(5 * 2 ** (batch_i % 5), 60)
-                print(f"    Gamma 429 — backoff {wait}s")
-                time.sleep(wait)
-                continue
-            if resp.status_code != 200:
-                continue
+                if resp.status_code == 429:
+                    wait = min(5 * 2 ** retries, 60)
+                    print(f"    Gamma 429 — backoff {wait}s (batch {batch_i + 1})")
+                    time.sleep(wait)
+                    retries += 1
+                    continue  # retry same batch
 
-            for market in resp.json():
-                outcome_prices_raw = market.get("outcomePrices", "")
-                clob_ids_raw = market.get("clobTokenIds", "")
-                if not outcome_prices_raw or not clob_ids_raw:
-                    continue
-                try:
-                    prices = json.loads(outcome_prices_raw) if isinstance(outcome_prices_raw, str) else outcome_prices_raw
-                    clob_ids = json.loads(clob_ids_raw) if isinstance(clob_ids_raw, str) else clob_ids_raw
-                except (json.JSONDecodeError, TypeError):
-                    continue
-                question = market.get("question", "")[:80]
-                for j, cid in enumerate(clob_ids):
-                    if j < len(prices):
-                        payout = float(prices[j])
-                        if payout not in (0.0, 1.0):
+                if resp.status_code != 200:
+                    break  # non-retryable, skip batch
+
+                markets = resp.json()
+                if isinstance(markets, list):
+                    for market in markets:
+                        outcome_prices_raw = market.get("outcomePrices", "")
+                        clob_ids_raw = market.get("clobTokenIds", "")
+                        if not outcome_prices_raw or not clob_ids_raw:
                             continue
-                        cache[cid] = {"payout": payout, "cached_at": today, "question": question}
+                        try:
+                            prices = json.loads(outcome_prices_raw) if isinstance(outcome_prices_raw, str) else outcome_prices_raw
+                            clob_ids = json.loads(clob_ids_raw) if isinstance(clob_ids_raw, str) else clob_ids_raw
+                        except (json.JSONDecodeError, TypeError):
+                            continue
+                        question = market.get("question", "")[:80]
+                        for j, cid in enumerate(clob_ids):
+                            if j < len(prices):
+                                payout = float(prices[j])
+                                if payout not in (0.0, 1.0):
+                                    continue
+                                cache[cid] = {"payout": payout, "cached_at": today, "question": question}
+                break  # success — exit retry loop
 
-        except Exception as e:
-            print(f"    Gamma error (batch {batch_i + 1}): {e}")
+            except Exception as e:
+                print(f"    Gamma error (batch {batch_i + 1}): {e}")
+                break
 
-        # Rate limit: same cadence as before (~2 req/s), but now each request covers 50 tokens
+        # Rate limit: ~2 req/s
         if (batch_i + 1) % 2 == 0:
             time.sleep(0.5)
 
@@ -304,7 +316,6 @@ def new_account_state(wallet: str) -> dict:
         "fills": {"total": 0, "maker": 0, "taker": 0},
         "day_bounds": {},          # {date_str: [min_ts, max_ts]}
         "positions": {},           # {token_id: {net_shares, cost_basis, fill_count}}
-        "resolved_tokens": [],     # token_ids already resolved (prevent double-counting)
         "maker_exhausted": False,  # True when maker fill cursor is fully drained
         "taker_exhausted": False,  # True when taker fill cursor is fully drained
         "aggregates": {
@@ -523,6 +534,10 @@ def _resolve_phase(ast: dict, state: dict, deadline: float) -> None:
 
     Queries Gamma in batches. If deadline is hit mid-way, unresolved positions
     remain in state and are retried on the next pipeline run.
+
+    Deduplication relies entirely on the id_gt cursor: each fill is fetched
+    exactly once, so each position entry reflects unique fills and is booked
+    exactly once before being deleted. No cross-run resolved-set needed.
     """
     positions = ast["positions"]
     token_ids = list(positions.keys())
@@ -530,18 +545,12 @@ def _resolve_phase(ast: dict, state: dict, deadline: float) -> None:
         return
 
     print(f"  Resolving {len(token_ids)} open positions…")
-    state["resolution_cache"] = resolve_markets(
-        token_ids, state.get("resolution_cache", {}), deadline
-    )
+    cache = resolve_markets(token_ids, state.get("resolution_cache", {}), deadline)
+    state["resolution_cache"] = cache
 
-    resolved_set = set(ast.get("resolved_tokens", []))
     resolved_count = 0
 
     for tid in list(positions.keys()):
-        if tid in resolved_set:
-            del positions[tid]
-            continue
-
         entry = state["resolution_cache"].get(tid)
         if entry is None:
             continue
@@ -573,10 +582,7 @@ def _resolve_phase(ast: dict, state: dict, deadline: float) -> None:
             tm = ast["aggregates"]["top_markets"]
             tm[short] = tm.get(short, 0) + abs(pnl)
 
-        resolved_set.add(tid)
         del positions[tid]
-
-    ast["resolved_tokens"] = list(resolved_set)
 
     tm = ast["aggregates"]["top_markets"]
     if len(tm) > 20:
@@ -586,32 +592,52 @@ def _resolve_phase(ast: dict, state: dict, deadline: float) -> None:
 
     print(f"  Resolved {resolved_count} | {len(positions)} still open")
 
+    # Always reset fill-phase flags after resolution so daily fills are
+    # picked up each cycle. Partial Gamma queries (deadline hit) are fine —
+    # uncached tokens are retried next run via random.shuffle ordering.
+    ast["maker_exhausted"] = False
+    ast["taker_exhausted"] = False
+
 
 # ---------------------------------------------------------------------------
 # Main pipeline
 # ---------------------------------------------------------------------------
 
 def process_account(name: str, wallet: str, state: dict, deadline: float) -> None:
-    """Advance exactly one phase for this account: maker → taker → resolution.
+    """Advance phases for this account within the deadline: maker → taker → resolution.
 
-    Each phase gets the full account time budget. Phases cannot compete within
-    a single run — a large maker fetch cannot starve taker or resolution.
+    Phases run in sequence. If a phase completes before the deadline, the next
+    phase starts immediately in the same invocation — budget is not wasted.
+    If a phase hits the deadline mid-way, it saves cursor state and stops;
+    the next run resumes from where it left off.
     """
     if name not in state["accounts"]:
         state["accounts"][name] = new_account_state(wallet)
 
     ast = state["accounts"][name]
-    maker_done = ast.get("maker_exhausted", False)
-    taker_done = ast.get("taker_exhausted", False)
 
-    if not maker_done:
-        _fetch_phase(ast, wallet, "maker", state, deadline)
-    elif not taker_done:
-        _fetch_phase(ast, wallet, "taker", state, deadline)
-    elif ast["positions"]:
-        _resolve_phase(ast, state, deadline)
-    else:
-        print(f"  Fully processed — nothing to do")
+    while time.time() < deadline:
+        maker_done = ast.get("maker_exhausted", False)
+        taker_done = ast.get("taker_exhausted", False)
+
+        if not maker_done:
+            _fetch_phase(ast, wallet, "maker", state, deadline)
+        elif not taker_done:
+            _fetch_phase(ast, wallet, "taker", state, deadline)
+        elif ast["positions"]:
+            _resolve_phase(ast, state, deadline)
+            # Remaining positions are open markets — no point re-querying Gamma
+            # in the same run. Come back next invocation when more markets close.
+            break
+        else:
+            # All phases done, no open positions — reset for next daily cycle.
+            ast["maker_exhausted"] = False
+            ast["taker_exhausted"] = False
+            print(f"  Cycle complete — reset for next refresh")
+            break
+
+        if time.time() >= deadline:
+            break
 
     f = ast["fills"]
     agg = ast["aggregates"]
