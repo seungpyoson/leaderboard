@@ -121,8 +121,15 @@ def main():
         pnl = t.get("pnl")
         volume = t.get("vol")
         efficiency = (pnl / volume * 100) if (pnl is not None and volume and volume > 0) else None
-        username = t.get("userName") or t.get("proxyWallet", "")[:10]
+        raw_username = t.get("userName") or ""
         wallet = t.get("proxyWallet", "")
+
+        # API returns "0xABC...-1772168966873" (wallet + epoch-ms) for users
+        # without a display name — strip the timestamp suffix
+        if raw_username.startswith("0x") and "-" in raw_username:
+            raw_username = raw_username.split("-")[0]
+
+        username = raw_username or wallet[:10]
 
         if username and username != wallet[:10]:
             profile_url = f"https://polymarket.com/@{username}"
