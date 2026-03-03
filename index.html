@@ -96,7 +96,7 @@
                         <td colspan="2"></td>
                         <td class="group-label" colspan="3">Crypto Performance</td>
                         <td class="group-label" colspan="2">All-Market Stats</td>
-                        <td class="group-label" colspan="4">Capital</td>
+                        <td class="group-label" colspan="5">Capital</td>
                     </tr>
                     <tr>
                         <th data-col="rank">#</th>
@@ -106,10 +106,11 @@
                         <th data-col="efficiency" title="Crypto PnL / Crypto Volume * 100">Efficiency</th>
                         <th data-col="largest_win" class="col-group" title="Largest single winning trade in USDC (all markets, not crypto-specific)">Best Win</th>
                         <th data-col="trades" title="Total trades placed across all markets (not crypto-specific)">Trades</th>
-                        <th data-col="first_deposit" class="col-group" title="Date of first USDC deposit to proxy wallet (Polygon on-chain)">1st Dep</th>
-                        <th data-col="deposits" title="Cumulative USDC deposited to proxy wallet (Polygon on-chain)">Deposits</th>
-                        <th data-col="withdrawn" title="Cumulative USDC withdrawn from proxy wallet (Polygon on-chain)">Withdrawn</th>
-                        <th data-col="roic" title="Return on Invested Capital: Crypto PnL / Total Deposits * 100">ROIC</th>
+                        <th data-col="first_seen" class="col-group" title="Date of first USDC transfer involving proxy wallet">1st Seen</th>
+                        <th data-col="total_received" title="Total USDC received by proxy wallet">Received</th>
+                        <th data-col="total_sent" title="Total USDC sent from proxy wallet">Sent</th>
+                        <th data-col="net_capital" title="Net USDC balance: received - sent">Net Capital</th>
+                        <th data-col="roic" title="Return on Invested Capital: Crypto PnL / Net Capital * 100">ROIC</th>
                         <!-- Hidden: on-chain fills (deferred to #26)
                         <th data-col="total_fills" class="col-group">Fills</th>
                         <th data-col="fills_sent">Maker</th>
@@ -201,7 +202,7 @@
 
     function getSortVal(p, col) {
         if (col === 'name') return (p.name || '').toLowerCase();
-        if (col === 'first_deposit') return p[col] || '';
+        if (col === 'first_seen') return p[col] || '';
         return p[col] != null ? Number(p[col]) : -Infinity;
     }
 
@@ -232,9 +233,10 @@
                 <td>${fmtPct(p.efficiency)}</td>
                 <td class="col-group">${fmtMoney(p.largest_win)}</td>
                 <td>${fmtNum(p.trades)}</td>
-                <td class="col-group">${fmtDate(p.first_deposit)}</td>
-                <td>${fmtMoney(p.deposits)}</td>
-                <td>${fmtMoney(p.withdrawn)}</td>
+                <td class="col-group">${fmtDate(p.first_seen)}</td>
+                <td>${fmtMoney(p.total_received)}</td>
+                <td>${fmtMoney(p.total_sent)}</td>
+                <td>${fmtMoney(p.net_capital)}</td>
                 <td>${fmtPct(p.roic)}</td>
             </tr>
         `).join('');
