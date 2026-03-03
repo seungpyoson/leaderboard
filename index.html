@@ -79,58 +79,56 @@
     <div class="container">
         <header>
             <h1>Polymarket Crypto Leaderboard</h1>
-            <div class="subtitle">Top crypto interval traders — performance metrics from Polymarket profiles + on-chain data</div>
+            <div class="subtitle">Top crypto interval traders — crypto-category performance from Polymarket leaderboard API</div>
             <div class="updated" id="updated"></div>
         </header>
 
+        <!-- Style filters removed — leaderboard API doesn't provide style classification
         <div class="filters">
             <button class="filter-btn active" data-filter="all">All</button>
             <button class="filter-btn" data-filter="HFT/MM">HFT / MM</button>
             <button class="filter-btn" data-filter="Directional">Directional</button>
             <button class="filter-btn" data-filter="Hybrid">Hybrid</button>
         </div>
+        -->
 
         <div class="table-wrap">
             <table>
                 <thead>
                     <tr class="group-row">
                         <td colspan="2"></td>
-                        <td class="group-label" colspan="5">Profile</td>
-                        <td class="group-label" colspan="3">Activity</td>
-                        <td class="group-label" colspan="5">Fills</td>
-                        <td class="group-label" colspan="4">Performance</td>
-                        <td class="group-label" colspan="5">Capital</td>
+                        <td class="group-label" colspan="3">Crypto Performance</td>
                     </tr>
                     <tr>
                         <th data-col="rank">#</th>
                         <th data-col="name">Name</th>
-                        <!-- Profile -->
-                        <th data-col="pnl" title="Total profit and loss from all trades (Polymarket API)">PnL</th>
-                        <th data-col="volume" title="Total USDC volume traded across all markets (Polymarket API)">Volume</th>
-                        <th data-col="efficiency" title="PnL / Volume * 100 — how much profit per dollar traded">Efficiency</th>
+                        <th data-col="pnl" title="Crypto-category PnL from Polymarket leaderboard API">PnL</th>
+                        <th data-col="volume" title="Crypto-category volume from Polymarket leaderboard API">Volume</th>
+                        <th data-col="efficiency" title="Crypto PnL / Crypto Volume * 100">Efficiency</th>
+                        <!-- Hidden: all-market columns (not crypto-specific)
                         <th data-col="positions_value" title="Current value of all open positions in USDC">Positions</th>
                         <th data-col="biggest_win" title="Largest single winning trade in USDC">Best Win</th>
-                        <!-- Activity -->
                         <th data-col="markets" title="Number of unique markets traded (Polymarket API)">Markets</th>
                         <th data-col="trades" title="Total number of trades placed (Polymarket API)">Trades</th>
-                        <th data-col="join_date" title="Date the account was created on Polymarket">Joined</th>
-                        <!-- Fills (on-chain) -->
-                        <th data-col="total_fills" class="col-group" title="Total OrderFilled events on-chain (Goldsky). Includes both maker and taker fills.">Fills</th>
-                        <th data-col="fills_sent" title="Fills where this account was the maker (placed limit order that got filled)">Maker</th>
-                        <th data-col="fills_received" title="Fills where this account was the taker (hit an existing order)">Taker</th>
-                        <th data-col="maker_taker_ratio" title="Ratio of maker fills to taker fills. M badge = ratio > 2 (market maker), T badge = ratio < 0.5 (taker)">M/T</th>
-                        <th data-col="trading_days" title="Number of distinct calendar days with at least one fill">Days</th>
-                        <!-- Performance (on-chain) -->
-                        <th data-col="win_rate_pct" class="col-group" title="Percentage of fills that were profitable">Win %</th>
-                        <th data-col="sharpe" title="Sharpe ratio — risk-adjusted return calculated from fill-level PnL">Sharpe</th>
-                        <th data-col="pnl_per_fill_cents" title="Average profit per fill in cents">PnL/Fill</th>
-                        <th data-col="trading_hours" title="Cumulative hours this account had open positions">Hours</th>
-                        <!-- Capital (Dune) -->
-                        <th data-col="initial_deposit" class="col-group" title="First USDC transfer into Polymarket from external wallet (Dune)">1st Dep</th>
-                        <th data-col="cumul_deposits" title="Total USDC deposited into Polymarket over all time (Dune)">Deposits</th>
-                        <th data-col="total_withdrawn" title="Total USDC withdrawn from Polymarket (Dune)">Withdrawn</th>
-                        <th data-col="roic_pct" title="Return on invested capital: PnL / Cumulative Deposits * 100 (Dune)">ROIC</th>
-                        <th data-col="top_market" title="Market with highest absolute PnL for this account (Goldsky)">Top Mkt</th>
+                        -->
+                        <!-- Hidden: on-chain fills (deferred to #26)
+                        <th data-col="total_fills" class="col-group">Fills</th>
+                        <th data-col="fills_sent">Maker</th>
+                        <th data-col="fills_received">Taker</th>
+                        <th data-col="maker_taker_ratio">M/T</th>
+                        <th data-col="trading_days">Days</th>
+                        <th data-col="win_rate_pct" class="col-group">Win %</th>
+                        <th data-col="sharpe">Sharpe</th>
+                        <th data-col="pnl_per_fill_cents">PnL/Fill</th>
+                        <th data-col="trading_hours">Hours</th>
+                        -->
+                        <!-- Hidden: capital columns (Dune, deferred)
+                        <th data-col="initial_deposit" class="col-group">1st Dep</th>
+                        <th data-col="cumul_deposits">Deposits</th>
+                        <th data-col="total_withdrawn">Withdrawn</th>
+                        <th data-col="roic_pct">ROIC</th>
+                        <th data-col="top_market">Top Mkt</th>
+                        -->
                     </tr>
                 </thead>
                 <tbody id="tbody"></tbody>
@@ -203,14 +201,11 @@
 
     function getSortVal(p, col) {
         if (col === 'name') return (p.name || '').toLowerCase();
-        if (col === 'join_date' || col === 'first_trade' || col === 'last_trade' || col === 'top_market') return p[col] || '9999';
         return p[col] != null ? Number(p[col]) : -Infinity;
     }
 
     function render() {
-        const filtered = activeFilter === 'all'
-            ? profiles
-            : profiles.filter(p => p.style === activeFilter);
+        const filtered = profiles;
 
         const sorted = [...filtered].sort((a, b) => {
             const av = getSortVal(a, sortCol);
@@ -225,33 +220,11 @@
             <tr>
                 <td>${i + 1}</td>
                 <td>
-                    <div class="name-cell">
-                        <a class="name-link" href="${escHtml(p.profile_url)}" target="_blank" rel="noopener">${escHtml(p.name)}</a>
-                        ${styleTag(p.style || 'Hybrid')}
-                    </div>
+                    <a class="name-link" href="${escHtml(p.profile_url)}" target="_blank" rel="noopener">${escHtml(p.name)}</a>
                 </td>
                 <td>${fmtMoney(p.pnl)}</td>
                 <td>${fmtMoney(p.volume)}</td>
                 <td>${fmtPct(p.efficiency)}</td>
-                <td>${fmtMoney(p.positions_value)}</td>
-                <td>${fmtMoney(p.biggest_win)}</td>
-                <td>${fmtNum(p.markets)}</td>
-                <td>${fmtNum(p.trades)}</td>
-                <td>${p.join_date || m}</td>
-                <td class="col-group">${fmtNum(p.total_fills)}</td>
-                <td>${fmtNum(p.fills_sent)}</td>
-                <td>${fmtNum(p.fills_received)}</td>
-                <td>${fmtMT(p.maker_taker_ratio)}</td>
-                <td>${fmtNum(p.trading_days)}</td>
-                <td class="col-group">${fmtPct(p.win_rate_pct)}</td>
-                <td>${fmtDec(p.sharpe, 2)}</td>
-                <td>${fmtDec(p.pnl_per_fill_cents, 1)}</td>
-                <td>${fmtNum(p.trading_hours)}</td>
-                <td class="col-group">${fmtMoney(p.initial_deposit)}</td>
-                <td>${fmtMoney(p.cumul_deposits)}</td>
-                <td>${fmtMoney(p.total_withdrawn)}</td>
-                <td>${fmtPct(p.roic_pct)}</td>
-                <td>${escHtml(p.top_market) || m}</td>
             </tr>
         `).join('');
 
@@ -271,7 +244,7 @@
                     sortDir = sortDir === 'desc' ? 'asc' : 'desc';
                 } else {
                     sortCol = col;
-                    sortDir = col === 'name' || col === 'join_date' ? 'asc' : 'desc';
+                    sortDir = col === 'name' ? 'asc' : 'desc';
                 }
                 render();
             });

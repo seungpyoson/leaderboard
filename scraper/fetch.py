@@ -1,140 +1,117 @@
 #!/usr/bin/env python3
-"""Fetch PnL/volume/stats from Polymarket profile pages for all tracked accounts.
+"""Fetch top crypto traders directly from Polymarket leaderboard API.
 
-Scrapes __NEXT_DATA__ SSR payload from each profile page. Outputs data/profiles.json
-for the static frontend to consume.
+Single API call — no curated accounts list needed. Polymarket handles the
+category filtering and PnL computation. Outputs data/profiles.json for the
+static frontend.
 
 Usage:
-    python3 scraper/fetch.py
+    python3 scraper/fetch.py [--limit 100]
 """
 
 from __future__ import annotations
 
+import argparse
 import json
 import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-from common import (
-    REQUEST_DELAY,
-    extract_profile_data,
-    fetch_profile,
-    fmt_money,
-    fmt_pct,
-    to_float,
-)
+import requests
+
+from common import REQUEST_DELAY, SESSION, fmt_money, fmt_pct
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-ACCOUNTS_FILE = REPO_ROOT / "scraper" / "accounts.json"
-DUNE_FILE = REPO_ROOT / "scraper" / "dune-performance.csv"
 OUTPUT_FILE = REPO_ROOT / "data" / "profiles.json"
 
-
-DUNE_FIELDS = [
-    "first_trade", "last_trade", "trading_days", "trading_hours",
-    "total_fills", "fills_received", "fills_sent",
-    "initial_deposit", "cumul_deposits", "total_withdrawn", "net_invested",
-    "realized_pnl", "total_profit", "total_loss", "win_rate_pct",
-    "pnl_per_fill_cents", "pnl_per_fill_pct", "sharpe", "usdc_balance", "roic_pct",
-    "maker_taker_ratio", "top_market",
-]
+LEADERBOARD_URL = "https://data-api.polymarket.com/v1/leaderboard"
+PAGE_SIZE = 50  # API max per request
 
 
-def parse_dune_data(path: Path) -> dict:
-    """Parse Dune/Goldsky performance data from pipe-delimited markdown table. Keyed by name."""
-    if not path.exists():
-        return {}
+def fetch_leaderboard(limit: int) -> list[dict]:
+    """Paginate the crypto leaderboard API. Returns up to `limit` traders."""
+    all_traders = []
+    pages_needed = (limit + PAGE_SIZE - 1) // PAGE_SIZE
 
-    dune = {}
-    lines = path.read_text().splitlines()
-    if len(lines) < 3:
-        return {}
+    for page in range(pages_needed):
+        offset = page * PAGE_SIZE
+        remaining = limit - len(all_traders)
+        batch_size = min(PAGE_SIZE, remaining)
 
-    headers = [h.strip().lower() for h in lines[0].split("|")[1:-1]]
-    for line in lines[2:]:
-        cols = [c.strip() for c in line.split("|")[1:-1]]
-        if len(cols) < len(headers):
-            continue
-        row = dict(zip(headers, cols))
-        name = row.get("name", "").strip()
-        if not name:
-            continue
-        entry = {}
-        for field in DUNE_FIELDS:
-            raw = row.get(field, "").strip()
-            if field in ("first_trade", "last_trade"):
-                entry[field] = raw[:19] if raw else None  # trim " UTC"
-            elif field == "top_market":
-                entry[field] = raw if raw else None
-            else:
-                entry[field] = to_float(raw)
-        dune[name.lower()] = entry
-    return dune
+        try:
+            resp = SESSION.get(
+                LEADERBOARD_URL,
+                params={
+                    "category": "CRYPTO",
+                    "timePeriod": "ALL",
+                    "orderBy": "PNL",
+                    "limit": batch_size,
+                    "offset": offset,
+                },
+                timeout=15,
+            )
+        except requests.RequestException as e:
+            print(f"  ERROR: page {page}: {e}")
+            break
+
+        if resp.status_code != 200:
+            print(f"  WARN: page {page} HTTP {resp.status_code}")
+            break
+
+        try:
+            traders = resp.json()
+        except json.JSONDecodeError:
+            print(f"  ERROR: page {page} invalid JSON")
+            break
+
+        if not isinstance(traders, list) or not traders:
+            break
+
+        all_traders.extend(traders)
+
+        if len(traders) < batch_size:
+            break  # last page
+
+        if page < pages_needed - 1:
+            time.sleep(REQUEST_DELAY)
+
+    return all_traders
 
 
 def main():
-    if not ACCOUNTS_FILE.exists():
-        print(f"ERROR: {ACCOUNTS_FILE} not found")
-        raise SystemExit(1)
+    parser = argparse.ArgumentParser(description="Fetch crypto leaderboard")
+    parser.add_argument("--limit", type=int, default=100, help="Number of traders (default: 100)")
+    args = parser.parse_args()
 
-    accounts = json.loads(ACCOUNTS_FILE.read_text())
-    dune_data = parse_dune_data(DUNE_FILE)
-    print(f"Fetching {len(accounts)} accounts | Dune data for {len(dune_data)}")
+    print(f"Fetching top {args.limit} crypto traders from Polymarket leaderboard API")
+
+    traders = fetch_leaderboard(args.limit)
+    print(f"  Got {len(traders)} traders")
 
     results = []
-    failures = 0
+    for t in traders:
+        pnl = t.get("pnl")
+        volume = t.get("vol")
+        efficiency = (pnl / volume * 100) if (pnl is not None and volume and volume > 0) else None
+        username = t.get("userName") or t.get("proxyWallet", "")[:10]
+        wallet = t.get("proxyWallet", "")
 
-    for i, acct in enumerate(accounts):
-        name = acct["name"]
-        print(f"[{i+1}/{len(accounts)}] {name}")
-
-        data = fetch_profile(name, acct["profile_url"])
-
-        dune = dune_data.get(name.lower(), {})
-
-        if data is None:
-            print("  FAILED: no API data (Dune data preserved)")
-            failures += 1
-            entry = {
-                **acct,
-                "pnl": None, "volume": None, "positions_value": None,
-                "biggest_win": None, "trades": None, "markets": None,
-                "join_date": None, "efficiency": None,
-            }
+        # Build profile URL
+        if username and username != wallet[:10]:
+            profile_url = f"https://polymarket.com/@{username}"
         else:
-            pnl = data["pnl"]
-            volume = data["volume"]
-            efficiency = (pnl / volume * 100) if (pnl is not None and volume and volume > 0) else None
+            profile_url = f"https://polymarket.com/@{wallet}"
 
-            print(f"  PnL: {fmt_money(pnl)} | Vol: {fmt_money(volume)} | Eff: {fmt_pct(efficiency)}")
+        results.append({
+            "name": username,
+            "wallet": wallet,
+            "profile_url": profile_url,
+            "pnl": pnl,
+            "volume": volume,
+            "efficiency": efficiency,
+        })
 
-            entry = {
-                "name": acct["name"],
-                "wallet": acct["wallet"],
-                "profile_url": acct["profile_url"],
-                "style": acct.get("style", ""),
-                "note": acct.get("note", ""),
-                "pnl": pnl,
-                "volume": volume,
-                "positions_value": data["positions_value"],
-                "biggest_win": data["biggest_win"],
-                "trades": data["trades"],
-                "markets": data["markets"],
-                "join_date": data["join_date"],
-                "efficiency": efficiency,
-            }
-
-        # Merge Dune/Goldsky data
-        for field in DUNE_FIELDS:
-            if field not in entry:
-                entry[field] = dune.get(field)
-
-        results.append(entry)
-
-        if i < len(accounts) - 1:
-            time.sleep(REQUEST_DELAY)
-
-    # Sort by PnL descending
+    # Already sorted by PnL from API, but ensure it
     results.sort(key=lambda r: r["pnl"] if r["pnl"] is not None else float("-inf"), reverse=True)
 
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
@@ -145,12 +122,11 @@ def main():
     }
     OUTPUT_FILE.write_text(json.dumps(output, indent=2))
 
-    print(f"\nOutput: {OUTPUT_FILE}")
-    print(f"Accounts: {len(results)} | Failures: {failures}")
+    print(f"\nTop 5:")
+    for i, r in enumerate(results[:5]):
+        print(f"  {i+1}. {r['name']:<25} PnL: {fmt_money(r['pnl'])} | Vol: {fmt_money(r['volume'])} | Eff: {fmt_pct(r['efficiency'])}")
 
-    if failures > len(accounts) * 0.5:
-        print("ERROR: >50% of accounts failed — possible scraping breakage")
-        raise SystemExit(1)
+    print(f"\nOutput: {OUTPUT_FILE} ({len(results)} traders)")
 
 
 if __name__ == "__main__":
