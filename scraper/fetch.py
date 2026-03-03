@@ -108,7 +108,7 @@ def fetch_user_stats(wallet: str) -> dict:
 
 def main():
     parser = argparse.ArgumentParser(description="Fetch crypto leaderboard")
-    parser.add_argument("--limit", type=int, default=500, help="Number of traders (default: 500)")
+    parser.add_argument("--limit", type=int, default=800, help="Number of traders (default: 800)")
     args = parser.parse_args()
 
     # --- Phase 1: Leaderboard (crypto-category) ---
