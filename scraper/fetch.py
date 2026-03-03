@@ -192,7 +192,9 @@ def main():
             # known trade-off — filtering by contract blacklist was inflating
             # deposits by 10-50x (see #30 capital flow inflation fix).
             net_cap = to_float(cap.get("net_capital")) or 0
-            if net_cap > 0 and r["pnl"] is not None:
+            # Require minimum $5K net capital to avoid division explosion
+            # when net_capital is near-zero (e.g. $145 → 780,000% ROIC)
+            if net_cap >= 5000 and r["pnl"] is not None:
                 r["roic"] = r["pnl"] / net_cap * 100
 
     # --- Output ---

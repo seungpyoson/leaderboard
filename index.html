@@ -110,7 +110,7 @@
                         <th data-col="total_received" title="Total USDC received by proxy wallet">Received</th>
                         <th data-col="total_sent" title="Total USDC sent from proxy wallet">Sent</th>
                         <th data-col="net_capital" title="Net USDC balance: received - sent">Net Capital</th>
-                        <th data-col="roic" title="Return on Invested Capital: Crypto PnL / Net Capital * 100">ROIC</th>
+                        <th data-col="roic" title="Crypto PnL / Net Capital * 100. Net Capital includes trading flows, not just external deposits. Wallets with &lt;$100 net capital are excluded.">ROIC *</th>
                         <!-- Hidden: on-chain fills (deferred to #26)
                         <th data-col="total_fills" class="col-group">Fills</th>
                         <th data-col="fills_sent">Maker</th>
@@ -237,7 +237,7 @@
                 <td>${fmtMoney(p.total_received)}</td>
                 <td>${fmtMoney(p.total_sent)}</td>
                 <td>${fmtMoney(p.net_capital)}</td>
-                <td>${fmtPct(p.roic)}</td>
+                <td>${fmtPct(p.roic != null && Math.abs(p.roic) > 200000 ? Math.sign(p.roic) * 200000 : p.roic)}</td>
             </tr>
         `).join('');
 
