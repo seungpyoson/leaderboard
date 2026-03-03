@@ -1,6 +1,6 @@
 {
-  "updated": "2026-03-03 11:52 UTC",
-  "accounts": 100,
+  "updated": "2026-03-03 12:03 UTC",
+  "accounts": 500,
   "profiles": [
     {
       "name": "0x8dxd",
@@ -801,6 +801,3206 @@
       "pnl": 183641.08537474094,
       "volume": 16162726.502542013,
       "efficiency": 1.1362011560726377
+    },
+    {
+      "name": "0xe01AE9D586B428c251043368f808e678d4C4132C-1765963663013",
+      "wallet": "0xe01ae9d586b428c251043368f808e678d4c4132c",
+      "profile_url": "https://polymarket.com/@0xe01AE9D586B428c251043368f808e678d4C4132C-1765963663013",
+      "pnl": 182209.16156727102,
+      "volume": 917235.9813659996,
+      "efficiency": 19.865025497137047
+    },
+    {
+      "name": "fiankee",
+      "wallet": "0xef104cc70851a4246e8e06790d7fad9708190b43",
+      "profile_url": "https://polymarket.com/@fiankee",
+      "pnl": 179321.5986401228,
+      "volume": 9924801.608927006,
+      "efficiency": 1.8068028531555673
+    },
+    {
+      "name": "hgfhff",
+      "wallet": "0x92a54267b56800430b2be9af0f768d18134f9631",
+      "profile_url": "https://polymarket.com/@hgfhff",
+      "pnl": 179285.52694100453,
+      "volume": 3045389.53525,
+      "efficiency": 5.88711312184524
+    },
+    {
+      "name": "0x2ef0e278354A971b4cACB02089E43526dea762fd-1772031509515",
+      "wallet": "0x2ef0e278354a971b4cacb02089e43526dea762fd",
+      "profile_url": "https://polymarket.com/@0x2ef0e278354A971b4cACB02089E43526dea762fd-1772031509515",
+      "pnl": 175708.14377,
+      "volume": 1507367.9499999997,
+      "efficiency": 11.656619325759184
+    },
+    {
+      "name": "dahndahn",
+      "wallet": "0x14ae1d1679fc048eaafadea39646755d528a0459",
+      "profile_url": "https://polymarket.com/@dahndahn",
+      "pnl": 175297.92250668476,
+      "volume": 2397710.50203,
+      "efficiency": 7.311054539664832
+    },
+    {
+      "name": "15m-a4",
+      "wallet": "0xecd55daa7c6900683b804d1d4db935fbfabe43f4",
+      "profile_url": "https://polymarket.com/@15m-a4",
+      "pnl": 174769.81605700005,
+      "volume": 16295306.648239028,
+      "efficiency": 1.0725162761873324
+    },
+    {
+      "name": "Anjun",
+      "wallet": "0x43372356634781eea88d61bbdd7824cdce958882",
+      "profile_url": "https://polymarket.com/@Anjun",
+      "pnl": 174455.1170940849,
+      "volume": 13396750.03767601,
+      "efficiency": 1.3022196921153302
+    },
+    {
+      "name": "A P",
+      "wallet": "0x421bf8e567f99bb544f317f38fe71719dbb6ac12",
+      "profile_url": "https://polymarket.com/@A P",
+      "pnl": 173119.89234021105,
+      "volume": 13751665.28211,
+      "efficiency": 1.2589012951429854
+    },
+    {
+      "name": "no-fuistes-baneado",
+      "wallet": "0x6d79687084407c07761088ac216f8722da7a4725",
+      "profile_url": "https://polymarket.com/@no-fuistes-baneado",
+      "pnl": 172525.27624891303,
+      "volume": 16201939.007818002,
+      "efficiency": 1.0648433879775967
+    },
+    {
+      "name": "98866",
+      "wallet": "0x7e6fda10646a4343358c84004859adfea1c0c022",
+      "profile_url": "https://polymarket.com/@98866",
+      "pnl": 172132.75000000003,
+      "volume": 1084733.0999999999,
+      "efficiency": 15.868673132589025
+    },
+    {
+      "name": "0xA9650de4301F45e7F090AdA7252F9c",
+      "wallet": "0xa9650fe4301f45e7f090ada7252f9c1268183565",
+      "profile_url": "https://polymarket.com/@0xA9650de4301F45e7F090AdA7252F9c",
+      "pnl": 171552.56404103982,
+      "volume": 24657700.095775507,
+      "efficiency": 0.6957362745701946
+    },
+    {
+      "name": "podgies",
+      "wallet": "0xb237caf99c01ead5c7984e9b3d99b271079604a1",
+      "profile_url": "https://polymarket.com/@podgies",
+      "pnl": 170441.9412285432,
+      "volume": 540581.981751,
+      "efficiency": 31.529341891208514
+    },
+    {
+      "name": "ComTruise",
+      "wallet": "0xeee92f1cc6d6e0ad0b4ffda20b01cf3678e27ecb",
+      "profile_url": "https://polymarket.com/@ComTruise",
+      "pnl": 170279.2314240311,
+      "volume": 117502360.14002168,
+      "efficiency": 0.1449155840113491
+    },
+    {
+      "name": "abrak25",
+      "wallet": "0x37c94ea1b44e01b18a1ce3ab6f8002bd6b9d7e6d",
+      "profile_url": "https://polymarket.com/@abrak25",
+      "pnl": 169360.48337958835,
+      "volume": 10935143.090789903,
+      "efficiency": 1.54877244836633
+    },
+    {
+      "name": "dalailama",
+      "wallet": "0x208e7d17e83f757e68bc0d0aecfca9d67c3ebcb3",
+      "profile_url": "https://polymarket.com/@dalailama",
+      "pnl": 169029.46467979273,
+      "volume": 814602.062022,
+      "efficiency": 20.749943139135798
+    },
+    {
+      "name": "choohkz23",
+      "wallet": "0x10fbc3d2421e002f269089d15be6a56ce6ffc66c",
+      "profile_url": "https://polymarket.com/@choohkz23",
+      "pnl": 168736.4665917916,
+      "volume": 3309313.2172880005,
+      "efficiency": 5.098836390291035
+    },
+    {
+      "name": "0xba264356d6fef08f23a44db4153d12d47f5",
+      "wallet": "0xba264376d6fef08f23a44db4153d12d47f5f23c9",
+      "profile_url": "https://polymarket.com/@0xba264356d6fef08f23a44db4153d12d47f5",
+      "pnl": 167756.918932471,
+      "volume": 42330760.54519227,
+      "efficiency": 0.39630027141462265
+    },
+    {
+      "name": "justTrying",
+      "wallet": "0xc6aefc2cf3f95cc3859105203167fdd79bd4bd0a",
+      "profile_url": "https://polymarket.com/@justTrying",
+      "pnl": 167744.98177780883,
+      "volume": 34858825.967223,
+      "efficiency": 0.4812123676670459
+    },
+    {
+      "name": "LambSaauce",
+      "wallet": "0x1a4249cd596a8e51b267dfe3c56cacc25815a00b",
+      "profile_url": "https://polymarket.com/@LambSaauce",
+      "pnl": 167666.7807828514,
+      "volume": 17557971.388470013,
+      "efficiency": 0.9549325321999043
+    },
+    {
+      "name": "SeniorLaghetto",
+      "wallet": "0x05ab749a8554fb7c852238c271d384bae6798145",
+      "profile_url": "https://polymarket.com/@SeniorLaghetto",
+      "pnl": 167176.12028565723,
+      "volume": 17923166.902691003,
+      "efficiency": 0.9327376193799616
+    },
+    {
+      "name": "tphhh",
+      "wallet": "0xf9151529abce6aa8357b99707ec06607cf238720",
+      "profile_url": "https://polymarket.com/@tphhh",
+      "pnl": 166109.16323858,
+      "volume": 920326.2034279999,
+      "efficiency": 18.048944235192067
+    },
+    {
+      "name": "0xb9fce078fd6c0275c631ec10fcf8d5cc52d6da",
+      "wallet": "0xb9fc8078fd6c0275c631ec10fcf8d5cc52d6da76",
+      "profile_url": "https://polymarket.com/@0xb9fce078fd6c0275c631ec10fcf8d5cc52d6da",
+      "pnl": 165993.5691711337,
+      "volume": 20477519.256054234,
+      "efficiency": 0.8106136641627489
+    },
+    {
+      "name": "YLnas",
+      "wallet": "0x71fc2824003cd203a9509174a95302158466171a",
+      "profile_url": "https://polymarket.com/@YLnas",
+      "pnl": 164033.3779699458,
+      "volume": 324662.10407999996,
+      "efficiency": 50.52433773715899
+    },
+    {
+      "name": "cccccccccccccc",
+      "wallet": "0xa103eee98ac104a676c202d7afe5e859881c255c",
+      "profile_url": "https://polymarket.com/@cccccccccccccc",
+      "pnl": 163683.99380065847,
+      "volume": 12503088.16214282,
+      "efficiency": 1.309148521373025
+    },
+    {
+      "name": "Martiini",
+      "wallet": "0x3b6fd06a595d71c70afb3f44414be1c11304340b",
+      "profile_url": "https://polymarket.com/@Martiini",
+      "pnl": 163255.85416968237,
+      "volume": 11810043.715509,
+      "efficiency": 1.3823475856850054
+    },
+    {
+      "name": "BoshBashBish",
+      "wallet": "0x29bc82f761749e67fa00d62896bc6855097b683c",
+      "profile_url": "https://polymarket.com/@BoshBashBish",
+      "pnl": 162275.58810125053,
+      "volume": 31472793.38363705,
+      "efficiency": 0.5156059270722976
+    },
+    {
+      "name": "Nibiru2",
+      "wallet": "0x0f5801f1fe7dbadb5c1e92a310c9871447d90ff0",
+      "profile_url": "https://polymarket.com/@Nibiru2",
+      "pnl": 161557.27309079038,
+      "volume": 7726859.519073,
+      "efficiency": 2.0908529874524313
+    },
+    {
+      "name": "0xe56526b27b96f009b31ddb46558a134047bfce48",
+      "wallet": "0xe56526b27b96f009b31ddb46558a134047bfce48",
+      "profile_url": "https://polymarket.com/@0xe56526b27b96f009b31ddb46558a134047bfce48",
+      "pnl": 160876.83822395894,
+      "volume": 580772.084236,
+      "efficiency": 27.70051154156124
+    },
+    {
+      "name": "filthyBera",
+      "wallet": "0x8a091656e5f4c6bc4fdf37b2585be0235f68e317",
+      "profile_url": "https://polymarket.com/@filthyBera",
+      "pnl": 159847.02597991776,
+      "volume": 906840.3096380002,
+      "efficiency": 17.626810837701598
+    },
+    {
+      "name": "easypredict",
+      "wallet": "0x388537259dc9e693c1c9b96fdf07a63f6b7aca77",
+      "profile_url": "https://polymarket.com/@easypredict",
+      "pnl": 159122.96695312002,
+      "volume": 27862337.27906301,
+      "efficiency": 0.5711041588484826
+    },
+    {
+      "name": "MuseumOfBees",
+      "wallet": "0x61276aba49117fd9299707d5d573652949d5c977",
+      "profile_url": "https://polymarket.com/@MuseumOfBees",
+      "pnl": 159025.46442002966,
+      "volume": 23021317.645224433,
+      "efficiency": 0.6907748151983737
+    },
+    {
+      "name": "big.bitch",
+      "wallet": "0x4851a13a61c99688c68191e8e8a8755ea5b81e94",
+      "profile_url": "https://polymarket.com/@big.bitch",
+      "pnl": 157288.29611497454,
+      "volume": 5133073.381257,
+      "efficiency": 3.0642128883117072
+    },
+    {
+      "name": "gabagool-inv",
+      "wallet": "0xf444220e8d32f456c39b6b727e7bb5bc41d8c970",
+      "profile_url": "https://polymarket.com/@gabagool-inv",
+      "pnl": 156184.40048307483,
+      "volume": 15837937.179868963,
+      "efficiency": 0.9861410530254865
+    },
+    {
+      "name": "Berinando",
+      "wallet": "0x7e1570ca6c2bf1ee33dc4a3f567831635684cfdb",
+      "profile_url": "https://polymarket.com/@Berinando",
+      "pnl": 153117.97141750576,
+      "volume": 651686.053855,
+      "efficiency": 23.495664900567977
+    },
+    {
+      "name": "pwnatorul",
+      "wallet": "0x3eba55f41f4064bc4b070d06a00fec7c2dd5849a",
+      "profile_url": "https://polymarket.com/@pwnatorul",
+      "pnl": 152171.43376508498,
+      "volume": 4396109.104715,
+      "efficiency": 3.4615026638414212
+    },
+    {
+      "name": "gopfan2",
+      "wallet": "0xf2f6af4f27ec2dcf4072095ab804016e14cd5817",
+      "profile_url": "https://polymarket.com/@gopfan2",
+      "pnl": 149327.46928468545,
+      "volume": 6594474.515873999,
+      "efficiency": 2.2644331845582135
+    },
+    {
+      "name": "The Spirit of Ukraine>UMA",
+      "wallet": "0x0c0e270cf879583d6a0142fc817e05b768d0434e",
+      "profile_url": "https://polymarket.com/@The Spirit of Ukraine>UMA",
+      "pnl": 148529.22052420725,
+      "volume": 8410609.017865002,
+      "efficiency": 1.76597461858845
+    },
+    {
+      "name": "JanAMEX",
+      "wallet": "0x6765c1c000e3b99c7fffea752c561cb868f1fa0d",
+      "profile_url": "https://polymarket.com/@JanAMEX",
+      "pnl": 148136.52793028048,
+      "volume": 4921967.768569999,
+      "efficiency": 3.009701300285419
+    },
+    {
+      "name": "slurpslurpslurp",
+      "wallet": "0x6a9b04663e24b275bf6258a53976eb1a516e4d6c",
+      "profile_url": "https://polymarket.com/@slurpslurpslurp",
+      "pnl": 147870.7752805015,
+      "volume": 4073937.2485189997,
+      "efficiency": 3.629677293980339
+    },
+    {
+      "name": "late-to-tomorrow",
+      "wallet": "0x5924ca480d8b08cd5f3e5811fa378c4082475af6",
+      "profile_url": "https://polymarket.com/@late-to-tomorrow",
+      "pnl": 146782.3854647599,
+      "volume": 5635653.87154302,
+      "efficiency": 2.6045315913727585
+    },
+    {
+      "name": "GaleMartin",
+      "wallet": "0xaddaf5823edacd74c0d4555e3166971046234786",
+      "profile_url": "https://polymarket.com/@GaleMartin",
+      "pnl": 146003.0438638436,
+      "volume": 14889774.37220403,
+      "efficiency": 0.9805591422285049
+    },
+    {
+      "name": "DonaldinhoTrumpito",
+      "wallet": "0x7523cafcee7bcf2db9a79d80e0d79b88a9a54c4c",
+      "profile_url": "https://polymarket.com/@DonaldinhoTrumpito",
+      "pnl": 143814.96689755959,
+      "volume": 4210741.000809999,
+      "efficiency": 3.415431318855627
+    },
+    {
+      "name": "anon1565",
+      "wallet": "0x7bda5bceac127c3fc41d7fe7ac335593aaaa121b",
+      "profile_url": "https://polymarket.com/@anon1565",
+      "pnl": 143748.682325,
+      "volume": 2813672.364083,
+      "efficiency": 5.108934649249716
+    },
+    {
+      "name": "chi3",
+      "wallet": "0x6a603ead2ab361654d867ea15eb610d81686d019",
+      "profile_url": "https://polymarket.com/@chi3",
+      "pnl": 143649.82181199992,
+      "volume": 31685661.931236964,
+      "efficiency": 0.4533590686025224
+    },
+    {
+      "name": "oblivioncapital",
+      "wallet": "0x0c0df2184722450cc75654eadea16421ce724dd3",
+      "profile_url": "https://polymarket.com/@oblivioncapital",
+      "pnl": 142992.66151984097,
+      "volume": 1433234.205717,
+      "efficiency": 9.97692219104598
+    },
+    {
+      "name": "Leeche",
+      "wallet": "0xa20b482f97063f4f88ef621c9203e60814399940",
+      "profile_url": "https://polymarket.com/@Leeche",
+      "pnl": 141321.27086350755,
+      "volume": 16172241.354922969,
+      "efficiency": 0.8738508643422401
+    },
+    {
+      "name": "MarketMak3r1",
+      "wallet": "0x04847b0925c5a537c001185c50a6ea2ac1919321",
+      "profile_url": "https://polymarket.com/@MarketMak3r1",
+      "pnl": 140734.95370901923,
+      "volume": 11249302.793751935,
+      "efficiency": 1.251054899039485
+    },
+    {
+      "name": "0x6f06f9436fbc17cdd396e5943a14865065c5515",
+      "wallet": "0x6f06f9436fbc17cdd396e5943a14865065c5515a",
+      "profile_url": "https://polymarket.com/@0x6f06f9436fbc17cdd396e5943a14865065c5515",
+      "pnl": 139213.41067357705,
+      "volume": 22564194.78323206,
+      "efficiency": 0.6169660030458057
+    },
+    {
+      "name": "0x51729bF1",
+      "wallet": "0x51729bf1b339d1c55216a01b087684e4e565ac35",
+      "profile_url": "https://polymarket.com/@0x51729bF1",
+      "pnl": 138623.93968374835,
+      "volume": 15941468.000246007,
+      "efficiency": 0.8695807668503873
+    },
+    {
+      "name": "Eurospar",
+      "wallet": "0x1a475c96573121a913ae61cbc57005c6c0e4846f",
+      "profile_url": "https://polymarket.com/@Eurospar",
+      "pnl": 138362.50944191648,
+      "volume": 1599607.0644369998,
+      "efficiency": 8.64978109424734
+    },
+    {
+      "name": "DefaultUser",
+      "wallet": "0x588c313ff437c8ef19b9fc47195d9d7cefc8698a",
+      "profile_url": "https://polymarket.com/@DefaultUser",
+      "pnl": 137534.37645900002,
+      "volume": 750969.141431,
+      "efficiency": 18.314251394794077
+    },
+    {
+      "name": "AIRules247",
+      "wallet": "0x47f532a6f307862eea75a28af0f432412e5727c8",
+      "profile_url": "https://polymarket.com/@AIRules247",
+      "pnl": 135929.0170674512,
+      "volume": 2029373.5379089988,
+      "efficiency": 6.698077733264824
+    },
+    {
+      "name": "Ktulhu",
+      "wallet": "0xf32898291d309e3c5e499c85ddd03a13268c219c",
+      "profile_url": "https://polymarket.com/@Ktulhu",
+      "pnl": 135230.39260563414,
+      "volume": 412936.15788799996,
+      "efficiency": 32.74849877455209
+    },
+    {
+      "name": "yrughey",
+      "wallet": "0x30ae3992180b30b791df5e6e5480629449594318",
+      "profile_url": "https://polymarket.com/@yrughey",
+      "pnl": 134915.33275918223,
+      "volume": 3807188.639586001,
+      "efficiency": 3.5436997094489415
+    },
+    {
+      "name": "Lucasmeow2",
+      "wallet": "0x28d8426a4b21bbc05b028abaae5d542a21463d89",
+      "profile_url": "https://polymarket.com/@Lucasmeow2",
+      "pnl": 134476.6077453307,
+      "volume": 3716638.8194060004,
+      "efficiency": 3.6182318024333333
+    },
+    {
+      "name": "0x21504551452f4c4b67a1fbee6ba743a611cdba1",
+      "wallet": "0x21504551452f4c4b67a1fbee6ba743a611cdba16",
+      "profile_url": "https://polymarket.com/@0x21504551452f4c4b67a1fbee6ba743a611cdba1",
+      "pnl": 133628.30695654414,
+      "volume": 19955366.819825016,
+      "efficiency": 0.6696359338470727
+    },
+    {
+      "name": "RetamzZ",
+      "wallet": "0x19f19dd8ee1f7e5f6ec666987e2963a65971a9c6",
+      "profile_url": "https://polymarket.com/@RetamzZ",
+      "pnl": 131432.655404,
+      "volume": 549511.45524,
+      "efficiency": 23.918091998026966
+    },
+    {
+      "name": "5f5a",
+      "wallet": "0xa42f127d7e8df9f16881ffcc9ed0bc0326875f5a",
+      "profile_url": "https://polymarket.com/@5f5a",
+      "pnl": 131110.98386318062,
+      "volume": 44938770.67806397,
+      "efficiency": 0.2917547184422204
+    },
+    {
+      "name": "Brundle",
+      "wallet": "0x76bc5994bf0a12d08a791b897d1fe1affea7205b",
+      "profile_url": "https://polymarket.com/@Brundle",
+      "pnl": 130868.02121404158,
+      "volume": 14474002.906880995,
+      "efficiency": 0.9041591469615253
+    },
+    {
+      "name": "haidcks116",
+      "wallet": "0xa5e83423126dbc6cdb34f10f37f5d27668ab95f5",
+      "profile_url": "https://polymarket.com/@haidcks116",
+      "pnl": 129645.39098316364,
+      "volume": 1381127.0722339996,
+      "efficiency": 9.386927067721562
+    },
+    {
+      "name": "ansleyup",
+      "wallet": "0xee7ec0c06756a89a5f94b47c0733e00b9cf051a6",
+      "profile_url": "https://polymarket.com/@ansleyup",
+      "pnl": 127074.919779,
+      "volume": 574445.3895,
+      "efficiency": 22.12132294935931
+    },
+    {
+      "name": "SappySeal67",
+      "wallet": "0x067f7f6e3d5363f1cf962499d1be2ca6de8be041",
+      "profile_url": "https://polymarket.com/@SappySeal67",
+      "pnl": 126497.90036097317,
+      "volume": 19737243.441542048,
+      "efficiency": 0.6409096626671087
+    },
+    {
+      "name": "RedCaterpillar",
+      "wallet": "0x05c1882212a41aa8d7df5b70eebe03d9319345b7",
+      "profile_url": "https://polymarket.com/@RedCaterpillar",
+      "pnl": 125066.66680739209,
+      "volume": 13848626.619651012,
+      "efficiency": 0.9030979767331165
+    },
+    {
+      "name": "zhudid",
+      "wallet": "0xf2f0262cbe40ffe5f89f3ac184654e0659d7a7b7",
+      "profile_url": "https://polymarket.com/@zhudid",
+      "pnl": 124979.32999999999,
+      "volume": 2304542.34,
+      "efficiency": 5.423173522600587
+    },
+    {
+      "name": "betyonko",
+      "wallet": "0x7f692340bcc1d90b3ca3c8436e3973adb0279c7a",
+      "profile_url": "https://polymarket.com/@betyonko",
+      "pnl": 124664.4056562267,
+      "volume": 5933828.554764999,
+      "efficiency": 2.1009101376230084
+    },
+    {
+      "name": "thanksforshow",
+      "wallet": "0x8262ffa70186af8656abb788bdb778e3f67ba815",
+      "profile_url": "https://polymarket.com/@thanksforshow",
+      "pnl": 124649.42471541575,
+      "volume": 20089912.877721015,
+      "efficiency": 0.6204577664129516
+    },
+    {
+      "name": "AgricultureSecretary",
+      "wallet": "0x6ffb4354cbe6e0f9989e3b55564ec5fb8646a834",
+      "profile_url": "https://polymarket.com/@AgricultureSecretary",
+      "pnl": 124529.3575335544,
+      "volume": 5692018.306320998,
+      "efficiency": 2.1877891256123387
+    },
+    {
+      "name": "SellLowBuyHigh",
+      "wallet": "0x118ed6e1e562ec54f1fa6e7f0a2741fe0d32ea4b",
+      "profile_url": "https://polymarket.com/@SellLowBuyHigh",
+      "pnl": 124473.86535959294,
+      "volume": 10792988.179487,
+      "efficiency": 1.153284551873838
+    },
+    {
+      "name": "odsxii",
+      "wallet": "0xbe195349beb0b8572991469ff9f64a3f1ef6eeb9",
+      "profile_url": "https://polymarket.com/@odsxii",
+      "pnl": 124430.82,
+      "volume": 1617028.3599999999,
+      "efficiency": 7.695030160138937
+    },
+    {
+      "name": "minglee2",
+      "wallet": "0x5f4d4927ea3ca72c9735f56778cfbb046c186be0",
+      "profile_url": "https://polymarket.com/@minglee2",
+      "pnl": 123320.52814298161,
+      "volume": 21687228.04117305,
+      "efficiency": 0.5686320442098846
+    },
+    {
+      "name": "S-Works",
+      "wallet": "0xee00ba338c59557141789b127927a55f5cc5cea1",
+      "profile_url": "https://polymarket.com/@S-Works",
+      "pnl": 123239.63251099996,
+      "volume": 3008878.794238,
+      "efficiency": 4.095865634302177
+    },
+    {
+      "name": "0x203f6f1fa096197f735434c7000758964beb521e",
+      "wallet": "0x203f6f1fa096197f735434c7000758964beb521e",
+      "profile_url": "https://polymarket.com/@0x203f6f1fa096197f735434c7000758964beb521e",
+      "pnl": 123139.37004356689,
+      "volume": 11785342.459856039,
+      "efficiency": 1.0448518612251771
+    },
+    {
+      "name": "usddde",
+      "wallet": "0x594e7904aca0cb5fcf02650f66f9b1f8f915d0fa",
+      "profile_url": "https://polymarket.com/@usddde",
+      "pnl": 122930.14000000001,
+      "volume": 2659736.2800000003,
+      "efficiency": 4.621892062170916
+    },
+    {
+      "name": "0xb2A922",
+      "wallet": "0xb2a922eda6b288af1248f461afc7ab8504cf0a5d",
+      "profile_url": "https://polymarket.com/@0xb2A922",
+      "pnl": 122723.50514323752,
+      "volume": 6546166.927882993,
+      "efficiency": 1.874738400276723
+    },
+    {
+      "name": "quepasamae",
+      "wallet": "0x23cb796cf58bfa12352f0164f479deedbd50658e",
+      "profile_url": "https://polymarket.com/@quepasamae",
+      "pnl": 122273.1369386743,
+      "volume": 34000280.49863322,
+      "efficiency": 0.3596239064662704
+    },
+    {
+      "name": "0x64dbf41255eacd1f73da6c0af7f8624ca60d766",
+      "wallet": "0x64dbf41255eacd1f73da6c0af7f8624ca60d766d",
+      "profile_url": "https://polymarket.com/@0x64dbf41255eacd1f73da6c0af7f8624ca60d766",
+      "pnl": 122196.28599448146,
+      "volume": 7860030.732356002,
+      "efficiency": 1.5546540485071842
+    },
+    {
+      "name": "0xd71304743e49f7254e5d9329c9e4b9ec5b6f7ff",
+      "wallet": "0xd71304743e49f7254e5d9329c9e4b9ec5b6f7ff5",
+      "profile_url": "https://polymarket.com/@0xd71304743e49f7254e5d9329c9e4b9ec5b6f7ff",
+      "pnl": 121628.24906810164,
+      "volume": 22074580.10591004,
+      "efficiency": 0.5509878261989591
+    },
+    {
+      "name": "wangqian51",
+      "wallet": "0x38973f5b3abbbcbed16ee15c2baa5a3f16b843ab",
+      "profile_url": "https://polymarket.com/@wangqian51",
+      "pnl": 121585.62916971052,
+      "volume": 284535.95465100004,
+      "efficiency": 42.73120046246612
+    },
+    {
+      "name": "2024.",
+      "wallet": "0x96c4b0f5d839f5cb44ae07762441559ee2c2bfde",
+      "profile_url": "https://polymarket.com/@2024.",
+      "pnl": 121262.26055155581,
+      "volume": 4639914.287751,
+      "efficiency": 2.6134590647865714
+    },
+    {
+      "name": "Car",
+      "wallet": "0x7c3db723f1d4d8cb9c550095203b686cb11e5c6b",
+      "profile_url": "https://polymarket.com/@Car",
+      "pnl": 119956.69737687484,
+      "volume": 12470284.731832,
+      "efficiency": 0.9619403241905936
+    },
+    {
+      "name": "kindlydelta",
+      "wallet": "0x7780e9f103f370a7a0351217501d99da178503ed",
+      "profile_url": "https://polymarket.com/@kindlydelta",
+      "pnl": 119689.721191,
+      "volume": 216663.194971,
+      "efficiency": 55.24229493939673
+    },
+    {
+      "name": "w534zerg439gj4i3gh8ewhfggt54z",
+      "wallet": "0x54ae6bb570cb04ee4d84088eda5400099a4c481f",
+      "profile_url": "https://polymarket.com/@w534zerg439gj4i3gh8ewhfggt54z",
+      "pnl": 116675.92975036771,
+      "volume": 1690569.3556069995,
+      "efficiency": 6.901576049713451
+    },
+    {
+      "name": "Bidou28old",
+      "wallet": "0x4460bf2c0aa59db412a6493c2c08970797b62970",
+      "profile_url": "https://polymarket.com/@Bidou28old",
+      "pnl": 116280.60097300001,
+      "volume": 603497.1071100001,
+      "efficiency": 19.267797575673452
+    },
+    {
+      "name": "eloncreampie",
+      "wallet": "0xac21f5a71e5492975f9800070c818db99a5d4fe3",
+      "profile_url": "https://polymarket.com/@eloncreampie",
+      "pnl": 116247.26586892387,
+      "volume": 10182302.977293998,
+      "efficiency": 1.1416598595440461
+    },
+    {
+      "name": "0xB96903067A7129D14931c5A7E82B1A7c8A3c66a1-1770840142269",
+      "wallet": "0xb96903067a7129d14931c5a7e82b1a7c8a3c66a1",
+      "profile_url": "https://polymarket.com/@0xB96903067A7129D14931c5A7E82B1A7c8A3c66a1-1770840142269",
+      "pnl": 115207.62488899998,
+      "volume": 459082.675495,
+      "efficiency": 25.09518024499157
+    },
+    {
+      "name": "Hunter-Biden",
+      "wallet": "0xe29aaa4696b824ae186075a4a1220262f2f7612f",
+      "profile_url": "https://polymarket.com/@Hunter-Biden",
+      "pnl": 114861.72426000002,
+      "volume": 3025454.596595,
+      "efficiency": 3.7965112545159734
+    },
+    {
+      "name": "NeverYES",
+      "wallet": "0xe55108581aec68af7686bd4cbc4f53ef93680a67",
+      "profile_url": "https://polymarket.com/@NeverYES",
+      "pnl": 113740.85853267422,
+      "volume": 786235.1882089998,
+      "efficiency": 14.466518446187788
+    },
+    {
+      "name": "MNBBBB",
+      "wallet": "0xb8cd777114b6cc4d488e79eff1fef91e1c521f4b",
+      "profile_url": "https://polymarket.com/@MNBBBB",
+      "pnl": 113141.23,
+      "volume": 694570.46,
+      "efficiency": 16.289381209791156
+    },
+    {
+      "name": "Waterfall412",
+      "wallet": "0xa0bac72021f5d8fb959d7965c65d7a213c38e7eb",
+      "profile_url": "https://polymarket.com/@Waterfall412",
+      "pnl": 112873.67116985495,
+      "volume": 2849135.102207,
+      "efficiency": 3.9616819533205225
+    },
+    {
+      "name": "23222222",
+      "wallet": "0xa8e1bf10c79a9d4a4db827bfdcb26b0664261b41",
+      "profile_url": "https://polymarket.com/@23222222",
+      "pnl": 112385.08,
+      "volume": 270440.16000000003,
+      "efficiency": 41.556357606059684
+    },
+    {
+      "name": "0x336848A1A1cb00348020c9457676F34d882F21Cd-1766959015844",
+      "wallet": "0x336848a1a1cb00348020c9457676f34d882f21cd",
+      "profile_url": "https://polymarket.com/@0x336848A1A1cb00348020c9457676F34d882F21Cd-1766959015844",
+      "pnl": 111743.95922701732,
+      "volume": 25911284.23196109,
+      "efficiency": 0.43125596642247166
+    },
+    {
+      "name": "Kopojlb4yxaHoB1",
+      "wallet": "0x2a3ef27f644f70a25bf04fa07a5eee0d1bca8d9a",
+      "profile_url": "https://polymarket.com/@Kopojlb4yxaHoB1",
+      "pnl": 111239.276252,
+      "volume": 610127.5417249998,
+      "efficiency": 18.232134864375357
+    },
+    {
+      "name": "qwqbw",
+      "wallet": "0x799c2267096b7523577d1d30564f914e649637f7",
+      "profile_url": "https://polymarket.com/@qwqbw",
+      "pnl": 110904.15825899997,
+      "volume": 223755.65749200003,
+      "efficiency": 49.56485100850026
+    },
+    {
+      "name": "Olololo",
+      "wallet": "0xb75cebbe80b305baeeb125e05d0ee09eb58e2159",
+      "profile_url": "https://polymarket.com/@Olololo",
+      "pnl": 110146.97518391967,
+      "volume": 6209862.523696997,
+      "efficiency": 1.773742571008552
+    },
+    {
+      "name": "NicholasWickerson",
+      "wallet": "0xf6ea56fa38789d4552b8e8a4d11d7f464e6e3ea8",
+      "profile_url": "https://polymarket.com/@NicholasWickerson",
+      "pnl": 109501.32819833,
+      "volume": 725048.2345179999,
+      "efficiency": 15.102626692295123
+    },
+    {
+      "name": "0x34aBa0ED4A752ce76461589212696987d711840e-1759592138245",
+      "wallet": "0x34aba0ed4a752ce76461589212696987d711840e",
+      "profile_url": "https://polymarket.com/@0x34aBa0ED4A752ce76461589212696987d711840e-1759592138245",
+      "pnl": 108695.40205469959,
+      "volume": 393127.791701,
+      "efficiency": 27.648872542028197
+    },
+    {
+      "name": "scottilicious",
+      "wallet": "0x000d257d2dc7616feaef4ae0f14600fdf50a758e",
+      "profile_url": "https://polymarket.com/@scottilicious",
+      "pnl": 108459.91104216034,
+      "volume": 4212030.620944001,
+      "efficiency": 2.575002909590726
+    },
+    {
+      "name": "kafwhsd",
+      "wallet": "0xfdb826a0fb4a90b4cc9049e408ea3ef1b73ae4c9",
+      "profile_url": "https://polymarket.com/@kafwhsd",
+      "pnl": 108177.34368561614,
+      "volume": 27462265.345689036,
+      "efficiency": 0.39391267371392424
+    },
+    {
+      "name": "XieGuangKun",
+      "wallet": "0x25dcf4635fe93082e0849fbbf81c95680cf5e33b",
+      "profile_url": "https://polymarket.com/@XieGuangKun",
+      "pnl": 107089.6921580388,
+      "volume": 1316043.225504,
+      "efficiency": 8.137247324610259
+    },
+    {
+      "name": "0x8d8868zc-s",
+      "wallet": "0x5cc5b031c7b8e43dc9cc9b6c4e496fd02815b83a",
+      "profile_url": "https://polymarket.com/@0x8d8868zc-s",
+      "pnl": 106918.22643648849,
+      "volume": 3157353.1747959973,
+      "efficiency": 3.386324573696026
+    },
+    {
+      "name": "0x8d8868zc-s",
+      "wallet": "0x5cc5b031c7b8e43dc9cc9b6c4e496fd02815b83a",
+      "profile_url": "https://polymarket.com/@0x8d8868zc-s",
+      "pnl": 106918.22643648839,
+      "volume": 3157353.174796001,
+      "efficiency": 3.386324573696019
+    },
+    {
+      "name": "ddalkkak",
+      "wallet": "0x16bd7cc71f6da1e77d1d8255677abc75b9bae288",
+      "profile_url": "https://polymarket.com/@ddalkkak",
+      "pnl": 106362.05761404781,
+      "volume": 554720.6233559999,
+      "efficiency": 19.173986532277965
+    },
+    {
+      "name": "Honeybadger3",
+      "wallet": "0xbd7d453564deca2bd3b3d51091105e94270dd7d1",
+      "profile_url": "https://polymarket.com/@Honeybadger3",
+      "pnl": 106341.77158439561,
+      "volume": 8763098.14667306,
+      "efficiency": 1.2135179796516218
+    },
+    {
+      "name": "Losu2w",
+      "wallet": "0xf8001e720d275dcdc69adf94e5047f88f67524eb",
+      "profile_url": "https://polymarket.com/@Losu2w",
+      "pnl": 105745.39622795,
+      "volume": 368725.58006800007,
+      "efficiency": 28.678616820793536
+    },
+    {
+      "name": "jadexxade",
+      "wallet": "0x5792bdaa99c199ef461ca95abf46b70f2f5dd1d6",
+      "profile_url": "https://polymarket.com/@jadexxade",
+      "pnl": 105579.29500000001,
+      "volume": 640345.87,
+      "efficiency": 16.487854446535277
+    },
+    {
+      "name": "Silver-coin",
+      "wallet": "0x707ee69ecae91e2486ec33a906d3ddd17af51960",
+      "profile_url": "https://polymarket.com/@Silver-coin",
+      "pnl": 104459.68685171711,
+      "volume": 11598152.327024998,
+      "efficiency": 0.9006580005706107
+    },
+    {
+      "name": "ArmageddonRewardsBilly",
+      "wallet": "0xc8ab97a9089a9ff7e6ef0688e6e591a066946418",
+      "profile_url": "https://polymarket.com/@ArmageddonRewardsBilly",
+      "pnl": 103900.73849358615,
+      "volume": 27298139.662484966,
+      "efficiency": 0.38061472238847793
+    },
+    {
+      "name": "...",
+      "wallet": "0x8b3eeb3ea135c9b2246b1b78adce71a4c580662c",
+      "profile_url": "https://polymarket.com/@...",
+      "pnl": 103622.73682449294,
+      "volume": 29841798.979670007,
+      "efficiency": 0.3472402481334549
+    },
+    {
+      "name": "oijafowejfoawejif",
+      "wallet": "0x9fefb57d21e15950df03246cde50ddbc521b361b",
+      "profile_url": "https://polymarket.com/@oijafowejfoawejif",
+      "pnl": 103267.1580313876,
+      "volume": 1176618.8701979998,
+      "efficiency": 8.776602232633746
+    },
+    {
+      "name": "Hand6789hand",
+      "wallet": "0x0ae49502214d903677022a2627f8cb27e7dba659",
+      "profile_url": "https://polymarket.com/@Hand6789hand",
+      "pnl": 102371.64621609927,
+      "volume": 3281527.2454769984,
+      "efficiency": 3.1196341995087917
+    },
+    {
+      "name": "Xander-corvus2",
+      "wallet": "0xeeb684d0364e193fb9b1d0a096c1d44718c3d982",
+      "profile_url": "https://polymarket.com/@Xander-corvus2",
+      "pnl": 101737.83264799998,
+      "volume": 860533.7466459997,
+      "efficiency": 11.822642986928923
+    },
+    {
+      "name": "anllicopter",
+      "wallet": "0x4f62b4b1474412f3430c9ed9e55c354cddf52ce6",
+      "profile_url": "https://polymarket.com/@anllicopter",
+      "pnl": 100814.16157258545,
+      "volume": 2110949.503227,
+      "efficiency": 4.775773244147776
+    },
+    {
+      "name": "quartzling",
+      "wallet": "0x6df9df733c38913fc94b1acc5ae56b64cf64ff21",
+      "profile_url": "https://polymarket.com/@quartzling",
+      "pnl": 100240.15278906547,
+      "volume": 5084367.641977997,
+      "efficiency": 1.9715362823383196
+    },
+    {
+      "name": "ZHAOCHANGPENG",
+      "wallet": "0xb72b92ea6f21a64bc5ec0a070c9b89346a7b989a",
+      "profile_url": "https://polymarket.com/@ZHAOCHANGPENG",
+      "pnl": 100166.28999589164,
+      "volume": 441166.266412,
+      "efficiency": 22.70488421758601
+    },
+    {
+      "name": "azzzzzzzzz",
+      "wallet": "0xaba06aaf3d1fe58bb5a5e4b17856599f8e9552ca",
+      "profile_url": "https://polymarket.com/@azzzzzzzzz",
+      "pnl": 98251.653464,
+      "volume": 1162655,
+      "efficiency": 8.450628386236673
+    },
+    {
+      "name": "denjisan",
+      "wallet": "0x5858196bbcb5059a7f67904deb06755dc2adfbbf",
+      "profile_url": "https://polymarket.com/@denjisan",
+      "pnl": 98096.85868886553,
+      "volume": 3002646.0767249996,
+      "efficiency": 3.2670136999915833
+    },
+    {
+      "name": "jslxyf",
+      "wallet": "0xbbf32e0e8e69209ce7b0b1452e759a057bb65ebb",
+      "profile_url": "https://polymarket.com/@jslxyf",
+      "pnl": 98054.47533862623,
+      "volume": 904696.7167870001,
+      "efficiency": 10.838380809743999
+    },
+    {
+      "name": "gsfadfas",
+      "wallet": "0xf90b9f6bbbcfda0b2846a5ecca18a7d12070dfce",
+      "profile_url": "https://polymarket.com/@gsfadfas",
+      "pnl": 97871.70199182819,
+      "volume": 6754689.440133,
+      "efficiency": 1.448944512686598
+    },
+    {
+      "name": "0x35385f3ef6c95f83fc18aae11462d3726950eac",
+      "wallet": "0x35385f3ef6c95f83fc18aae11462d3726950eac8",
+      "profile_url": "https://polymarket.com/@0x35385f3ef6c95f83fc18aae11462d3726950eac",
+      "pnl": 97454.48235738746,
+      "volume": 9811899.88484615,
+      "efficiency": 0.9932274432182053
+    },
+    {
+      "name": "0x46617f82716f7d44e7eE301c41206dF1360cC760-1751483692213",
+      "wallet": "0x46617f82716f7d44e7ee301c41206df1360cc760",
+      "profile_url": "https://polymarket.com/@0x46617f82716f7d44e7eE301c41206dF1360cC760-1751483692213",
+      "pnl": 97342.63564634569,
+      "volume": 472162.0881559999,
+      "efficiency": 20.616359950988734
+    },
+    {
+      "name": "chickendinnerxxdd",
+      "wallet": "0xc13cbd011bc02c0c9fd9a5d4dbd236ecc0e8a202",
+      "profile_url": "https://polymarket.com/@chickendinnerxxdd",
+      "pnl": 96213.3231419277,
+      "volume": 1859219.8284339998,
+      "efficiency": 5.174929917941286
+    },
+    {
+      "name": "ateenre",
+      "wallet": "0x7b473d72f1da195c2e9d5933cb41f219c8494fb9",
+      "profile_url": "https://polymarket.com/@ateenre",
+      "pnl": 96045.36471314354,
+      "volume": 808253.2052389999,
+      "efficiency": 11.883078729609615
+    },
+    {
+      "name": "anon-fake",
+      "wallet": "0x20ad75e19b155f8518eb9e0486158f9884879c9a",
+      "profile_url": "https://polymarket.com/@anon-fake",
+      "pnl": 95744.45008580163,
+      "volume": 10099069.184241008,
+      "efficiency": 0.9480522248050851
+    },
+    {
+      "name": "0x3C2781460CF28726ed6ff38dC52E3175b0c2555B-1770837381456",
+      "wallet": "0x3c2781460cf28726ed6ff38dc52e3175b0c2555b",
+      "profile_url": "https://polymarket.com/@0x3C2781460CF28726ed6ff38dC52E3175b0c2555B-1770837381456",
+      "pnl": 95544.56861399997,
+      "volume": 1257936.5038280003,
+      "efficiency": 7.595341125982932
+    },
+    {
+      "name": "ExpressoMartini",
+      "wallet": "0x080a53ccb5caf5949d2e67074e8629fe1f249da4",
+      "profile_url": "https://polymarket.com/@ExpressoMartini",
+      "pnl": 95430.02737150018,
+      "volume": 31079854.25937392,
+      "efficiency": 0.3070478599259125
+    },
+    {
+      "name": "ZnegrzNirervpx",
+      "wallet": "0xce0a9a3c325820a078fda1f74fc973b7c16cc836",
+      "profile_url": "https://polymarket.com/@ZnegrzNirervpx",
+      "pnl": 94867.02711974282,
+      "volume": 9371541.40071495,
+      "efficiency": 1.0122884066062543
+    },
+    {
+      "name": "plantardisease",
+      "wallet": "0xf323f1a3599b55ad945e6b28a97a9161f0d4c700",
+      "profile_url": "https://polymarket.com/@plantardisease",
+      "pnl": 94236.97152659438,
+      "volume": 21651376.164289996,
+      "efficiency": 0.43524702915660907
+    },
+    {
+      "name": "Nadin592",
+      "wallet": "0xc747b8f900a08f59974f50989e0703344ba0324b",
+      "profile_url": "https://polymarket.com/@Nadin592",
+      "pnl": 93935.62337766927,
+      "volume": 2238988.9757280005,
+      "efficiency": 4.195448231143094
+    },
+    {
+      "name": "paoloestp",
+      "wallet": "0x66e27114127dbe9b40c1f58eedb709892a75bf7f",
+      "profile_url": "https://polymarket.com/@paoloestp",
+      "pnl": 93725.5,
+      "volume": 187451,
+      "efficiency": 50.0
+    },
+    {
+      "name": "ascetic0x",
+      "wallet": "0xfcbecc7e5186e88e03445b81f593685d62828f44",
+      "profile_url": "https://polymarket.com/@ascetic0x",
+      "pnl": 93580.25799430926,
+      "volume": 7121825.4700770015,
+      "efficiency": 1.313992576587214
+    },
+    {
+      "name": "agx",
+      "wallet": "0xdb556e4790f9e62ff602325258b0d05e18ff4014",
+      "profile_url": "https://polymarket.com/@agx",
+      "pnl": 93539.02676366597,
+      "volume": 336863.179598,
+      "efficiency": 27.76766130251812
+    },
+    {
+      "name": "vocifer",
+      "wallet": "0xacd943c52e0ba8efcabfeaddfa3ca17c1a5a3d87",
+      "profile_url": "https://polymarket.com/@vocifer",
+      "pnl": 91910.8073467528,
+      "volume": 2256343.620662,
+      "efficiency": 4.073440166874344
+    },
+    {
+      "name": "Demphu.finite",
+      "wallet": "0xd0bde12c58772999c61c2b8e0d31ba608c52a5d6",
+      "profile_url": "https://polymarket.com/@Demphu.finite",
+      "pnl": 91599.08637699997,
+      "volume": 558572.9564160001,
+      "efficiency": 16.39876856279112
+    },
+    {
+      "name": "chungguskhan",
+      "wallet": "0x7744bfd749a70020d16a1fcbac1d064761c9999e",
+      "profile_url": "https://polymarket.com/@chungguskhan",
+      "pnl": 91368.88673189069,
+      "volume": 9563593.696933,
+      "efficiency": 0.9553823554966818
+    },
+    {
+      "name": "sukaebanayaaa",
+      "wallet": "0xbc43b727a0364be6c44840f7fb7007596478ab30",
+      "profile_url": "https://polymarket.com/@sukaebanayaaa",
+      "pnl": 91025.50898158271,
+      "volume": 302073.84311,
+      "efficiency": 30.133528955844024
+    },
+    {
+      "name": "deandolorat",
+      "wallet": "0x99aef149cda5674657b3cc51b395c50ae5ce045e",
+      "profile_url": "https://polymarket.com/@deandolorat",
+      "pnl": 90444.5,
+      "volume": 186593,
+      "efficiency": 48.47153966118772
+    },
+    {
+      "name": "cowcat",
+      "wallet": "0x38e59b36aae31b164200d0cad7c3fe5e0ee795e7",
+      "profile_url": "https://polymarket.com/@cowcat",
+      "pnl": 90000.52503735256,
+      "volume": 4950622.271648999,
+      "efficiency": 1.8179638861313157
+    },
+    {
+      "name": "hembag",
+      "wallet": "0x9155e8cf81a3fb557639d23d43f1528675bcfcad",
+      "profile_url": "https://polymarket.com/@hembag",
+      "pnl": 89937.15602500013,
+      "volume": 35616534.32757729,
+      "efficiency": 0.25251518072426066
+    },
+    {
+      "name": "weareallsatoshi",
+      "wallet": "0x166a5ffcf823ff7c26588c59ae25ba015f3ba007",
+      "profile_url": "https://polymarket.com/@weareallsatoshi",
+      "pnl": 89635.66468175588,
+      "volume": 244898.47752800002,
+      "efficiency": 36.60115227605184
+    },
+    {
+      "name": "962da2fgg",
+      "wallet": "0x80e5aadfbf39e851f35b50256cd59fa70ca734a9",
+      "profile_url": "https://polymarket.com/@962da2fgg",
+      "pnl": 89427.24128486922,
+      "volume": 5206260.657496001,
+      "efficiency": 1.7176865925087985
+    },
+    {
+      "name": "pricklypete",
+      "wallet": "0x3227b991405282ffe3a19178bc36fb9770262727",
+      "profile_url": "https://polymarket.com/@pricklypete",
+      "pnl": 89224.687193,
+      "volume": 515446.65199,
+      "efficiency": 17.31016912196978
+    },
+    {
+      "name": "david43332",
+      "wallet": "0xa9ae84ee529dbec0c6634b08cd97d3f13f7d74f5",
+      "profile_url": "https://polymarket.com/@david43332",
+      "pnl": 88669.50114495013,
+      "volume": 745859.9389199992,
+      "efficiency": 11.888224117968187
+    },
+    {
+      "name": "citispec",
+      "wallet": "0x6837a149d2278bc60fbe30a4b77246afd4029ca9",
+      "profile_url": "https://polymarket.com/@citispec",
+      "pnl": 88166.13711273647,
+      "volume": 21516403.216078147,
+      "efficiency": 0.40976243207254204
+    },
+    {
+      "name": "mmmmmmmmonsterkill",
+      "wallet": "0xe169f7ab9cd3d2cc593b28e4a00568a2eeaa2158",
+      "profile_url": "https://polymarket.com/@mmmmmmmmonsterkill",
+      "pnl": 88162.40124600002,
+      "volume": 1188377.6690689996,
+      "efficiency": 7.418719110993422
+    },
+    {
+      "name": "soicowboy",
+      "wallet": "0x8d61e79cd773f7dba5367261fa2fdce02e2712f6",
+      "profile_url": "https://polymarket.com/@soicowboy",
+      "pnl": 87155.1209238251,
+      "volume": 251942.88305900004,
+      "efficiency": 34.59320615276721
+    },
+    {
+      "name": "ratue",
+      "wallet": "0x912a58103662ebe2e30328a305bc33131eca0f92",
+      "profile_url": "https://polymarket.com/@ratue",
+      "pnl": 87101.7092452787,
+      "volume": 3949323.7792909816,
+      "efficiency": 2.205484131283761
+    },
+    {
+      "name": "0x7846e489e11c7D2b9d6C15a955c1DF93D041C0",
+      "wallet": "0x7846e489e11c7d2b9d6c15a955c1df93d041c08d",
+      "profile_url": "https://polymarket.com/@0x7846e489e11c7D2b9d6C15a955c1DF93D041C0",
+      "pnl": 87012.84616455817,
+      "volume": 10075053.906421002,
+      "efficiency": 0.8636464576045931
+    },
+    {
+      "name": "0x472Be80809165b1BA999d5fbC5EFEF9F2e86c594-1727802614685",
+      "wallet": "0x472be80809165b1ba999d5fbc5efef9f2e86c594",
+      "profile_url": "https://polymarket.com/@0x472Be80809165b1BA999d5fbC5EFEF9F2e86c594-1727802614685",
+      "pnl": 87010.22853335987,
+      "volume": 21943323.55800896,
+      "efficiency": 0.39652256096639715
+    },
+    {
+      "name": "amused85",
+      "wallet": "0x8fe70c889ce14f67acea5d597e3d0351d73b4f20",
+      "profile_url": "https://polymarket.com/@amused85",
+      "pnl": 86711.81100681944,
+      "volume": 5452999.759177,
+      "efficiency": 1.590167152692237
+    },
+    {
+      "name": "fuzzymoos",
+      "wallet": "0xf91ad32730d2c7e95e017700eec7412782fb4267",
+      "profile_url": "https://polymarket.com/@fuzzymoos",
+      "pnl": 86562.188,
+      "volume": 179772,
+      "efficiency": 48.15109583249894
+    },
+    {
+      "name": "tostitos",
+      "wallet": "0xb741a5dade4a298897a3124ed798a9cca1fba996",
+      "profile_url": "https://polymarket.com/@tostitos",
+      "pnl": 86456.33608546144,
+      "volume": 468350.3628120002,
+      "efficiency": 18.45975640253016
+    },
+    {
+      "name": "ExhaustedBoyBilly",
+      "wallet": "0x96b59f71f635da5da031e3e93448c54fe226f5e7",
+      "profile_url": "https://polymarket.com/@ExhaustedBoyBilly",
+      "pnl": 86320.77388176598,
+      "volume": 17612055.436289996,
+      "efficiency": 0.4901232237998768
+    },
+    {
+      "name": "199955",
+      "wallet": "0x26edb15c78b79f40a5ec6066c082a820f5dc96eb",
+      "profile_url": "https://polymarket.com/@199955",
+      "pnl": 86124.285,
+      "volume": 610801.21,
+      "efficiency": 14.10021519112577
+    },
+    {
+      "name": "bratanbratishka",
+      "wallet": "0xcbb1a3174d9ac5a0f57f5b86808204b9382e7afb",
+      "profile_url": "https://polymarket.com/@bratanbratishka",
+      "pnl": 85982.81635300002,
+      "volume": 1122371.7984329998,
+      "efficiency": 7.6608140433539935
+    },
+    {
+      "name": "TTbilly",
+      "wallet": "0xc25120b27e01031b2122f74488dcdb077a78b9c3",
+      "profile_url": "https://polymarket.com/@TTbilly",
+      "pnl": 85853.90918980255,
+      "volume": 9319417.124740997,
+      "efficiency": 0.9212368975510212
+    },
+    {
+      "name": "xunyu253",
+      "wallet": "0xa09f09a460a5260eb6dae062eba379f9667d276d",
+      "profile_url": "https://polymarket.com/@xunyu253",
+      "pnl": 85514.98388029996,
+      "volume": 3320668.8000030005,
+      "efficiency": 2.5752337565318975
+    },
+    {
+      "name": "Yeueu",
+      "wallet": "0x034475def048324ad32d87c5fd90e99f0f7b2538",
+      "profile_url": "https://polymarket.com/@Yeueu",
+      "pnl": 85413.61832951094,
+      "volume": 900650.4499460001,
+      "efficiency": 9.483548066248346
+    },
+    {
+      "name": "0xf49a30eeba44edc98c104bd9830be7a5c140f9ba",
+      "wallet": "0xf49a30eeba44edc98c104bd9830be7a5c140f9ba",
+      "profile_url": "https://polymarket.com/@0xf49a30eeba44edc98c104bd9830be7a5c140f9ba",
+      "pnl": 85335.471724983,
+      "volume": 20382390.526220407,
+      "efficiency": 0.41867253801856735
+    },
+    {
+      "name": "debased",
+      "wallet": "0x24c8cf69a0e0a17eee21f69d29752bfa32e823e1",
+      "profile_url": "https://polymarket.com/@debased",
+      "pnl": 85245.0732724673,
+      "volume": 8382564.8032519985,
+      "efficiency": 1.0169330661111817
+    },
+    {
+      "name": "LampStore",
+      "wallet": "0x56bad0e7a00913c6e35c00dce3ec7f7cd6a311d7",
+      "profile_url": "https://polymarket.com/@LampStore",
+      "pnl": 84992.28141787852,
+      "volume": 11307802.425876062,
+      "efficiency": 0.7516251011194495
+    },
+    {
+      "name": "0x0D32e5fC366d846BbcA8a82C6D60a6DD718b6336-1761759997574",
+      "wallet": "0x0d32e5fc366d846bbca8a82c6d60a6dd718b6336",
+      "profile_url": "https://polymarket.com/@0x0D32e5fC366d846BbcA8a82C6D60a6DD718b6336-1761759997574",
+      "pnl": 84509.90971552068,
+      "volume": 4856005.194724999,
+      "efficiency": 1.7403175311122492
+    },
+    {
+      "name": "gasd4",
+      "wallet": "0x5e6952010b81be25e15683e696171ea546701925",
+      "profile_url": "https://polymarket.com/@gasd4",
+      "pnl": 84455.71649300001,
+      "volume": 1936064.9507719998,
+      "efficiency": 4.362235701820002
+    },
+    {
+      "name": "0x8e9cd5ec7a26d602b63b4bc4c193febb83c8ed64",
+      "wallet": "0x8e9cd5ec7a26d602b63b4bc4c193febb83c8ed64",
+      "profile_url": "https://polymarket.com/@0x8e9cd5ec7a26d602b63b4bc4c193febb83c8ed64",
+      "pnl": 84238.23496012062,
+      "volume": 11206703.566345993,
+      "efficiency": 0.7516771944703714
+    },
+    {
+      "name": "smartttt",
+      "wallet": "0xbca17b0d255c88c972d859a76676e43432de7181",
+      "profile_url": "https://polymarket.com/@smartttt",
+      "pnl": 84094.00210858608,
+      "volume": 869773.5401790001,
+      "efficiency": 9.668493949733106
+    },
+    {
+      "name": "candor",
+      "wallet": "0x2a1dfd1a8ba5271839847264559bc19d07cfd02f",
+      "profile_url": "https://polymarket.com/@candor",
+      "pnl": 84033.318014,
+      "volume": 22213904.445751984,
+      "efficiency": 0.3782915255587583
+    },
+    {
+      "name": "llllmmmmmmmmm",
+      "wallet": "0xe4f84ae8aca2b370e7eef7519a40364b9d052b68",
+      "profile_url": "https://polymarket.com/@llllmmmmmmmmm",
+      "pnl": 83845.625,
+      "volume": 421665.25,
+      "efficiency": 19.884404749976433
+    },
+    {
+      "name": "UnRektCapital",
+      "wallet": "0xdb7513a3c54d579d64ee64c948c85d2f27620252",
+      "profile_url": "https://polymarket.com/@UnRektCapital",
+      "pnl": 83691.242697,
+      "volume": 436697.4053049999,
+      "efficiency": 19.164584373600306
+    },
+    {
+      "name": "B8a2eF07B847626688",
+      "wallet": "0x3c27b6ef2d914abbc3c96948a942e295b2d11b56",
+      "profile_url": "https://polymarket.com/@B8a2eF07B847626688",
+      "pnl": 82887.96956742188,
+      "volume": 1061874.839169999,
+      "efficiency": 7.805813501731543
+    },
+    {
+      "name": "Trump2028",
+      "wallet": "0x2e0b70d482e6b389e81dea528be57d825dd48070",
+      "profile_url": "https://polymarket.com/@Trump2028",
+      "pnl": 82662.64397877897,
+      "volume": 4401389.677819003,
+      "efficiency": 1.8781032816830783
+    },
+    {
+      "name": "commeowder",
+      "wallet": "0xd06f0f7719df1b3b75b607923536b3250825d4a6",
+      "profile_url": "https://polymarket.com/@commeowder",
+      "pnl": 81923.1272028069,
+      "volume": 4097542.947722,
+      "efficiency": 1.9993232102265452
+    },
+    {
+      "name": "tomsir",
+      "wallet": "0x630519aed8ebc5e0e08a95f4e83b0ae541c09d0b",
+      "profile_url": "https://polymarket.com/@tomsir",
+      "pnl": 81855.1726138587,
+      "volume": 444416.5734900001,
+      "efficiency": 18.418568860078874
+    },
+    {
+      "name": "Rainiak",
+      "wallet": "0x1bfdf7224c358405a486b5fd8489f13c2adcb5f3",
+      "profile_url": "https://polymarket.com/@Rainiak",
+      "pnl": 81841.61062879476,
+      "volume": 4176814.504836,
+      "efficiency": 1.9594265087433713
+    },
+    {
+      "name": "dfgfbv",
+      "wallet": "0xc3940d891c5b14c01e37aa528e70cbc0e4b7fb0a",
+      "profile_url": "https://polymarket.com/@dfgfbv",
+      "pnl": 81657.57138140885,
+      "volume": 18381580.55862199,
+      "efficiency": 0.4442358540441555
+    },
+    {
+      "name": "jamessx",
+      "wallet": "0xf1023595751254e8cb8971aa5d1cfc2aa5827ebf",
+      "profile_url": "https://polymarket.com/@jamessx",
+      "pnl": 81599.055,
+      "volume": 1303712.1099999999,
+      "efficiency": 6.258978065333764
+    },
+    {
+      "name": "JDDance",
+      "wallet": "0x2ca792f6c6d58796c5a04b9adc7fb23a18484dcb",
+      "profile_url": "https://polymarket.com/@JDDance",
+      "pnl": 81494.65103100003,
+      "volume": 799587.9277259998,
+      "efficiency": 10.192081221482168
+    },
+    {
+      "name": "scrooge",
+      "wallet": "0x1fd50e9298ab99e6e427a2a3363bff480657cf04",
+      "profile_url": "https://polymarket.com/@scrooge",
+      "pnl": 81449.30133172702,
+      "volume": 2350218.9840490003,
+      "efficiency": 3.4656047748965366
+    },
+    {
+      "name": "7thStaircase",
+      "wallet": "0x0ac97e4f5c542cd98c226ae8e1736ae78b489641",
+      "profile_url": "https://polymarket.com/@7thStaircase",
+      "pnl": 80613.43028457287,
+      "volume": 3724529.0785209984,
+      "efficiency": 2.1643925603766334
+    },
+    {
+      "name": "loserWinner1",
+      "wallet": "0x95481feb1901b5dba3e301450d0e1a90ebfb521f",
+      "profile_url": "https://polymarket.com/@loserWinner1",
+      "pnl": 80536.777753,
+      "volume": 438900.93559099996,
+      "efficiency": 18.349648228603932
+    },
+    {
+      "name": "Domx12",
+      "wallet": "0xd2b51d9accca5ec0a853eb0d94eeb0dce9a82889",
+      "profile_url": "https://polymarket.com/@Domx12",
+      "pnl": 80307.6110815996,
+      "volume": 13942232.911185963,
+      "efficiency": 0.5760025068665162
+    },
+    {
+      "name": "0x7bEbb8Daa6B403346Be3b26D5b99d29e9F62F48a-1766655054403",
+      "wallet": "0x7bebb8daa6b403346be3b26d5b99d29e9f62f48a",
+      "profile_url": "https://polymarket.com/@0x7bEbb8Daa6B403346Be3b26D5b99d29e9F62F48a-1766655054403",
+      "pnl": 79976.76874358125,
+      "volume": 636826.92287,
+      "efficiency": 12.558634987218886
+    },
+    {
+      "name": "mapleghost",
+      "wallet": "0x39636344f4906695016c13a78a8cd4ea705b2b0b",
+      "profile_url": "https://polymarket.com/@mapleghost",
+      "pnl": 79648.00972927349,
+      "volume": 11140723.467494085,
+      "efficiency": 0.7149267277090843
+    },
+    {
+      "name": "lantian",
+      "wallet": "0xe6299886c39b1c0724b797a576b6c0d8908c4b09",
+      "profile_url": "https://polymarket.com/@lantian",
+      "pnl": 79064.862581,
+      "volume": 2281373.37,
+      "efficiency": 3.4656695664419015
+    },
+    {
+      "name": "Lifessence",
+      "wallet": "0x550ced0c9c8bc83dcf1a5926acbfb1a9c2011549",
+      "profile_url": "https://polymarket.com/@Lifessence",
+      "pnl": 78928.16087784336,
+      "volume": 11304275.165487,
+      "efficiency": 0.6982151418148272
+    },
+    {
+      "name": "Parz1vaI",
+      "wallet": "0xb10047d6a254b2ebb306d7a7d13bf59171ab6461",
+      "profile_url": "https://polymarket.com/@Parz1vaI",
+      "pnl": 78903.33816776882,
+      "volume": 6535714.6384379985,
+      "efficiency": 1.207264125390675
+    },
+    {
+      "name": "Uuuu4545545",
+      "wallet": "0x98714cf2ee0b2b06802124529750a1aefb5736eb",
+      "profile_url": "https://polymarket.com/@Uuuu4545545",
+      "pnl": 78846.41464396502,
+      "volume": 4505559.397162005,
+      "efficiency": 1.749980583845579
+    },
+    {
+      "name": "lowellqua",
+      "wallet": "0x74b7937435e1b3c392520e6defbe588bf6d8cdcf",
+      "profile_url": "https://polymarket.com/@lowellqua",
+      "pnl": 78840.00668600001,
+      "volume": 160464.686,
+      "efficiency": 49.13230982547775
+    },
+    {
+      "name": "TheDandelion",
+      "wallet": "0x45afde053d18e9dd5d5ee28fc16aabf27df29158",
+      "profile_url": "https://polymarket.com/@TheDandelion",
+      "pnl": 78829.61821733748,
+      "volume": 10943598.167457003,
+      "efficiency": 0.7203263223950717
+    },
+    {
+      "name": "bobe2",
+      "wallet": "0xed107a85a4585a381e48c7f7ca4144909e7dd2e5",
+      "profile_url": "https://polymarket.com/@bobe2",
+      "pnl": 78503.70658025886,
+      "volume": 11950839.678326001,
+      "efficiency": 0.6568886261827518
+    },
+    {
+      "name": "Poln",
+      "wallet": "0x372e593fa57bed5525c41692d616be5555b54453",
+      "profile_url": "https://polymarket.com/@Poln",
+      "pnl": 78294.19255247171,
+      "volume": 13710127.868403967,
+      "efficiency": 0.571068288377577
+    },
+    {
+      "name": "limosine",
+      "wallet": "0x0ababd7750cce137dae84471b7ade3b19c87eea1",
+      "profile_url": "https://polymarket.com/@limosine",
+      "pnl": 78276.6573581784,
+      "volume": 2017779.3062069996,
+      "efficiency": 3.879346820407334
+    },
+    {
+      "name": "justinbeaver",
+      "wallet": "0x86a29f88fcc23ea2b0e01b4e186b043e26c873a8",
+      "profile_url": "https://polymarket.com/@justinbeaver",
+      "pnl": 78149.38695659398,
+      "volume": 35968170.61289977,
+      "efficiency": 0.21727373292809662
+    },
+    {
+      "name": "Petyaaa",
+      "wallet": "0x56d55bd3a96be201c65c260d66205dd4358310a6",
+      "profile_url": "https://polymarket.com/@Petyaaa",
+      "pnl": 77563.87019407332,
+      "volume": 7351099.509412,
+      "efficiency": 1.0551329103185747
+    },
+    {
+      "name": "SilverKestrel",
+      "wallet": "0x330efa1eaebfc30b51686879a846885ed546bf6c",
+      "profile_url": "https://polymarket.com/@SilverKestrel",
+      "pnl": 77516.62879979202,
+      "volume": 16132715.456233766,
+      "efficiency": 0.4804933739151717
+    },
+    {
+      "name": "bestfriends",
+      "wallet": "0x7abe2e7eac6f63b1bf4c21eeae71b03e9bd9b47e",
+      "profile_url": "https://polymarket.com/@bestfriends",
+      "pnl": 77295.22589971876,
+      "volume": 2085290.560203,
+      "efficiency": 3.706688524605136
+    },
+    {
+      "name": "Normandfsgfdsg",
+      "wallet": "0x54d61ec6644abc6e72fce77781a6f87dd18c0c3b",
+      "profile_url": "https://polymarket.com/@Normandfsgfdsg",
+      "pnl": 77154,
+      "volume": 159750,
+      "efficiency": 48.29671361502347
+    },
+    {
+      "name": "Melody626",
+      "wallet": "0xecaa8806a9a05049d7d5260a33dc924220e377a9",
+      "profile_url": "https://polymarket.com/@Melody626",
+      "pnl": 76701.01692343382,
+      "volume": 1373513.0885790004,
+      "efficiency": 5.584294577257114
+    },
+    {
+      "name": "arthurgcar",
+      "wallet": "0x530e6c4f8250a4247173efb981d46d3081d1cc11",
+      "profile_url": "https://polymarket.com/@arthurgcar",
+      "pnl": 76668.3070935438,
+      "volume": 1109497.7225519998,
+      "efficiency": 6.9101815655102
+    },
+    {
+      "name": "usuallyheads",
+      "wallet": "0x9fca1c4a10d43306472ec5c900ef59321cd3cc04",
+      "profile_url": "https://polymarket.com/@usuallyheads",
+      "pnl": 76283.48428047501,
+      "volume": 3835583.705520001,
+      "efficiency": 1.9888363841647156
+    },
+    {
+      "name": "stargate5",
+      "wallet": "0xb4d2499b6cabd0bb93672bb17c5ae47101759ee1",
+      "profile_url": "https://polymarket.com/@stargate5",
+      "pnl": 76178.35836368505,
+      "volume": 15262885.116091475,
+      "efficiency": 0.49910850919903166
+    },
+    {
+      "name": "kulkin-alexandr",
+      "wallet": "0x12c0b1b6916cf10a0ccc6b66a117390852c88750",
+      "profile_url": "https://polymarket.com/@kulkin-alexandr",
+      "pnl": 75010.02179347171,
+      "volume": 150490.05069499998,
+      "efficiency": 49.8438411357143
+    },
+    {
+      "name": "b1gGambler",
+      "wallet": "0x8ac1eaed0399f8332f47041436312d6cd4b19595",
+      "profile_url": "https://polymarket.com/@b1gGambler",
+      "pnl": 74762.93273064747,
+      "volume": 14973885.158369979,
+      "efficiency": 0.4992888080810284
+    },
+    {
+      "name": "0xa7ec2d5ce6c38557443a044e627d6ab",
+      "wallet": "0xa7ec2d5ce6c38557443a044e627d6abd317279fb",
+      "profile_url": "https://polymarket.com/@0xa7ec2d5ce6c38557443a044e627d6ab",
+      "pnl": 74669.32300709197,
+      "volume": 7731419.939878001,
+      "efficiency": 0.9657905480202156
+    },
+    {
+      "name": "..47plum",
+      "wallet": "0xe55b90febea370d4611a4b0a9ff201183268b24e",
+      "profile_url": "https://polymarket.com/@..47plum",
+      "pnl": 74379.56353607985,
+      "volume": 7210673.146835901,
+      "efficiency": 1.0315203868132363
+    },
+    {
+      "name": "cocac",
+      "wallet": "0xd3383f8850f852a8170c97db885a56af5cf35687",
+      "profile_url": "https://polymarket.com/@cocac",
+      "pnl": 74354.392408,
+      "volume": 190574.39652899996,
+      "efficiency": 39.01594010645884
+    },
+    {
+      "name": "VRVTeam",
+      "wallet": "0xe700c328241308094cb87f4734b917e1b1547005",
+      "profile_url": "https://polymarket.com/@VRVTeam",
+      "pnl": 74155.8323799552,
+      "volume": 886921.9594719999,
+      "efficiency": 8.361032398397427
+    },
+    {
+      "name": "Packed",
+      "wallet": "0x8db699f6003cf7b131b0d1c0cfe7a851478d09da",
+      "profile_url": "https://polymarket.com/@Packed",
+      "pnl": 73801.23413967254,
+      "volume": 327610.03152899997,
+      "efficiency": 22.5271594386876
+    },
+    {
+      "name": "0x9aDFf33E757c0987015353863a98D1eCC524f6c0-1770839520549",
+      "wallet": "0x9adff33e757c0987015353863a98d1ecc524f6c0",
+      "profile_url": "https://polymarket.com/@0x9aDFf33E757c0987015353863a98D1eCC524f6c0-1770839520549",
+      "pnl": 73648.378486,
+      "volume": 394990.010757,
+      "efficiency": 18.645630643887063
+    },
+    {
+      "name": "0x6d6afFce1Ed04a0e9611484Daf1CeF5CBcF3fb40-1772168966873",
+      "wallet": "0x6d6affce1ed04a0e9611484daf1cef5cbcf3fb40",
+      "profile_url": "https://polymarket.com/@0x6d6afFce1Ed04a0e9611484Daf1CeF5CBcF3fb40-1772168966873",
+      "pnl": 73433.65002687572,
+      "volume": 109450.049449,
+      "efficiency": 67.0932999999176
+    },
+    {
+      "name": "665566555888",
+      "wallet": "0x668b2f37a56955f7eb4f89328fe07d2c52a3005a",
+      "profile_url": "https://polymarket.com/@665566555888",
+      "pnl": 73281.41500000001,
+      "volume": 1506420.8299999998,
+      "efficiency": 4.864604467796693
+    },
+    {
+      "name": "MotherTheresa",
+      "wallet": "0x42a6ddf7cf7032972b0bfe32775e8109c5171b64",
+      "profile_url": "https://polymarket.com/@MotherTheresa",
+      "pnl": 73141.91121771887,
+      "volume": 2868960.9963750006,
+      "efficiency": 2.549421595836799
+    },
+    {
+      "name": "Wongwei",
+      "wallet": "0x7a2180022d383bd514276b7a2083a97e51e6ac9c",
+      "profile_url": "https://polymarket.com/@Wongwei",
+      "pnl": 73089.9035814575,
+      "volume": 1892949.0135469998,
+      "efficiency": 3.861165993293288
+    },
+    {
+      "name": "mnnnn123456",
+      "wallet": "0x5e2bbc2a6bcc683175b43fa2d315f8c01188f439",
+      "profile_url": "https://polymarket.com/@mnnnn123456",
+      "pnl": 72119.941562,
+      "volume": 119894.83841100003,
+      "efficiency": 60.15266588439157
+    },
+    {
+      "name": "checkdadata",
+      "wallet": "0xb48aaa65077dd7dd4b52f0b46b2ee23facd5e843",
+      "profile_url": "https://polymarket.com/@checkdadata",
+      "pnl": 72104.95378927604,
+      "volume": 1498525.6246089998,
+      "efficiency": 4.811726446659189
+    },
+    {
+      "name": "NouvelleVision",
+      "wallet": "0xbc6148ae94b9b0581ed4e270913e7b7c3cd3d368",
+      "profile_url": "https://polymarket.com/@NouvelleVision",
+      "pnl": 71851.86921003298,
+      "volume": 5310951.904510002,
+      "efficiency": 1.3529000168315808
+    },
+    {
+      "name": "averagerandomman",
+      "wallet": "0x8970b56535153baadee991ca25a178ac085636b5",
+      "profile_url": "https://polymarket.com/@averagerandomman",
+      "pnl": 71552.43615704116,
+      "volume": 29513533.10346001,
+      "efficiency": 0.24243941213752118
+    },
+    {
+      "name": "Resilience",
+      "wallet": "0x63e975a9904e09249a37f771a877c55de7cde1a1",
+      "profile_url": "https://polymarket.com/@Resilience",
+      "pnl": 71551.61683050875,
+      "volume": 36095486.92416198,
+      "efficiency": 0.19822870648854657
+    },
+    {
+      "name": "masterbIaster",
+      "wallet": "0xa6da1d8c0ec366e136d58bece826d718f31c3fce",
+      "profile_url": "https://polymarket.com/@masterbIaster",
+      "pnl": 71527.85685167369,
+      "volume": 188573.47892499997,
+      "efficiency": 37.9310268121648
+    },
+    {
+      "name": "blue-walnut",
+      "wallet": "0x4b188496d1b3da1716165380999afb9b314c725f",
+      "profile_url": "https://polymarket.com/@blue-walnut",
+      "pnl": 71406.5348177253,
+      "volume": 15662425.198422108,
+      "efficiency": 0.45590982183856854
+    },
+    {
+      "name": "BoreasArb",
+      "wallet": "0x363acea63c9193da7401b338b4f0efa9eac6df44",
+      "profile_url": "https://polymarket.com/@BoreasArb",
+      "pnl": 71376.08373219823,
+      "volume": 1450688.3653100003,
+      "efficiency": 4.920152766024683
+    },
+    {
+      "name": "Buratatatata",
+      "wallet": "0x66c5ee54dc7d8bb1a22664b2fb55dbeb3c8919e7",
+      "profile_url": "https://polymarket.com/@Buratatatata",
+      "pnl": 70983.44982200004,
+      "volume": 298849.655497,
+      "efficiency": 23.752227421494418
+    },
+    {
+      "name": "NeH",
+      "wallet": "0x11fcbba836d927c5fe6e6a6a64c9c0461e33dc48",
+      "profile_url": "https://polymarket.com/@NeH",
+      "pnl": 70954.62515841937,
+      "volume": 280274.97267199995,
+      "efficiency": 25.31607602418933
+    },
+    {
+      "name": "sxfwwxa",
+      "wallet": "0xa20bacaab782a97e8ccf68fcd8e8e1028fe6df6e",
+      "profile_url": "https://polymarket.com/@sxfwwxa",
+      "pnl": 70880.100176,
+      "volume": 3362962.63,
+      "efficiency": 2.107668385717388
+    },
+    {
+      "name": "sin-shalavi",
+      "wallet": "0x3a46963534f815608c0ccb380430741dd8fc764b",
+      "profile_url": "https://polymarket.com/@sin-shalavi",
+      "pnl": 70706.7341218772,
+      "volume": 141761.753447,
+      "efficiency": 49.87715826209225
+    },
+    {
+      "name": "0x30a616EB07E4a56aFB0a06B4422655a6682Da389-1772033055302",
+      "wallet": "0x30a616eb07e4a56afb0a06b4422655a6682da389",
+      "profile_url": "https://polymarket.com/@0x30a616EB07E4a56aFB0a06B4422655a6682Da389-1772033055302",
+      "pnl": 70375.5,
+      "volume": 140751,
+      "efficiency": 50.0
+    },
+    {
+      "name": "0x5F45b60C29d6e4D55c0bFd8dDD39ad45C5e0a77A-1761473032186",
+      "wallet": "0x5f45b60c29d6e4d55c0bfd8ddd39ad45c5e0a77a",
+      "profile_url": "https://polymarket.com/@0x5F45b60C29d6e4D55c0bFd8dDD39ad45C5e0a77A-1761473032186",
+      "pnl": 70357.69726737044,
+      "volume": 1488129.4165399997,
+      "efficiency": 4.727928665704143
+    },
+    {
+      "name": "kingdeserun",
+      "wallet": "0xe790950382f11f714a13965a7703501d6e2edb42",
+      "profile_url": "https://polymarket.com/@kingdeserun",
+      "pnl": 70292,
+      "volume": 147792,
+      "efficiency": 47.56143769622172
+    },
+    {
+      "name": "muhammaden",
+      "wallet": "0x4463be2426bc303c6de6d42bb0f8caf25cbdc195",
+      "profile_url": "https://polymarket.com/@muhammaden",
+      "pnl": 69999,
+      "volume": 140828,
+      "efficiency": 49.70531428409124
+    },
+    {
+      "name": "RITB123",
+      "wallet": "0x724db3c436dcc7b26fbe1ae0c0d6af538b588dea",
+      "profile_url": "https://polymarket.com/@RITB123",
+      "pnl": 69706.78732186381,
+      "volume": 28175507.874006048,
+      "efficiency": 0.24740206151234417
+    },
+    {
+      "name": "0x9fE266012a2af9bB106046A37b1A98690aAC336b-1772019804690",
+      "wallet": "0x9fe266012a2af9bb106046a37b1a98690aac336b",
+      "profile_url": "https://polymarket.com/@0x9fE266012a2af9bB106046A37b1A98690aAC336b-1772019804690",
+      "pnl": 69642.5,
+      "volume": 140005,
+      "efficiency": 49.74286632620263
+    },
+    {
+      "name": "MonsieurDimanche",
+      "wallet": "0x0d18e30e252008d83f51dae00d36873ddd9e24a6",
+      "profile_url": "https://polymarket.com/@MonsieurDimanche",
+      "pnl": 69600.0916524475,
+      "volume": 10480609.680577004,
+      "efficiency": 0.6640843784253562
+    },
+    {
+      "name": "Euan",
+      "wallet": "0xdd225a03cd7ed89e3931906c67c75ab31cf89ef1",
+      "profile_url": "https://polymarket.com/@Euan",
+      "pnl": 69565.22819719868,
+      "volume": 4983377.019702001,
+      "efficiency": 1.3959455189155765
+    },
+    {
+      "name": "BetterPlace",
+      "wallet": "0x5f8fe08245151828dc063df19ccbb3c9100d40cf",
+      "profile_url": "https://polymarket.com/@BetterPlace",
+      "pnl": 69388.33403937946,
+      "volume": 1595123.975247999,
+      "efficiency": 4.350027654031809
+    },
+    {
+      "name": "Wsix",
+      "wallet": "0x56c5e91f0ff58e9015011a18b61509b68192dbcf",
+      "profile_url": "https://polymarket.com/@Wsix",
+      "pnl": 69085.78779629729,
+      "volume": 926815.6499889999,
+      "efficiency": 7.45410242016492
+    },
+    {
+      "name": "ye2028",
+      "wallet": "0x4a0d6f30a6d82809a7a928867d51b2cb35a1c2ab",
+      "profile_url": "https://polymarket.com/@ye2028",
+      "pnl": 68844.603765,
+      "volume": 474847.68,
+      "efficiency": 14.498249999873645
+    },
+    {
+      "name": "edfgdsas",
+      "wallet": "0x3bdbf89b0420924b99408841349a13d3cd7cde66",
+      "profile_url": "https://polymarket.com/@edfgdsas",
+      "pnl": 68693.24170099998,
+      "volume": 137572.11147499998,
+      "efficiency": 49.93253426475403
+    },
+    {
+      "name": "marek-edelman",
+      "wallet": "0x9c1e16f23740b3cce806a3ffc54ebc11f8e92fd2",
+      "profile_url": "https://polymarket.com/@marek-edelman",
+      "pnl": 68607.35190075799,
+      "volume": 10298726.183803022,
+      "efficiency": 0.6661731817732752
+    },
+    {
+      "name": "nasiraliqu",
+      "wallet": "0xc26595e7752a9531b16028fd0165f3e8d890af0f",
+      "profile_url": "https://polymarket.com/@nasiraliqu",
+      "pnl": 67994,
+      "volume": 135988,
+      "efficiency": 50.0
+    },
+    {
+      "name": "0x8245ea0d5A476678Cb354B69e136908F0757EbeD-1721011077908",
+      "wallet": "0x8245ea0d5a476678cb354b69e136908f0757ebed",
+      "profile_url": "https://polymarket.com/@0x8245ea0d5A476678Cb354B69e136908F0757EbeD-1721011077908",
+      "pnl": 67943.65537546792,
+      "volume": 32783504.78484402,
+      "efficiency": 0.20724951716229748
+    },
+    {
+      "name": "werwerwerwer",
+      "wallet": "0xaa98a4d9f524d1076b071dce22a3b6c753c24a57",
+      "profile_url": "https://polymarket.com/@werwerwerwer",
+      "pnl": 67671.77727338535,
+      "volume": 685076.5806330001,
+      "efficiency": 9.877987247915799
+    },
+    {
+      "name": "Kramer",
+      "wallet": "0xb3c18d1a6e43c2012a48060b462f74f2aac01ef7",
+      "profile_url": "https://polymarket.com/@Kramer",
+      "pnl": 67598.2791268125,
+      "volume": 97785.986633,
+      "efficiency": 69.12879999924243
+    },
+    {
+      "name": "test686",
+      "wallet": "0x78546079b40bc80cd75dc318cac775c1f653a392",
+      "profile_url": "https://polymarket.com/@test686",
+      "pnl": 67584.017488,
+      "volume": 425176.8209,
+      "efficiency": 15.895508448682696
+    },
+    {
+      "name": "0xb563eb0184543459596fd1011d013b7451600115",
+      "wallet": "0xb563eb0184543459596fd1011d013b7451600115",
+      "profile_url": "https://polymarket.com/@0xb563eb0184543459596fd1011d013b7451600115",
+      "pnl": 67501.33316553103,
+      "volume": 7899890.056398001,
+      "efficiency": 0.8544591466923357
+    },
+    {
+      "name": "trevolkma",
+      "wallet": "0x69af2c46bccd6ce5d8e7dd6381fb8daa8a853210",
+      "profile_url": "https://polymarket.com/@trevolkma",
+      "pnl": 67428.72516400002,
+      "volume": 134900.834379,
+      "efficiency": 49.98392002125128
+    },
+    {
+      "name": "officialaccount",
+      "wallet": "0x3e3bb2ba5e1c84126524b842818ed32f850ee982",
+      "profile_url": "https://polymarket.com/@officialaccount",
+      "pnl": 67350.75745546649,
+      "volume": 7522596.550596002,
+      "efficiency": 0.8953126357697649
+    },
+    {
+      "name": "Collabb2",
+      "wallet": "0x9f2dde9fcb83190847a8da2287c3e6f43c8bc34d",
+      "profile_url": "https://polymarket.com/@Collabb2",
+      "pnl": 67299.938114,
+      "volume": 238537.35706600003,
+      "efficiency": 28.21358421246322
+    },
+    {
+      "name": "cleanwalls",
+      "wallet": "0x18ba998b01068c28418b7116ae86c6df1764de51",
+      "profile_url": "https://polymarket.com/@cleanwalls",
+      "pnl": 66786.36126524425,
+      "volume": 446406.61513000005,
+      "efficiency": 14.960880731078571
+    },
+    {
+      "name": "dsmr",
+      "wallet": "0xab0a0633093efe851db532907f55e9ffdbe99c25",
+      "profile_url": "https://polymarket.com/@dsmr",
+      "pnl": 66785.133794,
+      "volume": 133772.53213799998,
+      "efficiency": 49.92439982006495
+    },
+    {
+      "name": "luochen1",
+      "wallet": "0x511e5c7b146d861a66b29f8ba891e143306d1a69",
+      "profile_url": "https://polymarket.com/@luochen1",
+      "pnl": 66769.00744018544,
+      "volume": 315340.91885600006,
+      "efficiency": 21.173594496525013
+    },
+    {
+      "name": "0x1f55526663a32D5599138ec02be138e537DCe9A4-1768601824177",
+      "wallet": "0x1f55526663a32d5599138ec02be138e537dce9a4",
+      "profile_url": "https://polymarket.com/@0x1f55526663a32D5599138ec02be138e537DCe9A4-1768601824177",
+      "pnl": 66530.94367864115,
+      "volume": 2111811.769778,
+      "efficiency": 3.150420157267855
+    },
+    {
+      "name": "dasasd",
+      "wallet": "0x6a7d898b1be25e6799bc802fc539ccf1c0b81f87",
+      "profile_url": "https://polymarket.com/@dasasd",
+      "pnl": 66397.26837070574,
+      "volume": 1221051.7504729999,
+      "efficiency": 5.437711247290328
+    },
+    {
+      "name": "tryingmyluckhere",
+      "wallet": "0xac9b386454ed02ef205e0ebd189d8864fd02d4c5",
+      "profile_url": "https://polymarket.com/@tryingmyluckhere",
+      "pnl": 66299.0439650677,
+      "volume": 1665358.7924189998,
+      "efficiency": 3.9810666786564175
+    },
+    {
+      "name": "rigober",
+      "wallet": "0x5ee8cc00eb174041df6c854b4ba7a8d822c2b5c0",
+      "profile_url": "https://polymarket.com/@rigober",
+      "pnl": 66079.53343099999,
+      "volume": 132284.980404,
+      "efficiency": 49.95240822441993
+    },
+    {
+      "name": "sheridangerlach",
+      "wallet": "0xcc7b6376adee4c5720512cf1797c12d708468606",
+      "profile_url": "https://polymarket.com/@sheridangerlach",
+      "pnl": 65993.12585200001,
+      "volume": 132034.911718,
+      "efficiency": 49.981573050124844
+    },
+    {
+      "name": "SynthDataDotCo",
+      "wallet": "0x557bed924a1bb6f62842c5742d1dc789b8d480d4",
+      "profile_url": "https://polymarket.com/@SynthDataDotCo",
+      "pnl": 65963.19413000002,
+      "volume": 36600463.39517396,
+      "efficiency": 0.18022502452441014
+    },
+    {
+      "name": "tradewife",
+      "wallet": "0xb8d14d0488bee8a3f1403d118ba876f2e6ee40c3",
+      "profile_url": "https://polymarket.com/@tradewife",
+      "pnl": 65888.42220130605,
+      "volume": 5404615.13826,
+      "efficiency": 1.219114044492697
+    },
+    {
+      "name": "CarpeDegen",
+      "wallet": "0x1f85e6e3e41e5f1fe03f6cf22a52ae4e352ea51b",
+      "profile_url": "https://polymarket.com/@CarpeDegen",
+      "pnl": 65880.10759950962,
+      "volume": 1161084.458367,
+      "efficiency": 5.674015109302753
+    },
+    {
+      "name": "MangoTrolley7",
+      "wallet": "0xed86741e5223f1b72945f6c4002168b2588e78c7",
+      "profile_url": "https://polymarket.com/@MangoTrolley7",
+      "pnl": 65361.41221361258,
+      "volume": 8808443.893613046,
+      "efficiency": 0.7420313168027985
+    },
+    {
+      "name": "0x212af34bef48df3922c77ae109f67b690e",
+      "wallet": "0x212af34bef48df3922c77ae109f67b690ede83cf",
+      "profile_url": "https://polymarket.com/@0x212af34bef48df3922c77ae109f67b690e",
+      "pnl": 65331.669444587395,
+      "volume": 7405069.819129001,
+      "efficiency": 0.8822559549110617
+    },
+    {
+      "name": "trumpetplayer",
+      "wallet": "0x6f72fea92844c87b9d6683c415e7caef70ee83ad",
+      "profile_url": "https://polymarket.com/@trumpetplayer",
+      "pnl": 65114.384160286914,
+      "volume": 5202961.427705999,
+      "efficiency": 1.251486966894468
+    },
+    {
+      "name": "gydmasg",
+      "wallet": "0xc4567fe2a835b23f40db07f567ba0efbbdc98996",
+      "profile_url": "https://polymarket.com/@gydmasg",
+      "pnl": 65054.83704745642,
+      "volume": 2577708.941537999,
+      "efficiency": 2.52374641679449
+    },
+    {
+      "name": "wfff3",
+      "wallet": "0x3bbf699d871e4c2a3a54a5781d00f804fa721fb7",
+      "profile_url": "https://polymarket.com/@wfff3",
+      "pnl": 64448.00000687235,
+      "volume": 131103.882351,
+      "efficiency": 49.157964547783486
+    },
+    {
+      "name": "2026frederick",
+      "wallet": "0x82a9ca3dac74910ceaace565832400dfdf26c9a1",
+      "profile_url": "https://polymarket.com/@2026frederick",
+      "pnl": 64191.20800385351,
+      "volume": 10200718.757454008,
+      "efficiency": 0.6292812254719486
+    },
+    {
+      "name": "Mu0",
+      "wallet": "0x07ca072cb89bc5ffddef8f5f9cfd6d81630ba694",
+      "profile_url": "https://polymarket.com/@Mu0",
+      "pnl": 64184.80003255716,
+      "volume": 1582343.068932,
+      "efficiency": 4.0563137850933035
+    },
+    {
+      "name": "Besiege",
+      "wallet": "0x028f0762a67dd4df3cbfd71f05dc6c579a71f5ab",
+      "profile_url": "https://polymarket.com/@Besiege",
+      "pnl": 64130.632613668124,
+      "volume": 23992842.949196,
+      "efficiency": 0.26729067809705787
+    },
+    {
+      "name": "Treadmilled",
+      "wallet": "0xf4baccff188321440a1ed01a5d5fd89c3e1f5933",
+      "profile_url": "https://polymarket.com/@Treadmilled",
+      "pnl": 63957.44747608809,
+      "volume": 850616.3675880001,
+      "efficiency": 7.518953304113491
+    },
+    {
+      "name": "Ultron-has-landed",
+      "wallet": "0x1f7373a24425f6fba56938e007e45a915e347775",
+      "profile_url": "https://polymarket.com/@Ultron-has-landed",
+      "pnl": 63891.07746012436,
+      "volume": 137896.07293000002,
+      "efficiency": 46.33277518537985
+    },
+    {
+      "name": "0x3d2d66eb933cfa7aa7b9fc21e6614f080de99360",
+      "wallet": "0x3d2d66eb933cfa7aa7b9fc21e6614f080de99360",
+      "profile_url": "https://polymarket.com/@0x3d2d66eb933cfa7aa7b9fc21e6614f080de99360",
+      "pnl": 63724.08724253783,
+      "volume": 17441728.869558007,
+      "efficiency": 0.36535419005256375
+    },
+    {
+      "name": "tourists",
+      "wallet": "0xc6dd722558dbfbd8fa780efcbe819ed8c6604b9f",
+      "profile_url": "https://polymarket.com/@tourists",
+      "pnl": 63556.50768057516,
+      "volume": 1657491.05653,
+      "efficiency": 3.8345007914330673
+    },
+    {
+      "name": "ilovecircle",
+      "wallet": "0xa9878e59934ab507f9039bcb917c1bae0451141d",
+      "profile_url": "https://polymarket.com/@ilovecircle",
+      "pnl": 63554.26547877744,
+      "volume": 3946233.7861609985,
+      "efficiency": 1.6105043168414186
+    },
+    {
+      "name": "bigballer",
+      "wallet": "0x79f365b8973887b4d5606650edf6948fcd0bd803",
+      "profile_url": "https://polymarket.com/@bigballer",
+      "pnl": 63340.1914839766,
+      "volume": 1787583.9022380004,
+      "efficiency": 3.5433408974357294
+    },
+    {
+      "name": "0x7d8a547ecae47a031ea46fff45876e400c28217a",
+      "wallet": "0x7d8a547ecae47a031ea46fff45876e400c28217a",
+      "profile_url": "https://polymarket.com/@0x7d8a547ecae47a031ea46fff45876e400c28217a",
+      "pnl": 63186.24149896598,
+      "volume": 14423159.331568025,
+      "efficiency": 0.43808877130456436
+    },
+    {
+      "name": "turkish1nsider",
+      "wallet": "0xaf0ff679d5c2245fa6a4049981f026ef6dc8d0f8",
+      "profile_url": "https://polymarket.com/@turkish1nsider",
+      "pnl": 63134.05563099998,
+      "volume": 179438.909638,
+      "efficiency": 35.1841502817681
+    },
+    {
+      "name": "boobmen",
+      "wallet": "0x0172e87fa93125e9ebd3d657ed6ce62cc85884a4",
+      "profile_url": "https://polymarket.com/@boobmen",
+      "pnl": 62933.95522972262,
+      "volume": 374550.191934,
+      "efficiency": 16.80254251232964
+    },
+    {
+      "name": "anonymousei",
+      "wallet": "0x5e691969a74194d6d6a770d3235ceec3f9c84ecd",
+      "profile_url": "https://polymarket.com/@anonymousei",
+      "pnl": 62929.852980962634,
+      "volume": 191483.21812,
+      "efficiency": 32.86442206205524
+    },
+    {
+      "name": "n0madsplice",
+      "wallet": "0xb548b896c743baed7502077a819f4e6afea108f3",
+      "profile_url": "https://polymarket.com/@n0madsplice",
+      "pnl": 62856.22579053716,
+      "volume": 16506568.256668055,
+      "efficiency": 0.38079523746642807
+    },
+    {
+      "name": "nyypug",
+      "wallet": "0x41ac00f13900fe5852c310aa8dae45c5883d3900",
+      "profile_url": "https://polymarket.com/@nyypug",
+      "pnl": 62738,
+      "volume": 180124,
+      "efficiency": 34.83045013435189
+    },
+    {
+      "name": "geniusMC",
+      "wallet": "0x0b9cae2b0dfe7a71c413e0604eaac1c352f87e44",
+      "profile_url": "https://polymarket.com/@geniusMC",
+      "pnl": 62605.10189146,
+      "volume": 3765976.0158050004,
+      "efficiency": 1.662387164143364
+    },
+    {
+      "name": "elonmug",
+      "wallet": "0xdc669ba0adb45448020025f756070492d1070533",
+      "profile_url": "https://polymarket.com/@elonmug",
+      "pnl": 62578.572099701574,
+      "volume": 22446448.057361584,
+      "efficiency": 0.27879053264811837
+    },
+    {
+      "name": "wttg",
+      "wallet": "0xdf25bae7c5b03744791867ac39fe2865ad0c3b7f",
+      "profile_url": "https://polymarket.com/@wttg",
+      "pnl": 61913.88897098327,
+      "volume": 398904.49139700003,
+      "efficiency": 15.520980662352327
+    },
+    {
+      "name": "Raphael04",
+      "wallet": "0x7990f8702e1ee17a97fd719580f5c8ed050464b8",
+      "profile_url": "https://polymarket.com/@Raphael04",
+      "pnl": 61808.249915528024,
+      "volume": 2919595.898381999,
+      "efficiency": 2.117013863109663
+    },
+    {
+      "name": "Michelangelo02",
+      "wallet": "0x1d70c34229cc35817b5cdff882b4bcd4e3088691",
+      "profile_url": "https://polymarket.com/@Michelangelo02",
+      "pnl": 61722.244188154014,
+      "volume": 1958581.9341399998,
+      "efficiency": 3.1513741198300105
+    },
+    {
+      "name": "mideea",
+      "wallet": "0x018632336f97d72891d0b7dffc4f39b49f71fde0",
+      "profile_url": "https://polymarket.com/@mideea",
+      "pnl": 61696.760879471294,
+      "volume": 316178.5385060001,
+      "efficiency": 19.513266514229418
+    },
+    {
+      "name": "alakay",
+      "wallet": "0xa989d319af1f06de9c912f187ff6b5a27e628d91",
+      "profile_url": "https://polymarket.com/@alakay",
+      "pnl": 61370.503875488816,
+      "volume": 122841.631345,
+      "efficiency": 49.95904336627549
+    },
+    {
+      "name": "Onegambleisenoughtowin",
+      "wallet": "0x64fe36ebdbd3fbdc84a810b6161049e4e0fbe618",
+      "profile_url": "https://polymarket.com/@Onegambleisenoughtowin",
+      "pnl": 61324.973253805394,
+      "volume": 375665.806003,
+      "efficiency": 16.324342613529126
+    },
+    {
+      "name": "0xa3d043b2da34f58045c6485d3f89b798b2b0ec04",
+      "wallet": "0xa3d043b2da34f58045c6485d3f89b798b2b0ec04",
+      "profile_url": "https://polymarket.com/@0xa3d043b2da34f58045c6485d3f89b798b2b0ec04",
+      "pnl": 61319.04078123793,
+      "volume": 1259292.7884289941,
+      "efficiency": 4.8693235873871155
+    },
+    {
+      "name": "holytorpedo",
+      "wallet": "0xb9fb2393f0ba95f32e93ceea04888774bc20de7a",
+      "profile_url": "https://polymarket.com/@holytorpedo",
+      "pnl": 61251.6009007988,
+      "volume": 1394754.7718180004,
+      "efficiency": 4.391567760758408
+    },
+    {
+      "name": "swoswo88",
+      "wallet": "0x706b963cfc0aeaaf68c1ebea4cc75277214f4230",
+      "profile_url": "https://polymarket.com/@swoswo88",
+      "pnl": 61231.131034072205,
+      "volume": 350600.576282,
+      "efficiency": 17.464640726894277
+    },
+    {
+      "name": "goneee",
+      "wallet": "0x5dbea3ea1caed68d36703077c76bdd23d0fb41e9",
+      "profile_url": "https://polymarket.com/@goneee",
+      "pnl": 61156.865,
+      "volume": 695567.73,
+      "efficiency": 8.792366632649848
+    },
+    {
+      "name": "Nk9",
+      "wallet": "0x410338a0360417802c93d2e8f1c490f0fcc5a4e7",
+      "profile_url": "https://polymarket.com/@Nk9",
+      "pnl": 60615.97247251105,
+      "volume": 269912.615229,
+      "efficiency": 22.457628525840885
+    },
+    {
+      "name": "ProfShenaniger",
+      "wallet": "0xe7142d1bfd31dc215922a4c7b5ac613a3e01d510",
+      "profile_url": "https://polymarket.com/@ProfShenaniger",
+      "pnl": 60557.91971224778,
+      "volume": 357022.088877,
+      "efficiency": 16.961953223323107
+    },
+    {
+      "name": "SchrodingerBet",
+      "wallet": "0x5a1cd342c117a4edb1e283a306ccfd60a3d4970a",
+      "profile_url": "https://polymarket.com/@SchrodingerBet",
+      "pnl": 60435.84017781029,
+      "volume": 1086867.5354970002,
+      "efficiency": 5.5605525240179645
+    },
+    {
+      "name": "tnl",
+      "wallet": "0xb619ed5b378053f8309c307d2f7adf9c13665068",
+      "profile_url": "https://polymarket.com/@tnl",
+      "pnl": 60219.872111115015,
+      "volume": 241925.10039600002,
+      "efficiency": 24.891948794293313
+    },
+    {
+      "name": "0x0d471d4b359275E6F51Ab03E48467DB7C5489505-1770840474545",
+      "wallet": "0x0d471d4b359275e6f51ab03e48467db7c5489505",
+      "profile_url": "https://polymarket.com/@0x0d471d4b359275E6F51Ab03E48467DB7C5489505-1770840474545",
+      "pnl": 60185.116374,
+      "volume": 378524.31624700007,
+      "efficiency": 15.89993397801349
+    },
+    {
+      "name": "gerkyles",
+      "wallet": "0xb878a54083e5f6528ed28a3daac23d5d540916e0",
+      "profile_url": "https://polymarket.com/@gerkyles",
+      "pnl": 59947.431567722524,
+      "volume": 120217.960728,
+      "efficiency": 49.865620082640575
+    },
+    {
+      "name": "ss88ss",
+      "wallet": "0x57c22158a0fba791d6c3049a8aa981e0c0ddb716",
+      "profile_url": "https://polymarket.com/@ss88ss",
+      "pnl": 59818.795416955305,
+      "volume": 339530.218568,
+      "efficiency": 17.618106473481678
+    },
+    {
+      "name": "pschosuit",
+      "wallet": "0x32658d61f095d603fa7f8ea57799d392131334c3",
+      "profile_url": "https://polymarket.com/@pschosuit",
+      "pnl": 59752.50857874692,
+      "volume": 376733.042732,
+      "efficiency": 15.86070288537276
+    },
+    {
+      "name": "100USDollars",
+      "wallet": "0x781a48229e2c08e20d1eaad90ef73710988c96e6",
+      "profile_url": "https://polymarket.com/@100USDollars",
+      "pnl": 59625.92531096555,
+      "volume": 986955.3957969995,
+      "efficiency": 6.041400205610672
+    },
+    {
+      "name": "googoogaga23",
+      "wallet": "0xddaa07da69a0f71f7d0d7a654a430fa2f73c8766",
+      "profile_url": "https://polymarket.com/@googoogaga23",
+      "pnl": 59542.42689467658,
+      "volume": 854776.5224609993,
+      "efficiency": 6.965847251308112
+    },
+    {
+      "name": "thomas131",
+      "wallet": "0x7e118fee8b82bc6a189ccc382be3ea1010d59bac",
+      "profile_url": "https://polymarket.com/@thomas131",
+      "pnl": 59376.3118818325,
+      "volume": 339056.48354800005,
+      "efficiency": 17.512218395147315
+    },
+    {
+      "name": "eagerbeaver92",
+      "wallet": "0xed0d43dbd058832f23a867b4a99598f6c35b9716",
+      "profile_url": "https://polymarket.com/@eagerbeaver92",
+      "pnl": 59342.20789417467,
+      "volume": 251007.64382,
+      "efficiency": 23.64159393358138
+    },
+    {
+      "name": "0x2f83daa1ad38646b644f6ef320a58ea2a5684a2d",
+      "wallet": "0x2f83daa1ad38646b644f6ef320a58ea2a5684a2d",
+      "profile_url": "https://polymarket.com/@0x2f83daa1ad38646b644f6ef320a58ea2a5684a2d",
+      "pnl": 59317.81475372726,
+      "volume": 489403.356315,
+      "efficiency": 12.120434808695487
+    },
+    {
+      "name": "alexander-pistoletov",
+      "wallet": "0xb9a64a1dd8212ec282ac5a806cac6fe36fdb8b1e",
+      "profile_url": "https://polymarket.com/@alexander-pistoletov",
+      "pnl": 59313.82759772354,
+      "volume": 118749.51100200001,
+      "efficiency": 49.94869208069797
+    },
+    {
+      "name": "Axios",
+      "wallet": "0x03626d34381b0337387b0e8464c898f772009661",
+      "profile_url": "https://polymarket.com/@Axios",
+      "pnl": 59243.47748403933,
+      "volume": 683185.4725070001,
+      "efficiency": 8.671653579904293
+    },
+    {
+      "name": "0x0ab3a090e76fdec44",
+      "wallet": "0x16c0221d705a64895b704c97175c0f14ddf155a5",
+      "profile_url": "https://polymarket.com/@0x0ab3a090e76fdec44",
+      "pnl": 59128.87664762735,
+      "volume": 6376468.70137301,
+      "efficiency": 0.92729815540215
+    },
+    {
+      "name": "pochemy-on-a-ne-ya",
+      "wallet": "0xbf352222f3509e1f61bd5edb5d03ed834cce0718",
+      "profile_url": "https://polymarket.com/@pochemy-on-a-ne-ya",
+      "pnl": 59059.46396924247,
+      "volume": 142338.478609,
+      "efficiency": 41.492268672814205
+    },
+    {
+      "name": "Rock.San",
+      "wallet": "0xf7f0b0b1e9c0fe02ccad926916ee31aef74b912c",
+      "profile_url": "https://polymarket.com/@Rock.San",
+      "pnl": 59035.337584126864,
+      "volume": 6097918.156812001,
+      "efficiency": 0.9681228259545976
+    },
+    {
+      "name": "frozenriver",
+      "wallet": "0x143732d8a06bd1596c694f7873cd493be80aacfe",
+      "profile_url": "https://polymarket.com/@frozenriver",
+      "pnl": 58589.81171943883,
+      "volume": 3066457.6944770017,
+      "efficiency": 1.9106675374966031
+    },
+    {
+      "name": "Occult",
+      "wallet": "0x09705c0b0a5a7359f5c94688687fc73447e65ae4",
+      "profile_url": "https://polymarket.com/@Occult",
+      "pnl": 58472.481329251066,
+      "volume": 4895011.719243999,
+      "efficiency": 1.1945319987565166
+    },
+    {
+      "name": "D7422D98eA0d5b6Dd942a8eEd1d2a61945bFd0",
+      "wallet": "0x861f4149171db053c73382c40d2c7e5408fd177d",
+      "profile_url": "https://polymarket.com/@D7422D98eA0d5b6Dd942a8eEd1d2a61945bFd0",
+      "pnl": 58411.04409059989,
+      "volume": 498961.19080000004,
+      "efficiency": 11.706530521331256
+    },
+    {
+      "name": "madril",
+      "wallet": "0x34026514e0bda25f0f9fbb053fe3070cdc8c9446",
+      "profile_url": "https://polymarket.com/@madril",
+      "pnl": 58308.45515756313,
+      "volume": 1870011.592302,
+      "efficiency": 3.118079877022844
+    },
+    {
+      "name": "Vitaaalya",
+      "wallet": "0xd7eee5e918dc59fa32386a4ad8a89655946e9597",
+      "profile_url": "https://polymarket.com/@Vitaaalya",
+      "pnl": 58298.91908518362,
+      "volume": 3024562.0982810003,
+      "efficiency": 1.9275160235036208
+    },
+    {
+      "name": "valliedolor",
+      "wallet": "0xda3cb30df19c54d18fd79158c1c470048c280367",
+      "profile_url": "https://polymarket.com/@valliedolor",
+      "pnl": 58062.313401000014,
+      "volume": 116818.10966599999,
+      "efficiency": 49.70317835736996
+    },
+    {
+      "name": "kinderSman",
+      "wallet": "0xa6d9b55a6a3a54a9d50ca94c64f00af69c50fd2f",
+      "profile_url": "https://polymarket.com/@kinderSman",
+      "pnl": 58015.31730820222,
+      "volume": 275565.524309,
+      "efficiency": 21.05318415780774
+    },
+    {
+      "name": "Snoopy-Ba55",
+      "wallet": "0x28c090de0fa57a9e7cb8fd27e73c1d33413efaa1",
+      "profile_url": "https://polymarket.com/@Snoopy-Ba55",
+      "pnl": 58011.340982,
+      "volume": 994066.2662329996,
+      "efficiency": 5.835761955974341
+    },
+    {
+      "name": "yvonneal",
+      "wallet": "0x2da9cdcfc041d3732e0b1d42a2c7b35ac565be13",
+      "profile_url": "https://polymarket.com/@yvonneal",
+      "pnl": 57988.632962,
+      "volume": 122777.962,
+      "efficiency": 47.23048991642328
+    },
+    {
+      "name": "xiaomei8",
+      "wallet": "0x99eccf7c575974bdfa801f0ef262889191e121dd",
+      "profile_url": "https://polymarket.com/@xiaomei8",
+      "pnl": 57960.895577999996,
+      "volume": 727557.7837889998,
+      "efficiency": 7.966500650456834
+    },
+    {
+      "name": "simonabess0602",
+      "wallet": "0xf8a6f30bb738ca39fff47e38c2f526e53e9da12d",
+      "profile_url": "https://polymarket.com/@simonabess0602",
+      "pnl": 57951.93368234999,
+      "volume": 197040.891817,
+      "efficiency": 29.41112027455313
+    },
+    {
+      "name": "ebpvqs",
+      "wallet": "0xe19125dcc086f6f0097a9516b35626b4a8abaca4",
+      "profile_url": "https://polymarket.com/@ebpvqs",
+      "pnl": 57867.740027,
+      "volume": 117100.88295000001,
+      "efficiency": 49.41699718157419
+    },
+    {
+      "name": "johnnyapple",
+      "wallet": "0xe1a0aa0c3aff67101a3c6b33273194cab49afad0",
+      "profile_url": "https://polymarket.com/@johnnyapple",
+      "pnl": 57852.12624531195,
+      "volume": 1351453.9312379998,
+      "efficiency": 4.280732395540593
+    },
+    {
+      "name": "fernepre",
+      "wallet": "0x30020ae6818d9644726b9baa754766bccc67a212",
+      "profile_url": "https://polymarket.com/@fernepre",
+      "pnl": 57750.5,
+      "volume": 115501,
+      "efficiency": 50.0
+    },
+    {
+      "name": "oneoneone111",
+      "wallet": "0x89207d195197abcfaef9fae99d5483fcdab14ca5",
+      "profile_url": "https://polymarket.com/@oneoneone111",
+      "pnl": 57466.56144875071,
+      "volume": 8041487.589346074,
+      "efficiency": 0.7146260043339051
+    },
+    {
+      "name": "Ktulhuu",
+      "wallet": "0xe5bd36fc97a0bfc002bd2a8afc7616b1074637e7",
+      "profile_url": "https://polymarket.com/@Ktulhuu",
+      "pnl": 57370.65158938144,
+      "volume": 304974.84842200007,
+      "efficiency": 18.811600984877437
+    },
+    {
+      "name": "maidawill",
+      "wallet": "0x4eda5363800925e7f56f8d9135227b3a7e1cf4b8",
+      "profile_url": "https://polymarket.com/@maidawill",
+      "pnl": 57272.592698,
+      "volume": 116668.20968,
+      "efficiency": 49.09014448330738
+    },
+    {
+      "name": "le3s",
+      "wallet": "0x931bccc9667f7290988f5da68fab38e1395253e0",
+      "profile_url": "https://polymarket.com/@le3s",
+      "pnl": 57227.726202161495,
+      "volume": 137147.49842400002,
+      "efficiency": 41.727138197766045
+    },
+    {
+      "name": "4638507823",
+      "wallet": "0xbc2472a96accbe143b6f95e31929331e86cf3502",
+      "profile_url": "https://polymarket.com/@4638507823",
+      "pnl": 56922.11305825294,
+      "volume": 5637439.95498602,
+      "efficiency": 1.0097156424328442
+    },
+    {
+      "name": "pbshine",
+      "wallet": "0x9def9524630e31ff90f884eed32c3eecfbf8d1a5",
+      "profile_url": "https://polymarket.com/@pbshine",
+      "pnl": 56921.593792312975,
+      "volume": 1427018.050108,
+      "efficiency": 3.9888488998443306
+    },
+    {
+      "name": "sigridbeahanr",
+      "wallet": "0x5b228f006f70e182531cb3d440359051aa4f0d9e",
+      "profile_url": "https://polymarket.com/@sigridbeahanr",
+      "pnl": 56797.096964,
+      "volume": 113628.72226699999,
+      "efficiency": 49.98480650916814
+    },
+    {
+      "name": "Nessiasc",
+      "wallet": "0xedd2444500e2f246f90f3ceb258ab151edd4557a",
+      "profile_url": "https://polymarket.com/@Nessiasc",
+      "pnl": 56649.178577000006,
+      "volume": 114149.64037100002,
+      "efficiency": 49.62711962375298
+    },
+    {
+      "name": "fatpapi",
+      "wallet": "0xca334ba9a3ad086f0fce66d2b073d1f6c5c7918c",
+      "profile_url": "https://polymarket.com/@fatpapi",
+      "pnl": 56581.59999379653,
+      "volume": 1192310.5873960003,
+      "efficiency": 4.745542025033127
+    },
+    {
+      "name": "hmmmmm",
+      "wallet": "0x47bc8458d60154c8a17c2d8ce332f088a602abd2",
+      "profile_url": "https://polymarket.com/@hmmmmm",
+      "pnl": 56505.80760198675,
+      "volume": 16337424.311157996,
+      "efficiency": 0.34586729539364963
+    },
+    {
+      "name": "jakaylacons",
+      "wallet": "0x9da54c66299338b1a5ca2d082d62e2a402948d11",
+      "profile_url": "https://polymarket.com/@jakaylacons",
+      "pnl": 56485.544802000004,
+      "volume": 113070.752603,
+      "efficiency": 49.95592892206621
+    },
+    {
+      "name": "0xdAc0aBb17F6a20e728dBC03F97dFd83477df16D3-1769479778185",
+      "wallet": "0xdac0abb17f6a20e728dbc03f97dfd83477df16d3",
+      "profile_url": "https://polymarket.com/@0xdAc0aBb17F6a20e728dBC03F97dFd83477df16D3-1769479778185",
+      "pnl": 56307.64475941519,
+      "volume": 285274.2441040001,
+      "efficiency": 19.73807517614088
+    },
+    {
+      "name": "sobolevs",
+      "wallet": "0xa4b8acd82d21d7ef33811d20f2dc4a40b8e498b9",
+      "profile_url": "https://polymarket.com/@sobolevs",
+      "pnl": 56253.653839937295,
+      "volume": 8719802.557304038,
+      "efficiency": 0.6451253164306696
+    },
+    {
+      "name": "BuckMySalls",
+      "wallet": "0x509587cbb541251c74f261df3421f1fcc9fdc97c",
+      "profile_url": "https://polymarket.com/@BuckMySalls",
+      "pnl": 56188.87859018241,
+      "volume": 5534853.662770002,
+      "efficiency": 1.0151827313544877
+    },
+    {
+      "name": "SHERARD",
+      "wallet": "0xa564aaad2a650e43684211153e01f3eb112daa16",
+      "profile_url": "https://polymarket.com/@SHERARD",
+      "pnl": 56119.066439999995,
+      "volume": 112271.563225,
+      "efficiency": 49.98511183774424
+    },
+    {
+      "name": "Dreamwalker",
+      "wallet": "0xf0f6b5ac824ea202d312f46e7f701eeae354f699",
+      "profile_url": "https://polymarket.com/@Dreamwalker",
+      "pnl": 55882.65979046564,
+      "volume": 1666435.4018349992,
+      "efficiency": 3.3534249049756335
+    },
+    {
+      "name": "Peggyt",
+      "wallet": "0x49447d65bad9f5500972b6d535cc6a54bd3498c3",
+      "profile_url": "https://polymarket.com/@Peggyt",
+      "pnl": 55866.224831086096,
+      "volume": 116191.14054499999,
+      "efficiency": 48.08131202520515
+    },
+    {
+      "name": "baybebe",
+      "wallet": "0x3ed38dca1d28610e68c2fb39bba97c58111b898c",
+      "profile_url": "https://polymarket.com/@baybebe",
+      "pnl": 55699.818898,
+      "volume": 68300.00899999999,
+      "efficiency": 81.55170067107899
+    },
+    {
+      "name": "antoniettaex",
+      "wallet": "0x0eb7ef3e5c2baa9b85faa84555d90a5cc4b63930",
+      "profile_url": "https://polymarket.com/@antoniettaex",
+      "pnl": 55579.5,
+      "volume": 111649,
+      "efficiency": 49.780562297915786
+    },
+    {
+      "name": "randomuser123467",
+      "wallet": "0xf399f922cc8ff2527f88d151462a4cf21ee40129",
+      "profile_url": "https://polymarket.com/@randomuser123467",
+      "pnl": 55472.85061028863,
+      "volume": 1660646.5188670005,
+      "efficiency": 3.340436991259029
+    },
+    {
+      "name": "natoshi-sakamoto",
+      "wallet": "0xa8530e297e608975e846597e337f50819c52da85",
+      "profile_url": "https://polymarket.com/@natoshi-sakamoto",
+      "pnl": 55332.20199065378,
+      "volume": 1468612.2419990003,
+      "efficiency": 3.7676522371445307
+    },
+    {
+      "name": "coby",
+      "wallet": "0x574e3aa34743c81f8f9e65c38599e4da95e83ef1",
+      "profile_url": "https://polymarket.com/@coby",
+      "pnl": 55223.76142373506,
+      "volume": 891833.3583399999,
+      "efficiency": 6.192161451162238
+    },
+    {
+      "name": "0x53d2a7ae2c26664fb1f665893d07c0dadcaa872a",
+      "wallet": "0x53d2a7ae2c26664fb1f665893d07c0dadcaa872a",
+      "profile_url": "https://polymarket.com/@0x53d2a7ae2c26664fb1f665893d07c0dadcaa872a",
+      "pnl": 55145.10985800008,
+      "volume": 9010395.424416017,
+      "efficiency": 0.6120165349077803
+    },
+    {
+      "name": "Egozic86",
+      "wallet": "0x744c072005bde6ddab8764a7477f61d3d22ae37f",
+      "profile_url": "https://polymarket.com/@Egozic86",
+      "pnl": 55119.20782124016,
+      "volume": 612564.1045469998,
+      "efficiency": 8.998112591334687
+    },
+    {
+      "name": "goldingboy",
+      "wallet": "0x54e289262526f4cf3c347826b416ef341f7d5009",
+      "profile_url": "https://polymarket.com/@goldingboy",
+      "pnl": 55106.654235477814,
+      "volume": 1057701.2452289995,
+      "efficiency": 5.210039648156682
+    },
+    {
+      "name": "truthteller",
+      "wallet": "0x30e443872ddf63b2908a49f92cd690c304a55102",
+      "profile_url": "https://polymarket.com/@truthteller",
+      "pnl": 55095.849471982896,
+      "volume": 9858714.274938,
+      "efficiency": 0.55885430833555
+    },
+    {
+      "name": "brantut",
+      "wallet": "0x45642ba37038647ede5b9388578edcb7e9cd63be",
+      "profile_url": "https://polymarket.com/@brantut",
+      "pnl": 54950.553297000006,
+      "volume": 110286.780073,
+      "efficiency": 49.82514972386323
+    },
+    {
+      "name": "thebtcbear",
+      "wallet": "0x7bdeab151b9265a89f9c2a3261e68c6a1c948c91",
+      "profile_url": "https://polymarket.com/@thebtcbear",
+      "pnl": 54873.35380462659,
+      "volume": 2930515.522351,
+      "efficiency": 1.8724812541038705
+    },
+    {
+      "name": "RememberAmalek",
+      "wallet": "0x6139c42e48cf190e67a0a85d492413b499336b7a",
+      "profile_url": "https://polymarket.com/@RememberAmalek",
+      "pnl": 54536.86306110338,
+      "volume": 1247562.617421,
+      "efficiency": 4.371473006608973
+    },
+    {
+      "name": "geraldineba",
+      "wallet": "0x370470be35523fb86b229a281b09d81f0a40bc56",
+      "profile_url": "https://polymarket.com/@geraldineba",
+      "pnl": 54520.739368999995,
+      "volume": 109518.62376799998,
+      "efficiency": 49.782162606877364
+    },
+    {
+      "name": "ilyho",
+      "wallet": "0x3526087ea139532d71198813c2dd55defaefaaba",
+      "profile_url": "https://polymarket.com/@ilyho",
+      "pnl": 54439.05008478378,
+      "volume": 773379.406871,
+      "efficiency": 7.039112963330331
+    },
+    {
+      "name": "dwpoker",
+      "wallet": "0x8e77537e059837d3c2ca5b4efe75e74e9498c4f3",
+      "profile_url": "https://polymarket.com/@dwpoker",
+      "pnl": 54397.01554760078,
+      "volume": 876605.3468499999,
+      "efficiency": 6.205416809636334
+    },
+    {
+      "name": "kellenhyattp",
+      "wallet": "0x01c92ff81a9e729fb9a92d10f40049bd5ac20cea",
+      "profile_url": "https://polymarket.com/@kellenhyattp",
+      "pnl": 54342,
+      "volume": 109266,
+      "efficiency": 49.733677447696444
+    },
+    {
+      "name": "VOID-PEPPER",
+      "wallet": "0xa84edaf1a562eabb463dc6cf4c3e9c407a5edbeb",
+      "profile_url": "https://polymarket.com/@VOID-PEPPER",
+      "pnl": 54260.42423316803,
+      "volume": 2790109.27711,
+      "efficiency": 1.9447419023448094
+    },
+    {
+      "name": "liming123456",
+      "wallet": "0xffe697dd6fdcd23a08db4971983d199d762457bb",
+      "profile_url": "https://polymarket.com/@liming123456",
+      "pnl": 54215.234999999986,
+      "volume": 1801060.5499999998,
+      "efficiency": 3.0101839163597246
+    },
+    {
+      "name": "TraderYY",
+      "wallet": "0x36f4823c8227138fbf550c269bdc5d188b913e14",
+      "profile_url": "https://polymarket.com/@TraderYY",
+      "pnl": 54114.7855578012,
+      "volume": 744522.193589,
+      "efficiency": 7.268391194215264
+    },
+    {
+      "name": "wzbbb",
+      "wallet": "0x19b3823092892c026517fd0ff58df4889abe0b9b",
+      "profile_url": "https://polymarket.com/@wzbbb",
+      "pnl": 53777.0716423389,
+      "volume": 11866800.793187043,
+      "efficiency": 0.45317244790367883
+    },
+    {
+      "name": "0x65290cf8461AaEaDD854B44Eb48dE1F930945676-1764154817602",
+      "wallet": "0x65290cf8461aaeadd854b44eb48de1f930945676",
+      "profile_url": "https://polymarket.com/@0x65290cf8461AaEaDD854B44Eb48dE1F930945676-1764154817602",
+      "pnl": 53757.28638896391,
+      "volume": 207842.951313,
+      "efficiency": 25.864377910997042
+    },
+    {
+      "name": "LunarLoot",
+      "wallet": "0x75008f8c64c5f0935c64180ce4e352731fc6059b",
+      "profile_url": "https://polymarket.com/@LunarLoot",
+      "pnl": 53740.070166,
+      "volume": 107921.04205099998,
+      "efficiency": 49.79572949323838
+    },
+    {
+      "name": "kulipa",
+      "wallet": "0xc6ba0edbde8d0de978b5bdae76006b2883abc0ee",
+      "profile_url": "https://polymarket.com/@kulipa",
+      "pnl": 53619.14177420548,
+      "volume": 526806.1816489999,
+      "efficiency": 10.178153492118817
+    },
+    {
+      "name": "sdgwerb",
+      "wallet": "0x6b1f8b062d760c44fa70ce7d3856399a075b8a3d",
+      "profile_url": "https://polymarket.com/@sdgwerb",
+      "pnl": 53608.49261622302,
+      "volume": 296958.69629299996,
+      "efficiency": 18.05250807113228
+    },
+    {
+      "name": "testfinney",
+      "wallet": "0x59cd67a7a9bbede54516474bed6f3bf6069e92d2",
+      "profile_url": "https://polymarket.com/@testfinney",
+      "pnl": 53384.37256460911,
+      "volume": 4137633.7608000007,
+      "efficiency": 1.2902150274964739
+    },
+    {
+      "name": "1231123123",
+      "wallet": "0x3f610edaf25db2fe296a5a0cbd0b58a0dc99e259",
+      "profile_url": "https://polymarket.com/@1231123123",
+      "pnl": 53190.36075370121,
+      "volume": 7602308.905340999,
+      "efficiency": 0.6996606085860618
+    },
+    {
+      "name": "v4chan",
+      "wallet": "0x140a8a23e2cb236ec803ad8a8a7da8d68faec075",
+      "profile_url": "https://polymarket.com/@v4chan",
+      "pnl": 53122.736978,
+      "volume": 309976.712091,
+      "efficiency": 17.137654186874766
+    },
+    {
+      "name": "RoadTo1M-GLHF",
+      "wallet": "0x22e645acff2bbb2cd7a74462f8779eb6f53d409f",
+      "profile_url": "https://polymarket.com/@RoadTo1M-GLHF",
+      "pnl": 53093.386784142116,
+      "volume": 4298208.142723,
+      "efficiency": 1.2352446652456996
+    },
+    {
+      "name": "kristofersin",
+      "wallet": "0xba64c51abcade6f3276f896ae45b4a2a15454700",
+      "profile_url": "https://polymarket.com/@kristofersin",
+      "pnl": 53078.232676,
+      "volume": 106435.79086299999,
+      "efficiency": 49.86878215084645
+    },
+    {
+      "name": "janosik",
+      "wallet": "0x10040fe248682c406c4777958d243d62846e9b8f",
+      "profile_url": "https://polymarket.com/@janosik",
+      "pnl": 52879.573241019345,
+      "volume": 5549620.581574997,
+      "efficiency": 0.9528502437911167
+    },
+    {
+      "name": "johnmcginn",
+      "wallet": "0xa3e9a711841e655def080044768452b60f4263d0",
+      "profile_url": "https://polymarket.com/@johnmcginn",
+      "pnl": 52722.069654917635,
+      "volume": 1285926.300491,
+      "efficiency": 4.0999293376912025
+    },
+    {
+      "name": "0x6c4490948df4b4d88f5b9a800d5ad3cb629e3ae5",
+      "wallet": "0x6c4490948df4b4d88f5b9a800d5ad3cb629e3ae5",
+      "profile_url": "https://polymarket.com/@0x6c4490948df4b4d88f5b9a800d5ad3cb629e3ae5",
+      "pnl": 52591.48640036478,
+      "volume": 8511463.936957005,
+      "efficiency": 0.6178900220913952
+    },
+    {
+      "name": "shizzle99",
+      "wallet": "0xa2c97a854993d3f4935334f89d7dada6a6269c10",
+      "profile_url": "https://polymarket.com/@shizzle99",
+      "pnl": 52549.05591864182,
+      "volume": 4198620.829398999,
+      "efficiency": 1.251578984000892
+    },
+    {
+      "name": "quinca",
+      "wallet": "0x75ca58f74f718d583270bdbd665098551fbcd680",
+      "profile_url": "https://polymarket.com/@quinca",
+      "pnl": 52495.48652033351,
+      "volume": 552998.1899400001,
+      "efficiency": 9.4928857770817
+    },
+    {
+      "name": "cuti",
+      "wallet": "0xb7b3ed1c02a77a200b600ac407747be2f3b79573",
+      "profile_url": "https://polymarket.com/@cuti",
+      "pnl": 52470.25368374326,
+      "volume": 1124430.648491,
+      "efficiency": 4.666384161100464
+    },
+    {
+      "name": "WindWalk3",
+      "wallet": "0x2728d99b2405a52db60160837e130b3ba3c1a83c",
+      "profile_url": "https://polymarket.com/@WindWalk3",
+      "pnl": 52293.471123699994,
+      "volume": 147437.315492,
+      "efficiency": 35.46827405884059
+    },
+    {
+      "name": "suko-tikovka",
+      "wallet": "0x851946b13d7da4c1ddcaefd6bef605fd642f37c7",
+      "profile_url": "https://polymarket.com/@suko-tikovka",
+      "pnl": 52259.11750513958,
+      "volume": 123639.11761599999,
+      "efficiency": 42.26746236368868
+    },
+    {
+      "name": "wrqlj",
+      "wallet": "0x42750318632bb15bdbc2c58ec6be0919a43b655b",
+      "profile_url": "https://polymarket.com/@wrqlj",
+      "pnl": 52193.620147,
+      "volume": 104551.10300300001,
+      "efficiency": 49.92163511225926
+    },
+    {
+      "name": "euclids",
+      "wallet": "0xaad85f12e94e6bd9c09210e0b9c34d1348c1394a",
+      "profile_url": "https://polymarket.com/@euclids",
+      "pnl": 51876.61389049159,
+      "volume": 5013253.907321997,
+      "efficiency": 1.0347892775732814
+    },
+    {
+      "name": "teenag3er",
+      "wallet": "0xd399de75de083bb2b722489e4f2e9643a3f6927f",
+      "profile_url": "https://polymarket.com/@teenag3er",
+      "pnl": 51675.202696469794,
+      "volume": 118647.929332,
+      "efficiency": 43.553396159045064
+    },
+    {
+      "name": "Batundi",
+      "wallet": "0x9604b357e8307b0ccc8eb5812725d2b112c6fc1d",
+      "profile_url": "https://polymarket.com/@Batundi",
+      "pnl": 51583.827040010314,
+      "volume": 1947881.0943409996,
+      "efficiency": 2.6482020483628124
+    },
+    {
+      "name": "Honey12345",
+      "wallet": "0xcdae215927f04fb24fdf679f6c5923f6fb8ab808",
+      "profile_url": "https://polymarket.com/@Honey12345",
+      "pnl": 51568.35015458953,
+      "volume": 5312659.5015010005,
+      "efficiency": 0.9706692126611874
+    },
+    {
+      "name": "tatumjohns",
+      "wallet": "0xf7c6a4e0d6e71650c1efaf0ba00849a5ba61c7b9",
+      "profile_url": "https://polymarket.com/@tatumjohns",
+      "pnl": 51388,
+      "volume": 103324,
+      "efficiency": 49.73481475746196
+    },
+    {
+      "name": "zitaethyerguy",
+      "wallet": "0xb4ff33ac1c696af6395992da15d3f133d9b376dd",
+      "profile_url": "https://polymarket.com/@zitaethyerguy",
+      "pnl": 51377.086912,
+      "volume": 102798.27620600001,
+      "efficiency": 49.9785490653989
+    },
+    {
+      "name": "EtEatmyorder",
+      "wallet": "0x9efd3eb7b39a3989ec262c7f9790cab9c33880f3",
+      "profile_url": "https://polymarket.com/@EtEatmyorder",
+      "pnl": 51289.29226648735,
+      "volume": 195859.180825,
+      "efficiency": 26.186820577134085
+    },
+    {
+      "name": "0xdD2dcEbc3a85e8e7F986143446B13F91CB8E84E6-1722519269441",
+      "wallet": "0xdd2dcebc3a85e8e7f986143446b13f91cb8e84e6",
+      "profile_url": "https://polymarket.com/@0xdD2dcEbc3a85e8e7F986143446B13F91CB8E84E6-1722519269441",
+      "pnl": 51260.7657451984,
+      "volume": 1371392.8156270003,
+      "efficiency": 3.737861622219597
+    },
+    {
+      "name": "dooDoo69",
+      "wallet": "0x0cd52868c5b7d360e3699cf0401b225d2beab4bb",
+      "profile_url": "https://polymarket.com/@dooDoo69",
+      "pnl": 51045.13861193872,
+      "volume": 223434.31534500007,
+      "efficiency": 22.845702341254533
+    },
+    {
+      "name": "v1101",
+      "wallet": "0xdc767c90ec054dd8250cf27cb4b2f675c9807842",
+      "profile_url": "https://polymarket.com/@v1101",
+      "pnl": 51015.23332362493,
+      "volume": 873307.776727,
+      "efficiency": 5.841609874908114
+    },
+    {
+      "name": "marisaz",
+      "wallet": "0xb52ee3e874f645058d93fcf7c99dcdc96750d3c8",
+      "profile_url": "https://polymarket.com/@marisaz",
+      "pnl": 50922.308703999995,
+      "volume": 105907.687726,
+      "efficiency": 48.08178688193448
+    },
+    {
+      "name": "0xDb45465E6ffD7F6ac5E4B13BF0718c438bB3b5d6-1763483139729",
+      "wallet": "0xdb45465e6ffd7f6ac5e4b13bf0718c438bb3b5d6",
+      "profile_url": "https://polymarket.com/@0xDb45465E6ffD7F6ac5E4B13BF0718c438bB3b5d6-1763483139729",
+      "pnl": 50865.80342324704,
+      "volume": 2018378.552635,
+      "efficiency": 2.5201319820229737
+    },
+    {
+      "name": "bitmaster7",
+      "wallet": "0x716445fe00d0a78172b8be46d216e08d15159db6",
+      "profile_url": "https://polymarket.com/@bitmaster7",
+      "pnl": 50863.90563924782,
+      "volume": 29320986.95604822,
+      "efficiency": 0.17347269283770073
+    },
+    {
+      "name": "3daysgrays",
+      "wallet": "0xf5b4adda2310d05d7d7e9e685943b88dad289c70",
+      "profile_url": "https://polymarket.com/@3daysgrays",
+      "pnl": 50726.24695541202,
+      "volume": 208070.65242199998,
+      "efficiency": 24.379337674460317
+    },
+    {
+      "name": "UniformAlpha",
+      "wallet": "0x5f6aedef4812ce1ca8773949bdfdb00b480faba2",
+      "profile_url": "https://polymarket.com/@UniformAlpha",
+      "pnl": 50723.13735652912,
+      "volume": 18914755.01015453,
+      "efficiency": 0.2681670332462568
+    },
+    {
+      "name": "pikachusplace",
+      "wallet": "0x6adcccb0ea0b93a66e67f0d7b2b625b135a8beba",
+      "profile_url": "https://polymarket.com/@pikachusplace",
+      "pnl": 50638.04430951278,
+      "volume": 1440424.7466489999,
+      "efficiency": 3.515493914369146
+    },
+    {
+      "name": "0x04892657d3c2afebec8be4b6e60b9c56ad68ee",
+      "wallet": "0x04895657d3c2afebec8be4b6e60b9c56ad68ee4d",
+      "profile_url": "https://polymarket.com/@0x04892657d3c2afebec8be4b6e60b9c56ad68ee",
+      "pnl": 50587.85017788202,
+      "volume": 11124593.137963146,
+      "efficiency": 0.45473887944044294
+    },
+    {
+      "name": "Whaleisawake",
+      "wallet": "0xbe4e1b0b3b71ffbbbccd2555aca059ac9ecbc06f",
+      "profile_url": "https://polymarket.com/@Whaleisawake",
+      "pnl": 50534.0555720373,
+      "volume": 211366.01822600001,
+      "efficiency": 23.908316008491255
+    },
+    {
+      "name": "TRUMPF",
+      "wallet": "0x5735960afa64693a7e7d0087ae038aebc4cdf1f7",
+      "profile_url": "https://polymarket.com/@TRUMPF",
+      "pnl": 50495.48699481168,
+      "volume": 284748.96825599996,
+      "efficiency": 17.73333448899957
+    },
+    {
+      "name": "YOUARETHEHUNTER",
+      "wallet": "0x9677719e7922ec68fdc09a68cbde78433c7ec0ef",
+      "profile_url": "https://polymarket.com/@YOUARETHEHUNTER",
+      "pnl": 50322.30555899999,
+      "volume": 219786.494985,
+      "efficiency": 22.89599529872588
+    },
+    {
+      "name": "finbar",
+      "wallet": "0xb8e3ab1cfe1a5610af9486d490fe987d99a15f7b",
+      "profile_url": "https://polymarket.com/@finbar",
+      "pnl": 50268.628958,
+      "volume": 100811.37826399998,
+      "efficiency": 49.86404295193637
+    },
+    {
+      "name": "iroracap1",
+      "wallet": "0xd7b0032c7288cc0832d278b6ec520eb00b0dbd69",
+      "profile_url": "https://polymarket.com/@iroracap1",
+      "pnl": 50250.50017775032,
+      "volume": 1583090.723472,
+      "efficiency": 3.174202175068149
+    },
+    {
+      "name": "washeduptrader",
+      "wallet": "0x83960a48a453edd4f220a4079826873466c0e909",
+      "profile_url": "https://polymarket.com/@washeduptrader",
+      "pnl": 50172.83407939272,
+      "volume": 1262049.405343,
+      "efficiency": 3.9755047517935114
+    },
+    {
+      "name": "0x8929a0cE1c13aE9C9643F94A3F7E67580Fad0196-1740136760222",
+      "wallet": "0x8929a0ce1c13ae9c9643f94a3f7e67580fad0196",
+      "profile_url": "https://polymarket.com/@0x8929a0cE1c13aE9C9643F94A3F7E67580Fad0196-1740136760222",
+      "pnl": 50034.51464531447,
+      "volume": 100422.77507999999,
+      "efficiency": 49.823871731741505
+    },
+    {
+      "name": "j3s0s",
+      "wallet": "0xa3515d13b9c6b3806fb393234c77e4df1966f2c8",
+      "profile_url": "https://polymarket.com/@j3s0s",
+      "pnl": 49951.24468261647,
+      "volume": 113235.39213399997,
+      "efficiency": 44.11274932797106
     }
   ]
 }

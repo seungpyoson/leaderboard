@@ -80,7 +80,7 @@ def fetch_leaderboard(limit: int) -> list[dict]:
 
 def main():
     parser = argparse.ArgumentParser(description="Fetch crypto leaderboard")
-    parser.add_argument("--limit", type=int, default=100, help="Number of traders (default: 100)")
+    parser.add_argument("--limit", type=int, default=500, help="Number of traders (default: 500)")
     args = parser.parse_args()
 
     print(f"Fetching top {args.limit} crypto traders from Polymarket leaderboard API")
