@@ -24,6 +24,14 @@ DUNE_API = "https://api.dune.com/api/v1"
 # Bridged USDC.e on Polygon (6 decimals) — what Polymarket uses
 USDC_POLYGON = "2791Bca1f2de4661ED88A30C99A7a9449Aa84174"
 
+# Polymarket exchange contracts — USDC flows to/from these are trading, not capital
+# CTF Exchange (binary markets): https://polygonscan.com/address/0x4bfb41d5b3570defd03c39a9a4d8de6bd8b8982e
+# NegRisk CTF Exchange (multi-outcome): https://polygonscan.com/address/0xc5d563a36ae78145c45a50134d48a1215220f80a
+EXCHANGE_CONTRACTS = [
+    "4bfb41d5b3570defd03c39a9a4d8de6bd8b8982e",
+    "c5d563a36ae78145c45a50134d48a1215220f80a",
+]
+
 POLL_INTERVAL = 5   # seconds between status checks
 MAX_POLL_TIME = 300  # 5 minutes max
 
@@ -58,8 +66,14 @@ def _normalize_address(addr: str) -> str:
 
 
 def _build_sql(wallets: list[str]) -> str:
-    """Build DuneSQL query for USDC capital flows on Polygon."""
+    """Build DuneSQL query for USDC capital flows on Polygon.
+
+    Excludes USDC transfers to/from Polymarket exchange contracts
+    (CTF Exchange, NegRisk CTF Exchange) so only external capital
+    movements are counted — not trading activity.
+    """
     literals = ", ".join(_normalize_address(w) for w in wallets)
+    excludes = ", ".join(f"0x{c}" for c in EXCHANGE_CONTRACTS)
 
     return f"""
 WITH deposits AS (
@@ -69,6 +83,7 @@ WITH deposits AS (
     FROM erc20_polygon.evt_Transfer
     WHERE contract_address = 0x{USDC_POLYGON}
       AND "to" IN ({literals})
+      AND "from" NOT IN ({excludes})
 ),
 withdrawals AS (
     SELECT "from" AS wallet,
@@ -77,6 +92,7 @@ withdrawals AS (
     FROM erc20_polygon.evt_Transfer
     WHERE contract_address = 0x{USDC_POLYGON}
       AND "from" IN ({literals})
+      AND "to" NOT IN ({excludes})
 ),
 combined AS (
     SELECT wallet, amount, evt_block_time, 'deposit' AS direction FROM deposits
