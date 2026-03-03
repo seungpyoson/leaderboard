@@ -4,8 +4,8 @@
 Pipeline:
   1. Leaderboard API → PnL, volume, efficiency (crypto-category)
   2. User-stats API → trades, largestWin (all-market — caveat in UI)
-  3. Dune SQL → USDC deposits/withdrawals on Polygon (capital data)
-  4. Derived: ROIC (PnL / deposits), style tag (efficiency > 10% → DIR)
+  3. Dune SQL → USDC net capital flows on Polygon (received - sent)
+  4. Derived: ROIC (PnL / net capital), style tag (efficiency > 10% → DIR)
 
 Outputs data/profiles.json for the static frontend.
 
@@ -153,9 +153,10 @@ def main():
             # Placeholders — enriched in phases 2-3
             "trades": None,
             "largest_win": None,
-            "first_deposit": None,
-            "deposits": None,
-            "withdrawn": None,
+            "first_seen": None,
+            "total_received": None,
+            "total_sent": None,
+            "net_capital": None,
             "roic": None,
         })
 
@@ -180,13 +181,19 @@ def main():
     for r in results:
         cap = capital.get(r["wallet"].lower(), {})
         if cap:
-            r["first_deposit"] = cap.get("first_deposit")
-            r["deposits"] = cap.get("deposits")
-            r["withdrawn"] = cap.get("withdrawn")
-            # ROIC = PnL / Deposits × 100
-            deposits = cap.get("deposits", 0)
-            if deposits and deposits > 0 and r["pnl"] is not None:
-                r["roic"] = r["pnl"] / deposits * 100
+            r["first_seen"] = cap.get("first_seen")
+            r["total_received"] = cap.get("total_received")
+            r["total_sent"] = cap.get("total_sent")
+            r["net_capital"] = cap.get("net_capital")
+            # ROIC = PnL / Net Capital × 100
+            # Note: net_capital = total_received - total_sent, which includes
+            # trading flows (exchange payouts/buys). So the denominator is
+            # "net USDC position" not pure "capital deployed." This is a
+            # known trade-off — filtering by contract blacklist was inflating
+            # deposits by 10-50x (see #30 capital flow inflation fix).
+            net_cap = cap.get("net_capital", 0)
+            if net_cap and net_cap > 0 and r["pnl"] is not None:
+                r["roic"] = r["pnl"] / net_cap * 100
 
     # --- Output ---
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)

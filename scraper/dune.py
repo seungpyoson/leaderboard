@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 """Dune Analytics API client for Polymarket capital data.
 
-Fetches USDC deposit/withdrawal history for proxy wallets on Polygon.
+Fetches USDC transfer history for proxy wallets on Polygon.
+Uses net flow approach: total received - total sent = net capital.
+No contract blacklist needed — internal routing cancels out.
 Auth: DUNE_API_KEY env var (fallback: 1Password CLI).
 
 Usage:
     from dune import fetch_capital
     capital = fetch_capital(["0xabc...", "0xdef..."])
-    # => {"0xabc...": {"first_deposit": "2023-01-15 ...", "deposits": 50000.0, "withdrawn": 10000.0}}
+    # => {"0xabc...": {"first_seen": "2023-01-15 ...", "total_received": 50000.0, "total_sent": 10000.0, "net_capital": 40000.0}}
 """
 
 from __future__ import annotations
@@ -26,14 +28,6 @@ DUNE_API = "https://api.dune.com/api/v1"
 
 # Bridged USDC.e on Polygon (6 decimals) — what Polymarket uses
 USDC_POLYGON = "2791bca1f2de4661ed88a30c99a7a9449aa84174"
-
-# Polymarket exchange contracts — USDC flows to/from these are trading, not capital
-# CTF Exchange (binary markets): https://polygonscan.com/address/0x4bfb41d5b3570defd03c39a9a4d8de6bd8b8982e
-# NegRisk CTF Exchange (multi-outcome): https://polygonscan.com/address/0xc5d563a36ae78145c45a50134d48a1215220f80a
-EXCHANGE_CONTRACTS = [
-    "4bfb41d5b3570defd03c39a9a4d8de6bd8b8982e",
-    "c5d563a36ae78145c45a50134d48a1215220f80a",
-]
 
 POLL_INTERVAL = 5   # seconds between status checks
 MAX_POLL_TIME = 300  # 5 minutes max
@@ -71,43 +65,38 @@ def _normalize_address(addr: str) -> str:
 def _build_sql(wallets: list[str]) -> str:
     """Build DuneSQL query for USDC capital flows on Polygon.
 
-    Excludes USDC transfers to/from Polymarket exchange contracts
-    (CTF Exchange, NegRisk CTF Exchange) so only external capital
-    movements are counted — not trading activity.
+    Net flow approach: counts ALL USDC transfers involving the wallet.
+    No contract blacklist — internal routing (exchanges, relayers, etc.)
+    cancels out in the received - sent math.
     """
     literals = ", ".join(_normalize_address(w) for w in wallets)
-    excludes = ", ".join(f"0x{c}" for c in EXCHANGE_CONTRACTS)
 
     return f"""
-WITH deposits AS (
+WITH transfers AS (
     SELECT "to" AS wallet,
            CAST(value AS DOUBLE) / 1e6 AS amount,
-           evt_block_time
+           evt_block_time,
+           'in' AS direction
     FROM erc20_polygon.evt_Transfer
     WHERE contract_address = 0x{USDC_POLYGON}
       AND "to" IN ({literals})
-      AND "from" NOT IN ({excludes})
-),
-withdrawals AS (
+    UNION ALL
     SELECT "from" AS wallet,
            CAST(value AS DOUBLE) / 1e6 AS amount,
-           evt_block_time
+           evt_block_time,
+           'out' AS direction
     FROM erc20_polygon.evt_Transfer
     WHERE contract_address = 0x{USDC_POLYGON}
       AND "from" IN ({literals})
-      AND "to" NOT IN ({excludes})
-),
-combined AS (
-    SELECT wallet, amount, evt_block_time, 'deposit' AS direction FROM deposits
-    UNION ALL
-    SELECT wallet, amount, evt_block_time, 'withdrawal' AS direction FROM withdrawals
 )
 SELECT
     LOWER(CAST(wallet AS VARCHAR)) AS wallet,
-    MIN(CASE WHEN direction = 'deposit' THEN evt_block_time END) AS first_deposit,
-    COALESCE(SUM(CASE WHEN direction = 'deposit' THEN amount END), 0) AS total_deposits,
-    COALESCE(SUM(CASE WHEN direction = 'withdrawal' THEN amount END), 0) AS total_withdrawn
-FROM combined
+    MIN(evt_block_time) AS first_seen,
+    COALESCE(SUM(CASE WHEN direction = 'in' THEN amount END), 0) AS total_received,
+    COALESCE(SUM(CASE WHEN direction = 'out' THEN amount END), 0) AS total_sent,
+    COALESCE(SUM(CASE WHEN direction = 'in' THEN amount END), 0)
+        - COALESCE(SUM(CASE WHEN direction = 'out' THEN amount END), 0) AS net_capital
+FROM transfers
 GROUP BY wallet
 """
 
@@ -160,7 +149,7 @@ def _poll_results(api_key: str, execution_id: str) -> dict:
 def fetch_capital(wallets: list[str]) -> dict[str, dict]:
     """Fetch USDC capital data for proxy wallets.
 
-    Returns: {wallet_lower: {"first_deposit": str|None, "deposits": float, "withdrawn": float}}
+    Returns: {wallet_lower: {"first_seen": str|None, "total_received": float, "total_sent": float, "net_capital": float}}
     """
     api_key = _get_api_key()
     if not api_key:
@@ -197,9 +186,10 @@ def fetch_capital(wallets: list[str]) -> dict[str, dict]:
         wallet = row.get("wallet", "").lower()
         if wallet:
             capital[wallet] = {
-                "first_deposit": row.get("first_deposit"),
-                "deposits": row.get("total_deposits", 0),
-                "withdrawn": row.get("total_withdrawn", 0),
+                "first_seen": row.get("first_seen"),
+                "total_received": row.get("total_received", 0),
+                "total_sent": row.get("total_sent", 0),
+                "net_capital": row.get("net_capital", 0),
             }
 
     print(f"  Dune: got capital data for {len(capital)} wallets")
