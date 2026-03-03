@@ -83,14 +83,11 @@
             <div class="updated" id="updated"></div>
         </header>
 
-        <!-- Style filters removed — leaderboard API doesn't provide style classification
         <div class="filters">
             <button class="filter-btn active" data-filter="all">All</button>
             <button class="filter-btn" data-filter="HFT/MM">HFT / MM</button>
-            <button class="filter-btn" data-filter="Directional">Directional</button>
-            <button class="filter-btn" data-filter="Hybrid">Hybrid</button>
+            <button class="filter-btn" data-filter="DIR">Directional</button>
         </div>
-        -->
 
         <div class="table-wrap">
             <table>
@@ -98,6 +95,8 @@
                     <tr class="group-row">
                         <td colspan="2"></td>
                         <td class="group-label" colspan="3">Crypto Performance</td>
+                        <td class="group-label" colspan="2">All-Market Stats</td>
+                        <td class="group-label" colspan="4">Capital</td>
                     </tr>
                     <tr>
                         <th data-col="rank">#</th>
@@ -105,12 +104,12 @@
                         <th data-col="pnl" title="Crypto-category PnL from Polymarket leaderboard API">PnL</th>
                         <th data-col="volume" title="Crypto-category volume from Polymarket leaderboard API">Volume</th>
                         <th data-col="efficiency" title="Crypto PnL / Crypto Volume * 100">Efficiency</th>
-                        <!-- Hidden: all-market columns (not crypto-specific)
-                        <th data-col="positions_value" title="Current value of all open positions in USDC">Positions</th>
-                        <th data-col="biggest_win" title="Largest single winning trade in USDC">Best Win</th>
-                        <th data-col="markets" title="Number of unique markets traded (Polymarket API)">Markets</th>
-                        <th data-col="trades" title="Total number of trades placed (Polymarket API)">Trades</th>
-                        -->
+                        <th data-col="largest_win" class="col-group" title="Largest single winning trade in USDC (all markets, not crypto-specific)">Best Win</th>
+                        <th data-col="trades" title="Total trades placed across all markets (not crypto-specific)">Trades</th>
+                        <th data-col="first_deposit" class="col-group" title="Date of first USDC deposit to proxy wallet (Polygon on-chain)">1st Dep</th>
+                        <th data-col="deposits" title="Cumulative USDC deposited to proxy wallet (Polygon on-chain)">Deposits</th>
+                        <th data-col="withdrawn" title="Cumulative USDC withdrawn from proxy wallet (Polygon on-chain)">Withdrawn</th>
+                        <th data-col="roic" title="Return on Invested Capital: Crypto PnL / Total Deposits * 100">ROIC</th>
                         <!-- Hidden: on-chain fills (deferred to #26)
                         <th data-col="total_fills" class="col-group">Fills</th>
                         <th data-col="fills_sent">Maker</th>
@@ -121,13 +120,6 @@
                         <th data-col="sharpe">Sharpe</th>
                         <th data-col="pnl_per_fill_cents">PnL/Fill</th>
                         <th data-col="trading_hours">Hours</th>
-                        -->
-                        <!-- Hidden: capital columns (Dune, deferred)
-                        <th data-col="initial_deposit" class="col-group">1st Dep</th>
-                        <th data-col="cumul_deposits">Deposits</th>
-                        <th data-col="total_withdrawn">Withdrawn</th>
-                        <th data-col="roic_pct">ROIC</th>
-                        <th data-col="top_market">Top Mkt</th>
                         -->
                     </tr>
                 </thead>
@@ -188,9 +180,17 @@
     }
 
     function styleTag(style) {
-        const cls = style === 'HFT/MM' ? 'style-hft' : style === 'Directional' ? 'style-dir' : 'style-hyb';
-        const label = style === 'HFT/MM' ? 'HFT' : style === 'Directional' ? 'DIR' : 'HYB';
-        return `<span class="style-tag ${cls}">${label}</span>`;
+        if (!style) return '';
+        if (style === 'DIR') return '<span class="style-tag style-dir">DIR</span>';
+        if (style === 'HFT/MM') return '<span class="style-tag style-hft">HFT</span>';
+        return '';
+    }
+
+    function fmtDate(val) {
+        if (val == null) return '<span class="muted">\u2014</span>';
+        const s = String(val);
+        // Accept ISO dates or date strings — show YYYY-MM-DD
+        return escHtml(s.length >= 10 ? s.substring(0, 10) : s);
     }
 
     function escHtml(str) {
@@ -201,11 +201,14 @@
 
     function getSortVal(p, col) {
         if (col === 'name') return (p.name || '').toLowerCase();
+        if (col === 'first_deposit') return p[col] || '';
         return p[col] != null ? Number(p[col]) : -Infinity;
     }
 
     function render() {
-        const filtered = profiles;
+        const filtered = activeFilter === 'all'
+            ? profiles
+            : profiles.filter(p => p.style === activeFilter);
 
         const sorted = [...filtered].sort((a, b) => {
             const av = getSortVal(a, sortCol);
@@ -214,17 +217,25 @@
             return sortDir === 'asc' ? cmp : -cmp;
         });
 
-        const m = '<span class="muted">\u2014</span>';
         const tbody = document.getElementById('tbody');
         tbody.innerHTML = sorted.map((p, i) => `
             <tr>
                 <td>${i + 1}</td>
                 <td>
-                    <a class="name-link" href="${escHtml(p.profile_url)}" target="_blank" rel="noopener">${escHtml(p.name)}</a>
+                    <div class="name-cell">
+                        <a class="name-link" href="${escHtml(p.profile_url)}" target="_blank" rel="noopener">${escHtml(p.name)}</a>
+                        ${styleTag(p.style)}
+                    </div>
                 </td>
                 <td>${fmtMoney(p.pnl)}</td>
                 <td>${fmtMoney(p.volume)}</td>
                 <td>${fmtPct(p.efficiency)}</td>
+                <td class="col-group">${fmtMoney(p.largest_win)}</td>
+                <td>${fmtNum(p.trades)}</td>
+                <td class="col-group">${fmtDate(p.first_deposit)}</td>
+                <td>${fmtMoney(p.deposits)}</td>
+                <td>${fmtMoney(p.withdrawn)}</td>
+                <td>${fmtPct(p.roic)}</td>
             </tr>
         `).join('');
 
