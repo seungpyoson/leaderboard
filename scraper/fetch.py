@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
-"""Fetch top crypto traders directly from Polymarket leaderboard API.
+"""Fetch top crypto traders from Polymarket leaderboard API + enrichment.
 
-Single API call — no curated accounts list needed. Polymarket handles the
-category filtering and PnL computation. Outputs data/profiles.json for the
-static frontend.
+Pipeline:
+  1. Leaderboard API → PnL, volume, efficiency (crypto-category)
+  2. User-stats API → trades, largestWin (all-market — caveat in UI)
+  3. Dune SQL → USDC deposits/withdrawals on Polygon (capital data)
+  4. Derived: ROIC (PnL / deposits), style tag (efficiency > 10% → DIR)
+
+Outputs data/profiles.json for the static frontend.
 
 Usage:
     python3 scraper/fetch.py [--limit 100]
@@ -19,12 +23,14 @@ from pathlib import Path
 
 import requests
 
-from common import REQUEST_DELAY, SESSION, fmt_money, fmt_pct
+from common import REQUEST_DELAY, SESSION, fmt_money, fmt_pct, to_float
+from dune import fetch_capital
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 OUTPUT_FILE = REPO_ROOT / "data" / "profiles.json"
 
 LEADERBOARD_URL = "https://data-api.polymarket.com/v1/leaderboard"
+USER_STATS_URL = "https://data-api.polymarket.com/v1/user-stats"
 PAGE_SIZE = 50  # API max per request
 
 
@@ -78,13 +84,35 @@ def fetch_leaderboard(limit: int) -> list[dict]:
     return all_traders
 
 
+def fetch_user_stats(wallet: str) -> dict:
+    """Fetch per-user stats (all-market, not crypto-filtered).
+
+    Returns: {"trades": int|None, "largest_win": float|None}
+    """
+    try:
+        resp = SESSION.get(
+            USER_STATS_URL,
+            params={"proxyAddress": wallet},
+            timeout=10,
+        )
+        if resp.status_code != 200:
+            return {"trades": None, "largest_win": None}
+        data = resp.json()
+        return {
+            "trades": data.get("trades"),
+            "largest_win": to_float(data.get("largestWin")),
+        }
+    except (requests.RequestException, json.JSONDecodeError):
+        return {"trades": None, "largest_win": None}
+
+
 def main():
     parser = argparse.ArgumentParser(description="Fetch crypto leaderboard")
     parser.add_argument("--limit", type=int, default=500, help="Number of traders (default: 500)")
     args = parser.parse_args()
 
+    # --- Phase 1: Leaderboard (crypto-category) ---
     print(f"Fetching top {args.limit} crypto traders from Polymarket leaderboard API")
-
     traders = fetch_leaderboard(args.limit)
     print(f"  Got {len(traders)} traders")
 
@@ -96,11 +124,16 @@ def main():
         username = t.get("userName") or t.get("proxyWallet", "")[:10]
         wallet = t.get("proxyWallet", "")
 
-        # Build profile URL
         if username and username != wallet[:10]:
             profile_url = f"https://polymarket.com/@{username}"
         else:
             profile_url = f"https://polymarket.com/@{wallet}"
+
+        # Style tag: >10% efficiency → directional, ≤10% → HFT/market-maker
+        if efficiency is not None:
+            style = "DIR" if efficiency > 10 else "HFT/MM"
+        else:
+            style = None
 
         results.append({
             "name": username,
@@ -109,11 +142,46 @@ def main():
             "pnl": pnl,
             "volume": volume,
             "efficiency": efficiency,
+            "style": style,
+            # Placeholders — enriched in phases 2-3
+            "trades": None,
+            "largest_win": None,
+            "first_deposit": None,
+            "deposits": None,
+            "withdrawn": None,
+            "roic": None,
         })
 
     # Already sorted by PnL from API, but ensure it
     results.sort(key=lambda r: r["pnl"] if r["pnl"] is not None else float("-inf"), reverse=True)
 
+    # --- Phase 2: User stats (all-market) ---
+    print(f"\nFetching user stats for {len(results)} traders...")
+    for i, r in enumerate(results):
+        stats = fetch_user_stats(r["wallet"])
+        r["trades"] = stats["trades"]
+        r["largest_win"] = stats["largest_win"]
+        if (i + 1) % 50 == 0:
+            print(f"  Stats: {i + 1}/{len(results)}")
+        time.sleep(REQUEST_DELAY)
+    print(f"  Stats: done")
+
+    # --- Phase 3: Dune capital data ---
+    wallets = [r["wallet"] for r in results if r["wallet"]]
+    capital = fetch_capital(wallets)
+
+    for r in results:
+        cap = capital.get(r["wallet"].lower(), {})
+        if cap:
+            r["first_deposit"] = cap.get("first_deposit")
+            r["deposits"] = cap.get("deposits")
+            r["withdrawn"] = cap.get("withdrawn")
+            # ROIC = PnL / Deposits × 100
+            deposits = cap.get("deposits", 0)
+            if deposits and deposits > 0 and r["pnl"] is not None:
+                r["roic"] = r["pnl"] / deposits * 100
+
+    # --- Output ---
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
     output = {
         "updated": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),

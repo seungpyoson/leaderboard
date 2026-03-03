@@ -22,6 +22,8 @@ jobs:
         run: pip install requests
 
       - name: Fetch profiles
+        env:
+          DUNE_API_KEY: ${{ secrets.DUNE_API_KEY }}
         run: python3 scraper/fetch.py
 
       - name: Commit updated data
