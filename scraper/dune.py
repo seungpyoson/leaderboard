@@ -12,17 +12,20 @@ Usage:
 
 from __future__ import annotations
 
+import logging
 import os
 import re
 import subprocess
 import time
+
+logger = logging.getLogger(__name__)
 
 import requests
 
 DUNE_API = "https://api.dune.com/api/v1"
 
 # Bridged USDC.e on Polygon (6 decimals) — what Polymarket uses
-USDC_POLYGON = "2791Bca1f2de4661ED88A30C99A7a9449Aa84174"
+USDC_POLYGON = "2791bca1f2de4661ed88a30c99a7a9449aa84174"
 
 # Polymarket exchange contracts — USDC flows to/from these are trading, not capital
 # CTF Exchange (binary markets): https://polygonscan.com/address/0x4bfb41d5b3570defd03c39a9a4d8de6bd8b8982e
@@ -167,8 +170,19 @@ def fetch_capital(wallets: list[str]) -> dict[str, dict]:
     if not wallets:
         return {}
 
-    print(f"  Querying Dune for {len(wallets)} wallets...")
-    sql = _build_sql(wallets)
+    valid = []
+    for w in wallets:
+        try:
+            _normalize_address(w)
+            valid.append(w)
+        except ValueError:
+            logger.warning("Skipping invalid wallet address: %s", w)
+    if not valid:
+        logger.warning("No valid wallet addresses — skipping Dune query")
+        return {}
+
+    print(f"  Querying Dune for {len(valid)} wallets...")
+    sql = _build_sql(valid)
 
     try:
         execution_id = _execute_sql(api_key, sql)
