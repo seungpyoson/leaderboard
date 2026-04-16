@@ -1,0 +1,3005 @@
+{
+  "nodes": [
+    {
+      "id": "users_spson_projects_claude_leaderboard_scraper_fetch_py",
+      "label": "fetch.py",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/fetch.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "fetch_fetch_leaderboard",
+      "label": "fetch_leaderboard()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/fetch.py",
+      "source_location": "L37"
+    },
+    {
+      "id": "fetch_fetch_user_stats",
+      "label": "fetch_user_stats()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/fetch.py",
+      "source_location": "L87"
+    },
+    {
+      "id": "fetch_main",
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/fetch.py",
+      "source_location": "L109"
+    },
+    {
+      "id": "fetch_rationale_38",
+      "label": "Paginate the crypto leaderboard API. Returns up to `limit` traders.",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/fetch.py",
+      "source_location": "L38"
+    },
+    {
+      "id": "fetch_rationale_88",
+      "label": "Fetch per-user stats (all-market, not crypto-filtered).      Returns: {\"trades\":",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/fetch.py",
+      "source_location": "L88"
+    },
+    {
+      "id": "users_spson_projects_claude_leaderboard_scraper_backfill_s3_py",
+      "label": "backfill_s3.py",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "backfill_s3_scan_s3_fills",
+      "label": "scan_s3_fills()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L57"
+    },
+    {
+      "id": "backfill_s3_build_positions",
+      "label": "build_positions()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L117"
+    },
+    {
+      "id": "backfill_s3_book_pnl",
+      "label": "_book_pnl()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L205"
+    },
+    {
+      "id": "backfill_s3_resolve_all",
+      "label": "resolve_all()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L269"
+    },
+    {
+      "id": "backfill_s3_resolve_elapsed_markets",
+      "label": "resolve_elapsed_markets()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L290"
+    },
+    {
+      "id": "backfill_s3_main",
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L425"
+    },
+    {
+      "id": "backfill_s3_rationale_58",
+      "label": "Read all S3 parquet partitions, filter to tracked wallets, return rows.      Ret",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L58"
+    },
+    {
+      "id": "backfill_s3_rationale_122",
+      "label": "Iterate timestamp-sorted fills, update account states.      Each row tuple: (wal",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L122"
+    },
+    {
+      "id": "backfill_s3_rationale_206",
+      "label": "Book PnL for all accounts using the resolution cache. Shared by both phases.",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L206"
+    },
+    {
+      "id": "backfill_s3_rationale_270",
+      "label": "Resolve markets and book PnL for all 28 accounts.",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L270"
+    },
+    {
+      "id": "backfill_s3_rationale_291",
+      "label": "Phase 3b: Query Gamma WITHOUT closed=true for elapsed interval markets.      Saf",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L291"
+    },
+    {
+      "id": "users_spson_projects_claude_leaderboard_scraper_goldsky_parallel_py",
+      "label": "goldsky_parallel.py",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "goldsky_parallel_threadlocalsession",
+      "label": "ThreadLocalSession",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L47"
+    },
+    {
+      "id": "goldsky_parallel_threadlocalsession_init",
+      "label": ".__init__()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L50"
+    },
+    {
+      "id": "goldsky_parallel_threadlocalsession_get",
+      "label": "._get()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L53"
+    },
+    {
+      "id": "goldsky_parallel_threadlocalsession_post",
+      "label": ".post()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L58"
+    },
+    {
+      "id": "goldsky_parallel_guarded_save",
+      "label": "_guarded_save()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L73"
+    },
+    {
+      "id": "goldsky_parallel_fetch_worker",
+      "label": "fetch_worker()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L87"
+    },
+    {
+      "id": "goldsky_parallel_main",
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L119"
+    },
+    {
+      "id": "goldsky_parallel_rationale_48",
+      "label": "Drop-in proxy for requests.Session \u2014 each thread gets its own.",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L48"
+    },
+    {
+      "id": "goldsky_parallel_rationale_90",
+      "label": "Fetch maker + taker fills for one account. No resolution.      Returns (name, fi",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L90"
+    },
+    {
+      "id": "users_spson_projects_claude_leaderboard_scraper_dune_py",
+      "label": "dune.py",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "dune_get_api_key",
+      "label": "_get_api_key()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L36"
+    },
+    {
+      "id": "dune_normalize_address",
+      "label": "_normalize_address()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L57"
+    },
+    {
+      "id": "dune_build_sql",
+      "label": "_build_sql()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L65"
+    },
+    {
+      "id": "dune_headers",
+      "label": "_headers()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L104"
+    },
+    {
+      "id": "dune_execute_sql",
+      "label": "_execute_sql()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L108"
+    },
+    {
+      "id": "dune_poll_results",
+      "label": "_poll_results()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L120"
+    },
+    {
+      "id": "dune_fetch_capital",
+      "label": "fetch_capital()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L149"
+    },
+    {
+      "id": "dune_rationale_37",
+      "label": "Get Dune API key from env or 1Password.",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L37"
+    },
+    {
+      "id": "dune_rationale_58",
+      "label": "Validate and normalize an Ethereum address to lowercase 0x-prefixed hex.",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L58"
+    },
+    {
+      "id": "dune_rationale_66",
+      "label": "Build DuneSQL query for USDC capital flows on Polygon.      Net flow approach: c",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L66"
+    },
+    {
+      "id": "dune_rationale_109",
+      "label": "Submit inline SQL to Dune. Returns execution_id.",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L109"
+    },
+    {
+      "id": "dune_rationale_121",
+      "label": "Poll until query completes, then fetch results.",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L121"
+    },
+    {
+      "id": "dune_rationale_150",
+      "label": "Fetch USDC capital data for proxy wallets.      Returns: {wallet_lower: {\"first_",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L150"
+    },
+    {
+      "id": "users_spson_projects_claude_leaderboard_scraper_discover_py",
+      "label": "discover.py",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "discover_validate_session",
+      "label": "validate_session()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L60"
+    },
+    {
+      "id": "discover_validate_slug",
+      "label": "validate_slug()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L80"
+    },
+    {
+      "id": "discover_load_known_wallets",
+      "label": "load_known_wallets()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L108"
+    },
+    {
+      "id": "discover_load_existing_candidates",
+      "label": "load_existing_candidates()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L123"
+    },
+    {
+      "id": "discover_fetch_leaderboard",
+      "label": "fetch_leaderboard()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L141"
+    },
+    {
+      "id": "discover_validate_output",
+      "label": "validate_output()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L193"
+    },
+    {
+      "id": "discover_classify_style",
+      "label": "classify_style()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L225"
+    },
+    {
+      "id": "discover_score_candidate",
+      "label": "score_candidate()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L248"
+    },
+    {
+      "id": "discover_auto_status",
+      "label": "auto_status()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L295"
+    },
+    {
+      "id": "discover_main",
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L309"
+    },
+    {
+      "id": "discover_rationale_61",
+      "label": "Assert SESSION carries no auth secrets before using with untrusted URLs.      di",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L61"
+    },
+    {
+      "id": "discover_rationale_81",
+      "label": "Validate and return a safe slug for URL construction.      Returns None if no sa",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L81"
+    },
+    {
+      "id": "discover_rationale_109",
+      "label": "Load wallet addresses already in accounts.json (lowercased).",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L109"
+    },
+    {
+      "id": "discover_rationale_124",
+      "label": "Load existing candidates keyed by lowercase wallet. Preserves review decisions.",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L124"
+    },
+    {
+      "id": "discover_rationale_142",
+      "label": "Paginate the Polymarket leaderboard API for crypto traders.      Only catches ne",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L142"
+    },
+    {
+      "id": "discover_rationale_196",
+      "label": "Check data quality before writing. Returns error message or None if OK.      Gua",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L196"
+    },
+    {
+      "id": "discover_rationale_226",
+      "label": "Heuristic style guess based on trades-to-volume ratio.",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L226"
+    },
+    {
+      "id": "discover_rationale_249",
+      "label": "Composite confidence score (0.0\u20131.0) from available signals.      Weights:",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L249"
+    },
+    {
+      "id": "discover_rationale_296",
+      "label": "Determine status based on confidence score. Never overrides human decisions.",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L296"
+    },
+    {
+      "id": "users_spson_projects_claude_leaderboard_scraper_promote_py",
+      "label": "promote.py",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/promote.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "promote_main",
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/promote.py",
+      "source_location": "L35"
+    },
+    {
+      "id": "promote_run_promotion",
+      "label": "_run_promotion()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/promote.py",
+      "source_location": "L58"
+    },
+    {
+      "id": "promote_rationale_59",
+      "label": "Core promotion logic \u2014 must be called under lock.",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/promote.py",
+      "source_location": "L59"
+    },
+    {
+      "id": "users_spson_projects_claude_leaderboard_scraper_goldsky_pipeline_py",
+      "label": "goldsky_pipeline.py",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "goldsky_pipeline_query_goldsky",
+      "label": "query_goldsky()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L53"
+    },
+    {
+      "id": "goldsky_pipeline_fetchabortederror",
+      "label": "FetchAbortedError",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L87"
+    },
+    {
+      "id": "exception",
+      "label": "Exception",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "goldsky_pipeline_fetch_fills",
+      "label": "fetch_fills()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L93"
+    },
+    {
+      "id": "goldsky_pipeline_process_fill",
+      "label": "process_fill()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L148"
+    },
+    {
+      "id": "goldsky_pipeline_update_position",
+      "label": "update_position()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L194"
+    },
+    {
+      "id": "goldsky_pipeline_resolve_markets",
+      "label": "resolve_markets()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L221"
+    },
+    {
+      "id": "goldsky_pipeline_welford_update",
+      "label": "welford_update()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L299"
+    },
+    {
+      "id": "goldsky_pipeline_welford_std",
+      "label": "welford_std()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L309"
+    },
+    {
+      "id": "goldsky_pipeline_new_account_state",
+      "label": "new_account_state()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L320"
+    },
+    {
+      "id": "goldsky_pipeline_load_state",
+      "label": "load_state()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L349"
+    },
+    {
+      "id": "goldsky_pipeline_save_state",
+      "label": "save_state()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L355"
+    },
+    {
+      "id": "goldsky_pipeline_trading_hours_from_bounds",
+      "label": "trading_hours_from_bounds()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L368"
+    },
+    {
+      "id": "goldsky_pipeline_write_csv",
+      "label": "write_csv()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L391"
+    },
+    {
+      "id": "goldsky_pipeline_fetch_phase",
+      "label": "_fetch_phase()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L475"
+    },
+    {
+      "id": "goldsky_pipeline_resolve_phase",
+      "label": "_resolve_phase()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L553"
+    },
+    {
+      "id": "goldsky_pipeline_process_account",
+      "label": "process_account()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L629"
+    },
+    {
+      "id": "goldsky_pipeline_run_pipeline",
+      "label": "run_pipeline()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L684"
+    },
+    {
+      "id": "goldsky_pipeline_rationale_54",
+      "label": "Execute GraphQL query against Goldsky with exponential backoff.",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L54"
+    },
+    {
+      "id": "goldsky_pipeline_rationale_88",
+      "label": "Raised by fetch_fills() when 3 consecutive API failures abort the fetch.     Sig",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L88"
+    },
+    {
+      "id": "goldsky_pipeline_rationale_94",
+      "label": "Yield (events, new_last_id) batches via id_gt pagination.      Raises FetchAbort",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L94"
+    },
+    {
+      "id": "goldsky_pipeline_rationale_149",
+      "label": "Process raw fill into direction/price/shares relative to *wallet*.      Returns",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L149"
+    },
+    {
+      "id": "goldsky_pipeline_rationale_195",
+      "label": "Update net position for a token_id.      BUY:  net_shares += shares, cost_basis",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L195"
+    },
+    {
+      "id": "goldsky_pipeline_rationale_224",
+      "label": "Query Gamma API in batches of GAMMA_BATCH for resolved markets.      Returns upd",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L224"
+    },
+    {
+      "id": "goldsky_pipeline_rationale_300",
+      "label": "Return (n, mean, m2) after incorporating *value*.",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L300"
+    },
+    {
+      "id": "goldsky_pipeline_rationale_310",
+      "label": "Sample standard deviation from Welford state.",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L310"
+    },
+    {
+      "id": "goldsky_pipeline_rationale_321",
+      "label": "Return a blank state dict for one account.",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L321"
+    },
+    {
+      "id": "goldsky_pipeline_rationale_369",
+      "label": "Sum per-day (max_ts - min_ts) / 3600, rounded.",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L369"
+    },
+    {
+      "id": "goldsky_pipeline_rationale_392",
+      "label": "Write metrics for all accounts that have data.",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L392"
+    },
+    {
+      "id": "goldsky_pipeline_rationale_476",
+      "label": "Fetch all fills for one role, advancing cursor. Sets {role}_exhausted on complet",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L476"
+    },
+    {
+      "id": "goldsky_pipeline_rationale_554",
+      "label": "Resolve markets and compute PnL for all open positions.      Queries Gamma in ba",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L554"
+    },
+    {
+      "id": "goldsky_pipeline_rationale_630",
+      "label": "Advance phases for this account within the deadline: maker \u2192 taker \u2192 resolution.",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L630"
+    },
+    {
+      "id": "users_spson_projects_claude_leaderboard_scraper_common_py",
+      "label": "common.py",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "common_to_float",
+      "label": "to_float()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L30"
+    },
+    {
+      "id": "common_extract_profile_data",
+      "label": "extract_profile_data()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L40"
+    },
+    {
+      "id": "common_is_polymarket_host",
+      "label": "_is_polymarket_host()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L101"
+    },
+    {
+      "id": "common_fetch_profile",
+      "label": "fetch_profile()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L110"
+    },
+    {
+      "id": "common_atomic_write",
+      "label": "atomic_write()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L149"
+    },
+    {
+      "id": "common_fmt_money",
+      "label": "fmt_money()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L164"
+    },
+    {
+      "id": "common_fmt_pct",
+      "label": "fmt_pct()",
+      "file_type": "code",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L181"
+    },
+    {
+      "id": "common_rationale_1",
+      "label": "Shared utilities for Polymarket profile scraping.  Used by fetch.py (daily refre",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "common_rationale_31",
+      "label": "Safely coerce a value to float, returning None on failure.",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L31"
+    },
+    {
+      "id": "common_rationale_41",
+      "label": "Extract PnL/volume/stats from __NEXT_DATA__ embedded in profile page HTML.",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L41"
+    },
+    {
+      "id": "common_rationale_102",
+      "label": "Check if a URL's hostname is exactly polymarket.com.",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L102"
+    },
+    {
+      "id": "common_rationale_111",
+      "label": "Fetch profile page and extract data. Only fetches from polymarket.com.      URL",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L111"
+    },
+    {
+      "id": "common_rationale_150",
+      "label": "Write content to file atomically via temp file + rename.      Shared by discover",
+      "file_type": "rationale",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L150"
+    }
+  ],
+  "edges": [
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_fetch_py",
+      "target": "argparse",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/fetch.py",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_fetch_py",
+      "target": "json",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/fetch.py",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_fetch_py",
+      "target": "time",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/fetch.py",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_fetch_py",
+      "target": "datetime",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/fetch.py",
+      "source_location": "L21",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_fetch_py",
+      "target": "pathlib",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/fetch.py",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_fetch_py",
+      "target": "requests",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/fetch.py",
+      "source_location": "L24",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_fetch_py",
+      "target": "common",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/fetch.py",
+      "source_location": "L26",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_fetch_py",
+      "target": "dune",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/fetch.py",
+      "source_location": "L27",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_fetch_py",
+      "target": "fetch_fetch_leaderboard",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/fetch.py",
+      "source_location": "L37",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_fetch_py",
+      "target": "fetch_fetch_user_stats",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/fetch.py",
+      "source_location": "L87",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_fetch_py",
+      "target": "fetch_main",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/fetch.py",
+      "source_location": "L109",
+      "weight": 1.0
+    },
+    {
+      "source": "fetch_main",
+      "target": "fetch_fetch_leaderboard",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/fetch.py",
+      "source_location": "L116",
+      "weight": 1.0
+    },
+    {
+      "source": "fetch_main",
+      "target": "fetch_fetch_user_stats",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/fetch.py",
+      "source_location": "L169",
+      "weight": 1.0
+    },
+    {
+      "source": "fetch_rationale_38",
+      "target": "fetch_fetch_leaderboard",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/fetch.py",
+      "source_location": "L38",
+      "weight": 1.0
+    },
+    {
+      "source": "fetch_rationale_88",
+      "target": "fetch_fetch_user_stats",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/fetch.py",
+      "source_location": "L88",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_backfill_s3_py",
+      "target": "argparse",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_backfill_s3_py",
+      "target": "json",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_backfill_s3_py",
+      "target": "time",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_backfill_s3_py",
+      "target": "datetime",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_backfill_s3_py",
+      "target": "pathlib",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_backfill_s3_py",
+      "target": "duckdb",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L21",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_backfill_s3_py",
+      "target": "requests",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_backfill_s3_py",
+      "target": "goldsky_pipeline",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L25",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_backfill_s3_py",
+      "target": "backfill_s3_scan_s3_fills",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L57",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_backfill_s3_py",
+      "target": "backfill_s3_build_positions",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L117",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_backfill_s3_py",
+      "target": "backfill_s3_book_pnl",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L205",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_backfill_s3_py",
+      "target": "backfill_s3_resolve_all",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L269",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_backfill_s3_py",
+      "target": "backfill_s3_resolve_elapsed_markets",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L290",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_backfill_s3_py",
+      "target": "backfill_s3_main",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L425",
+      "weight": 1.0
+    },
+    {
+      "source": "backfill_s3_resolve_all",
+      "target": "backfill_s3_book_pnl",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L285",
+      "weight": 1.0
+    },
+    {
+      "source": "backfill_s3_resolve_elapsed_markets",
+      "target": "backfill_s3_book_pnl",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L416",
+      "weight": 1.0
+    },
+    {
+      "source": "backfill_s3_main",
+      "target": "backfill_s3_scan_s3_fills",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L439",
+      "weight": 1.0
+    },
+    {
+      "source": "backfill_s3_main",
+      "target": "backfill_s3_build_positions",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L459",
+      "weight": 1.0
+    },
+    {
+      "source": "backfill_s3_main",
+      "target": "backfill_s3_resolve_all",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L465",
+      "weight": 1.0
+    },
+    {
+      "source": "backfill_s3_main",
+      "target": "backfill_s3_resolve_elapsed_markets",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L466",
+      "weight": 1.0
+    },
+    {
+      "source": "backfill_s3_rationale_58",
+      "target": "backfill_s3_scan_s3_fills",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L58",
+      "weight": 1.0
+    },
+    {
+      "source": "backfill_s3_rationale_122",
+      "target": "backfill_s3_build_positions",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L122",
+      "weight": 1.0
+    },
+    {
+      "source": "backfill_s3_rationale_206",
+      "target": "backfill_s3_book_pnl",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L206",
+      "weight": 1.0
+    },
+    {
+      "source": "backfill_s3_rationale_270",
+      "target": "backfill_s3_resolve_all",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L270",
+      "weight": 1.0
+    },
+    {
+      "source": "backfill_s3_rationale_291",
+      "target": "backfill_s3_resolve_elapsed_markets",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L291",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_parallel_py",
+      "target": "argparse",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_parallel_py",
+      "target": "json",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_parallel_py",
+      "target": "sys",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L24",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_parallel_py",
+      "target": "threading",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L25",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_parallel_py",
+      "target": "time",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L26",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_parallel_py",
+      "target": "datetime",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L27",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_parallel_py",
+      "target": "pathlib",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L28",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_parallel_py",
+      "target": "concurrent_futures",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L29",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_parallel_py",
+      "target": "requests",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L31",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_parallel_py",
+      "target": "goldsky_pipeline",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L40",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_parallel_py",
+      "target": "goldsky_parallel_threadlocalsession",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L47",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_parallel_threadlocalsession",
+      "target": "goldsky_parallel_threadlocalsession_init",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L50",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_parallel_threadlocalsession",
+      "target": "goldsky_parallel_threadlocalsession_get",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L53",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_parallel_threadlocalsession",
+      "target": "goldsky_parallel_threadlocalsession_post",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L58",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_parallel_threadlocalsession",
+      "target": "goldsky_parallel_threadlocalsession_get",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L61",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_parallel_py",
+      "target": "goldsky_parallel_guarded_save",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L73",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_parallel_py",
+      "target": "goldsky_parallel_fetch_worker",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L87",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_parallel_py",
+      "target": "goldsky_parallel_main",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L119",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_parallel_threadlocalsession_post",
+      "target": "goldsky_parallel_threadlocalsession_get",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L59",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_parallel_rationale_48",
+      "target": "goldsky_parallel_threadlocalsession",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L48",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_parallel_rationale_90",
+      "target": "goldsky_parallel_fetch_worker",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L90",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_dune_py",
+      "target": "logging",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_dune_py",
+      "target": "os",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_dune_py",
+      "target": "re",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_dune_py",
+      "target": "subprocess",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_dune_py",
+      "target": "time",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L21",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_dune_py",
+      "target": "requests",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L25",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_dune_py",
+      "target": "dune_get_api_key",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L36",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_dune_py",
+      "target": "dune_normalize_address",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L57",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_dune_py",
+      "target": "dune_build_sql",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L65",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_dune_py",
+      "target": "dune_headers",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L104",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_dune_py",
+      "target": "dune_execute_sql",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L108",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_dune_py",
+      "target": "dune_poll_results",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L120",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_dune_py",
+      "target": "dune_fetch_capital",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L149",
+      "weight": 1.0
+    },
+    {
+      "source": "dune_build_sql",
+      "target": "dune_normalize_address",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L72",
+      "weight": 1.0
+    },
+    {
+      "source": "dune_execute_sql",
+      "target": "dune_headers",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L112",
+      "weight": 1.0
+    },
+    {
+      "source": "dune_poll_results",
+      "target": "dune_headers",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L126",
+      "weight": 1.0
+    },
+    {
+      "source": "dune_fetch_capital",
+      "target": "dune_get_api_key",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L154",
+      "weight": 1.0
+    },
+    {
+      "source": "dune_fetch_capital",
+      "target": "dune_normalize_address",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L165",
+      "weight": 1.0
+    },
+    {
+      "source": "dune_fetch_capital",
+      "target": "dune_build_sql",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L174",
+      "weight": 1.0
+    },
+    {
+      "source": "dune_fetch_capital",
+      "target": "dune_execute_sql",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L177",
+      "weight": 1.0
+    },
+    {
+      "source": "dune_fetch_capital",
+      "target": "dune_poll_results",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L179",
+      "weight": 1.0
+    },
+    {
+      "source": "dune_rationale_37",
+      "target": "dune_get_api_key",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L37",
+      "weight": 1.0
+    },
+    {
+      "source": "dune_rationale_58",
+      "target": "dune_normalize_address",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L58",
+      "weight": 1.0
+    },
+    {
+      "source": "dune_rationale_66",
+      "target": "dune_build_sql",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L66",
+      "weight": 1.0
+    },
+    {
+      "source": "dune_rationale_109",
+      "target": "dune_execute_sql",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L109",
+      "weight": 1.0
+    },
+    {
+      "source": "dune_rationale_121",
+      "target": "dune_poll_results",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L121",
+      "weight": 1.0
+    },
+    {
+      "source": "dune_rationale_150",
+      "target": "dune_fetch_capital",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L150",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_discover_py",
+      "target": "fcntl",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L21",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_discover_py",
+      "target": "json",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_discover_py",
+      "target": "re",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_discover_py",
+      "target": "time",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L24",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_discover_py",
+      "target": "datetime",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L25",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_discover_py",
+      "target": "pathlib",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L26",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_discover_py",
+      "target": "requests",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L28",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_discover_py",
+      "target": "common",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L30",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_discover_py",
+      "target": "discover_validate_session",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L60",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_discover_py",
+      "target": "discover_validate_slug",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L80",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_discover_py",
+      "target": "discover_load_known_wallets",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L108",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_discover_py",
+      "target": "discover_load_existing_candidates",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L123",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_discover_py",
+      "target": "discover_fetch_leaderboard",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L141",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_discover_py",
+      "target": "discover_validate_output",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L193",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_discover_py",
+      "target": "discover_classify_style",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L225",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_discover_py",
+      "target": "discover_score_candidate",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L248",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_discover_py",
+      "target": "discover_auto_status",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L295",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_discover_py",
+      "target": "discover_main",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L309",
+      "weight": 1.0
+    },
+    {
+      "source": "discover_main",
+      "target": "discover_validate_session",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L313",
+      "weight": 1.0
+    },
+    {
+      "source": "discover_main",
+      "target": "discover_load_known_wallets",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L316",
+      "weight": 1.0
+    },
+    {
+      "source": "discover_main",
+      "target": "discover_load_existing_candidates",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L317",
+      "weight": 1.0
+    },
+    {
+      "source": "discover_main",
+      "target": "discover_fetch_leaderboard",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L322",
+      "weight": 1.0
+    },
+    {
+      "source": "discover_main",
+      "target": "discover_validate_slug",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L361",
+      "weight": 1.0
+    },
+    {
+      "source": "discover_main",
+      "target": "discover_classify_style",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L393",
+      "weight": 1.0
+    },
+    {
+      "source": "discover_main",
+      "target": "discover_score_candidate",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L417",
+      "weight": 1.0
+    },
+    {
+      "source": "discover_main",
+      "target": "discover_auto_status",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L418",
+      "weight": 1.0
+    },
+    {
+      "source": "discover_main",
+      "target": "discover_validate_output",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L437",
+      "weight": 1.0
+    },
+    {
+      "source": "discover_rationale_61",
+      "target": "discover_validate_session",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L61",
+      "weight": 1.0
+    },
+    {
+      "source": "discover_rationale_81",
+      "target": "discover_validate_slug",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L81",
+      "weight": 1.0
+    },
+    {
+      "source": "discover_rationale_109",
+      "target": "discover_load_known_wallets",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L109",
+      "weight": 1.0
+    },
+    {
+      "source": "discover_rationale_124",
+      "target": "discover_load_existing_candidates",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L124",
+      "weight": 1.0
+    },
+    {
+      "source": "discover_rationale_142",
+      "target": "discover_fetch_leaderboard",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L142",
+      "weight": 1.0
+    },
+    {
+      "source": "discover_rationale_196",
+      "target": "discover_validate_output",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L196",
+      "weight": 1.0
+    },
+    {
+      "source": "discover_rationale_226",
+      "target": "discover_classify_style",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L226",
+      "weight": 1.0
+    },
+    {
+      "source": "discover_rationale_249",
+      "target": "discover_score_candidate",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L249",
+      "weight": 1.0
+    },
+    {
+      "source": "discover_rationale_296",
+      "target": "discover_auto_status",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L296",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_promote_py",
+      "target": "fcntl",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/promote.py",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_promote_py",
+      "target": "json",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/promote.py",
+      "source_location": "L21",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_promote_py",
+      "target": "re",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/promote.py",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_promote_py",
+      "target": "pathlib",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/promote.py",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_promote_py",
+      "target": "common",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/promote.py",
+      "source_location": "L25",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_promote_py",
+      "target": "promote_main",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/promote.py",
+      "source_location": "L35",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_promote_py",
+      "target": "promote_run_promotion",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/promote.py",
+      "source_location": "L58",
+      "weight": 1.0
+    },
+    {
+      "source": "promote_main",
+      "target": "promote_run_promotion",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/promote.py",
+      "source_location": "L52",
+      "weight": 1.0
+    },
+    {
+      "source": "promote_rationale_59",
+      "target": "promote_run_promotion",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/promote.py",
+      "source_location": "L59",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_pipeline_py",
+      "target": "argparse",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_pipeline_py",
+      "target": "json",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_pipeline_py",
+      "target": "math",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_pipeline_py",
+      "target": "os",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_pipeline_py",
+      "target": "random",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_pipeline_py",
+      "target": "time",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L21",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_pipeline_py",
+      "target": "datetime",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_pipeline_py",
+      "target": "pathlib",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_pipeline_py",
+      "target": "requests",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L25",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_pipeline_py",
+      "target": "goldsky_pipeline_query_goldsky",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L53",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_pipeline_py",
+      "target": "goldsky_pipeline_fetchabortederror",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L87",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_fetchabortederror",
+      "target": "exception",
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L87",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_pipeline_py",
+      "target": "goldsky_pipeline_fetch_fills",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L93",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_pipeline_py",
+      "target": "goldsky_pipeline_process_fill",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L148",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_pipeline_py",
+      "target": "goldsky_pipeline_update_position",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L194",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_pipeline_py",
+      "target": "goldsky_pipeline_resolve_markets",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L221",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_pipeline_py",
+      "target": "goldsky_pipeline_welford_update",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L299",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_pipeline_py",
+      "target": "goldsky_pipeline_welford_std",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L309",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_pipeline_py",
+      "target": "goldsky_pipeline_new_account_state",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L320",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_pipeline_py",
+      "target": "goldsky_pipeline_load_state",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L349",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_pipeline_py",
+      "target": "goldsky_pipeline_save_state",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L355",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_pipeline_py",
+      "target": "goldsky_pipeline_trading_hours_from_bounds",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L368",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_pipeline_py",
+      "target": "goldsky_pipeline_write_csv",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L391",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_pipeline_py",
+      "target": "goldsky_pipeline_fetch_phase",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L475",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_pipeline_py",
+      "target": "goldsky_pipeline_resolve_phase",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L553",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_pipeline_py",
+      "target": "goldsky_pipeline_process_account",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L629",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_goldsky_pipeline_py",
+      "target": "goldsky_pipeline_run_pipeline",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L684",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_fetch_fills",
+      "target": "goldsky_pipeline_query_goldsky",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L121",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_fetch_fills",
+      "target": "goldsky_pipeline_fetchabortederror",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L126",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_write_csv",
+      "target": "goldsky_pipeline_welford_std",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L424",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_write_csv",
+      "target": "goldsky_pipeline_trading_hours_from_bounds",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L442",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_fetch_phase",
+      "target": "goldsky_pipeline_fetch_fills",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L492",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_fetch_phase",
+      "target": "goldsky_pipeline_process_fill",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L496",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_fetch_phase",
+      "target": "goldsky_pipeline_update_position",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L522",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_fetch_phase",
+      "target": "goldsky_pipeline_save_state",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L533",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_resolve_phase",
+      "target": "goldsky_pipeline_resolve_markets",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L569",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_resolve_phase",
+      "target": "goldsky_pipeline_welford_update",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L590",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_process_account",
+      "target": "goldsky_pipeline_new_account_state",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L638",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_process_account",
+      "target": "goldsky_pipeline_fetch_phase",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L647",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_process_account",
+      "target": "goldsky_pipeline_resolve_phase",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L656",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_process_account",
+      "target": "goldsky_pipeline_save_state",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L681",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_run_pipeline",
+      "target": "goldsky_pipeline_load_state",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L689",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_run_pipeline",
+      "target": "goldsky_pipeline_process_account",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L740",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_run_pipeline",
+      "target": "goldsky_pipeline_write_csv",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L744",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_run_pipeline",
+      "target": "goldsky_pipeline_save_state",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L745",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_rationale_54",
+      "target": "goldsky_pipeline_query_goldsky",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L54",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_rationale_88",
+      "target": "goldsky_pipeline_fetchabortederror",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L88",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_rationale_94",
+      "target": "goldsky_pipeline_fetch_fills",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L94",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_rationale_149",
+      "target": "goldsky_pipeline_process_fill",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L149",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_rationale_195",
+      "target": "goldsky_pipeline_update_position",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L195",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_rationale_224",
+      "target": "goldsky_pipeline_resolve_markets",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L224",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_rationale_300",
+      "target": "goldsky_pipeline_welford_update",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L300",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_rationale_310",
+      "target": "goldsky_pipeline_welford_std",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L310",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_rationale_321",
+      "target": "goldsky_pipeline_new_account_state",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L321",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_rationale_369",
+      "target": "goldsky_pipeline_trading_hours_from_bounds",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L369",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_rationale_392",
+      "target": "goldsky_pipeline_write_csv",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L392",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_rationale_476",
+      "target": "goldsky_pipeline_fetch_phase",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L476",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_rationale_554",
+      "target": "goldsky_pipeline_resolve_phase",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L554",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_rationale_630",
+      "target": "goldsky_pipeline_process_account",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L630",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_common_py",
+      "target": "json",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_common_py",
+      "target": "re",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_common_py",
+      "target": "tempfile",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_common_py",
+      "target": "pathlib",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_common_py",
+      "target": "urllib_parse",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_common_py",
+      "target": "requests",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_common_py",
+      "target": "common_to_float",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L30",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_common_py",
+      "target": "common_extract_profile_data",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L40",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_common_py",
+      "target": "common_is_polymarket_host",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L101",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_common_py",
+      "target": "common_fetch_profile",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L110",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_common_py",
+      "target": "common_atomic_write",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L149",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_common_py",
+      "target": "common_fmt_money",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L164",
+      "weight": 1.0
+    },
+    {
+      "source": "users_spson_projects_claude_leaderboard_scraper_common_py",
+      "target": "common_fmt_pct",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L181",
+      "weight": 1.0
+    },
+    {
+      "source": "common_extract_profile_data",
+      "target": "common_to_float",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L75",
+      "weight": 1.0
+    },
+    {
+      "source": "common_fetch_profile",
+      "target": "common_is_polymarket_host",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L120",
+      "weight": 1.0
+    },
+    {
+      "source": "common_fetch_profile",
+      "target": "common_extract_profile_data",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L143",
+      "weight": 1.0
+    },
+    {
+      "source": "common_rationale_1",
+      "target": "users_spson_projects_claude_leaderboard_scraper_common_py",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "common_rationale_31",
+      "target": "common_to_float",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L31",
+      "weight": 1.0
+    },
+    {
+      "source": "common_rationale_41",
+      "target": "common_extract_profile_data",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L41",
+      "weight": 1.0
+    },
+    {
+      "source": "common_rationale_102",
+      "target": "common_is_polymarket_host",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L102",
+      "weight": 1.0
+    },
+    {
+      "source": "common_rationale_111",
+      "target": "common_fetch_profile",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L111",
+      "weight": 1.0
+    },
+    {
+      "source": "common_rationale_150",
+      "target": "common_atomic_write",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/common.py",
+      "source_location": "L150",
+      "weight": 1.0
+    },
+    {
+      "source": "fetch_fetch_user_stats",
+      "target": "common_to_float",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/fetch.py",
+      "source_location": "L103",
+      "weight": 1.0
+    },
+    {
+      "source": "fetch_main",
+      "target": "dune_fetch_capital",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/fetch.py",
+      "source_location": "L179",
+      "weight": 1.0
+    },
+    {
+      "source": "fetch_main",
+      "target": "common_to_float",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/fetch.py",
+      "source_location": "L194",
+      "weight": 1.0
+    },
+    {
+      "source": "fetch_main",
+      "target": "common_fmt_money",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/fetch.py",
+      "source_location": "L211",
+      "weight": 1.0
+    },
+    {
+      "source": "fetch_main",
+      "target": "common_fmt_pct",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/fetch.py",
+      "source_location": "L211",
+      "weight": 1.0
+    },
+    {
+      "source": "backfill_s3_build_positions",
+      "target": "goldsky_pipeline_new_account_state",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L136",
+      "weight": 1.0
+    },
+    {
+      "source": "backfill_s3_build_positions",
+      "target": "goldsky_pipeline_update_position",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L188",
+      "weight": 1.0
+    },
+    {
+      "source": "backfill_s3_book_pnl",
+      "target": "goldsky_pipeline_welford_update",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L231",
+      "weight": 1.0
+    },
+    {
+      "source": "backfill_s3_book_pnl",
+      "target": "goldsky_pipeline_save_state",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L264",
+      "weight": 1.0
+    },
+    {
+      "source": "backfill_s3_resolve_all",
+      "target": "goldsky_pipeline_resolve_markets",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L282",
+      "weight": 1.0
+    },
+    {
+      "source": "backfill_s3_resolve_elapsed_markets",
+      "target": "goldsky_pipeline_save_state",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L409",
+      "weight": 1.0
+    },
+    {
+      "source": "backfill_s3_main",
+      "target": "goldsky_pipeline_load_state",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L456",
+      "weight": 1.0
+    },
+    {
+      "source": "backfill_s3_main",
+      "target": "goldsky_pipeline_save_state",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L460",
+      "weight": 1.0
+    },
+    {
+      "source": "backfill_s3_main",
+      "target": "goldsky_pipeline_write_csv",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "source_location": "L473",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_parallel_fetch_worker",
+      "target": "goldsky_pipeline_fetch_phase",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L102",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_parallel_main",
+      "target": "goldsky_pipeline_load_state",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L140",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_parallel_main",
+      "target": "goldsky_pipeline_new_account_state",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L153",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_parallel_main",
+      "target": "goldsky_pipeline_save_state",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L204",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_parallel_main",
+      "target": "goldsky_pipeline_resolve_phase",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L230",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_parallel_main",
+      "target": "goldsky_pipeline_write_csv",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "source_location": "L244",
+      "weight": 1.0
+    },
+    {
+      "source": "dune_execute_sql",
+      "target": "goldsky_parallel_threadlocalsession_post",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "source_location": "L110",
+      "weight": 1.0
+    },
+    {
+      "source": "discover_main",
+      "target": "common_to_float",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L350",
+      "weight": 1.0
+    },
+    {
+      "source": "discover_main",
+      "target": "common_fmt_money",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L369",
+      "weight": 1.0
+    },
+    {
+      "source": "discover_main",
+      "target": "common_fetch_profile",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L379",
+      "weight": 1.0
+    },
+    {
+      "source": "discover_main",
+      "target": "common_fmt_pct",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L386",
+      "weight": 1.0
+    },
+    {
+      "source": "discover_main",
+      "target": "common_atomic_write",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "source_location": "L458",
+      "weight": 1.0
+    },
+    {
+      "source": "promote_run_promotion",
+      "target": "common_atomic_write",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/promote.py",
+      "source_location": "L135",
+      "weight": 1.0
+    },
+    {
+      "source": "goldsky_pipeline_query_goldsky",
+      "target": "goldsky_parallel_threadlocalsession_post",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "source_location": "L57",
+      "weight": 1.0
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}
