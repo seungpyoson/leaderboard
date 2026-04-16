@@ -1,0 +1,313 @@
+{
+  "communities": {
+    "0": [
+      "exception",
+      "goldsky_parallel_main",
+      "goldsky_pipeline_fetch_fills",
+      "goldsky_pipeline_fetch_phase",
+      "goldsky_pipeline_fetchabortederror",
+      "goldsky_pipeline_load_state",
+      "goldsky_pipeline_new_account_state",
+      "goldsky_pipeline_process_account",
+      "goldsky_pipeline_process_fill",
+      "goldsky_pipeline_query_goldsky",
+      "goldsky_pipeline_rationale_149",
+      "goldsky_pipeline_rationale_195",
+      "goldsky_pipeline_rationale_224",
+      "goldsky_pipeline_rationale_300",
+      "goldsky_pipeline_rationale_310",
+      "goldsky_pipeline_rationale_321",
+      "goldsky_pipeline_rationale_369",
+      "goldsky_pipeline_rationale_392",
+      "goldsky_pipeline_rationale_476",
+      "goldsky_pipeline_rationale_54",
+      "goldsky_pipeline_rationale_554",
+      "goldsky_pipeline_rationale_630",
+      "goldsky_pipeline_rationale_88",
+      "goldsky_pipeline_rationale_94",
+      "goldsky_pipeline_resolve_markets",
+      "goldsky_pipeline_resolve_phase",
+      "goldsky_pipeline_run_pipeline",
+      "goldsky_pipeline_save_state",
+      "goldsky_pipeline_trading_hours_from_bounds",
+      "goldsky_pipeline_update_position",
+      "goldsky_pipeline_welford_std",
+      "goldsky_pipeline_welford_update",
+      "goldsky_pipeline_write_csv",
+      "users_spson_projects_claude_leaderboard_scraper_goldsky_pipeline_py"
+    ],
+    "1": [
+      "CLAUDE_candidate_discovery_workflow",
+      "discover_auto_status",
+      "discover_classify_style",
+      "discover_fetch_leaderboard",
+      "discover_load_existing_candidates",
+      "discover_load_known_wallets",
+      "discover_main",
+      "discover_rationale_109",
+      "discover_rationale_124",
+      "discover_rationale_142",
+      "discover_rationale_196",
+      "discover_rationale_226",
+      "discover_rationale_249",
+      "discover_rationale_296",
+      "discover_rationale_61",
+      "discover_rationale_81",
+      "discover_score_candidate",
+      "discover_validate_output",
+      "discover_validate_session",
+      "discover_validate_slug",
+      "users_spson_projects_claude_leaderboard_scraper_discover_py"
+    ],
+    "2": [
+      "CLAUDE_next_data_payload",
+      "CLAUDE_scraper_component",
+      "common_extract_profile_data",
+      "common_fetch_profile",
+      "common_fmt_money",
+      "common_fmt_pct",
+      "common_is_polymarket_host",
+      "common_rationale_1",
+      "common_rationale_102",
+      "common_rationale_111",
+      "common_rationale_31",
+      "common_rationale_41",
+      "common_to_float",
+      "fetch_fetch_leaderboard",
+      "fetch_fetch_user_stats",
+      "fetch_main",
+      "fetch_rationale_38",
+      "fetch_rationale_88",
+      "users_spson_projects_claude_leaderboard_scraper_common_py",
+      "users_spson_projects_claude_leaderboard_scraper_fetch_py"
+    ],
+    "3": [
+      "CLAUDE_frontend_component",
+      "CLAUDE_github_actions_ci",
+      "CLAUDE_github_pages_hosting",
+      "CLAUDE_goldsky_pipeline_component",
+      "CLAUDE_leaderboard_project",
+      "CLAUDE_orderfilled_events",
+      "CLAUDE_rate_limit_rule",
+      "CLAUDE_state_persistence",
+      "goldsky_parallel_fetch_worker",
+      "goldsky_parallel_guarded_save",
+      "goldsky_parallel_rationale_48",
+      "goldsky_parallel_rationale_90",
+      "goldsky_parallel_threadlocalsession",
+      "goldsky_parallel_threadlocalsession_get",
+      "goldsky_parallel_threadlocalsession_init",
+      "goldsky_parallel_threadlocalsession_post",
+      "users_spson_projects_claude_leaderboard_scraper_goldsky_parallel_py"
+    ],
+    "4": [
+      "CLAUDE_gamma_resolution",
+      "CLAUDE_no_raw_fills_rule",
+      "CLAUDE_position_tracking",
+      "CLAUDE_welford_sharpe",
+      "backfill_s3_book_pnl",
+      "backfill_s3_build_positions",
+      "backfill_s3_main",
+      "backfill_s3_rationale_122",
+      "backfill_s3_rationale_206",
+      "backfill_s3_rationale_270",
+      "backfill_s3_rationale_291",
+      "backfill_s3_rationale_58",
+      "backfill_s3_resolve_all",
+      "backfill_s3_resolve_elapsed_markets",
+      "backfill_s3_scan_s3_fills",
+      "users_spson_projects_claude_leaderboard_scraper_backfill_s3_py"
+    ],
+    "5": [
+      "CLAUDE_proxy_wallets",
+      "CLAUDE_public_apis_rule",
+      "dune_build_sql",
+      "dune_execute_sql",
+      "dune_fetch_capital",
+      "dune_get_api_key",
+      "dune_headers",
+      "dune_normalize_address",
+      "dune_poll_results",
+      "dune_rationale_109",
+      "dune_rationale_121",
+      "dune_rationale_150",
+      "dune_rationale_37",
+      "dune_rationale_58",
+      "dune_rationale_66",
+      "users_spson_projects_claude_leaderboard_scraper_dune_py"
+    ],
+    "6": [
+      "CLAUDE_candidate_scoring_signals",
+      "CLAUDE_efficiency_signal",
+      "CLAUDE_enrichment_signal",
+      "CLAUDE_markets_signal",
+      "CLAUDE_pnl_signal",
+      "CLAUDE_pnl_threshold_rule",
+      "CLAUDE_trade_count_signal"
+    ],
+    "7": [
+      "common_atomic_write",
+      "common_rationale_150",
+      "promote_main",
+      "promote_rationale_59",
+      "promote_run_promotion",
+      "users_spson_projects_claude_leaderboard_scraper_promote_py"
+    ]
+  },
+  "cohesion": {
+    "0": 0.1,
+    "1": 0.15,
+    "2": 0.16,
+    "3": 0.14,
+    "4": 0.2,
+    "5": 0.2,
+    "6": 0.29,
+    "7": 0.4
+  },
+  "gods": [
+    {
+      "id": "discover_main",
+      "label": "main()",
+      "degree": 15
+    },
+    {
+      "id": "backfill_s3_main",
+      "label": "main()",
+      "degree": 9
+    },
+    {
+      "id": "dune_fetch_capital",
+      "label": "fetch_capital()",
+      "degree": 8
+    },
+    {
+      "id": "goldsky_pipeline_save_state",
+      "label": "save_state()",
+      "degree": 8
+    },
+    {
+      "id": "goldsky_pipeline_fetch_phase",
+      "label": "_fetch_phase()",
+      "degree": 8
+    },
+    {
+      "id": "fetch_main",
+      "label": "main()",
+      "degree": 7
+    },
+    {
+      "id": "backfill_s3_build_positions",
+      "label": "build_positions()",
+      "degree": 7
+    },
+    {
+      "id": "backfill_s3_book_pnl",
+      "label": "_book_pnl()",
+      "degree": 7
+    },
+    {
+      "id": "goldsky_pipeline_write_csv",
+      "label": "write_csv()",
+      "degree": 7
+    },
+    {
+      "id": "goldsky_pipeline_process_account",
+      "label": "process_account()",
+      "degree": 7
+    }
+  ],
+  "surprises": [
+    {
+      "source": "Incremental State Persistence",
+      "target": "main()",
+      "source_files": [
+        "CLAUDE.md",
+        "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "conceptually_related_to",
+      "why": "inferred connection - not explicitly stated in source; crosses file types (code \u2194 doc); connects across different repos/directories; bridges separate communities; peripheral node `Incremental State Persistence` unexpectedly reaches hub `main()`"
+    },
+    {
+      "source": "__NEXT_DATA__ SSR Payload",
+      "target": "fetch_leaderboard()",
+      "source_files": [
+        "CLAUDE.md",
+        "/Users/spson/Projects/Claude/leaderboard/scraper/fetch.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "rationale_for",
+      "why": "inferred connection - not explicitly stated in source; crosses file types (code \u2194 doc); connects across different repos/directories; peripheral node `__NEXT_DATA__ SSR Payload` unexpectedly reaches hub `fetch_leaderboard()`"
+    },
+    {
+      "source": "__NEXT_DATA__ SSR Payload",
+      "target": "fetch_user_stats()",
+      "source_files": [
+        "CLAUDE.md",
+        "/Users/spson/Projects/Claude/leaderboard/scraper/fetch.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "rationale_for",
+      "why": "inferred connection - not explicitly stated in source; crosses file types (code \u2194 doc); connects across different repos/directories; peripheral node `__NEXT_DATA__ SSR Payload` unexpectedly reaches hub `fetch_user_stats()`"
+    },
+    {
+      "source": "OrderFilled Events (Goldsky)",
+      "target": "scan_s3_fills()",
+      "source_files": [
+        "CLAUDE.md",
+        "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "conceptually_related_to",
+      "why": "inferred connection - not explicitly stated in source; crosses file types (code \u2194 doc); connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "No Raw Fills Storage Rule",
+      "target": "build_positions()",
+      "source_files": [
+        "CLAUDE.md",
+        "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "rationale_for",
+      "why": "inferred connection - not explicitly stated in source; crosses file types (code \u2194 doc); connects across different repos/directories; peripheral node `No Raw Fills Storage Rule` unexpectedly reaches hub `build_positions()`"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `Scraper (Python/requests)` connect `Community 2` to `Community 1`, `Community 3`?",
+      "why": "High betweenness centrality (0.207) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `main()` connect `Community 2` to `Community 5`?",
+      "why": "High betweenness centrality (0.184) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `Polymarket Trader Leaderboard` connect `Community 3` to `Community 2`?",
+      "why": "High betweenness centrality (0.182) - this node is a cross-community bridge."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 5 inferred relationships involving `main()` (e.g. with `to_float()` and `fmt_money()`) actually correct?",
+      "why": "`main()` has 5 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 4 inferred relationships involving `main()` (e.g. with `load_state()` and `save_state()`) actually correct?",
+      "why": "`main()` has 4 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 4 inferred relationships involving `save_state()` (e.g. with `_book_pnl()` and `resolve_elapsed_markets()`) actually correct?",
+      "why": "`save_state()` has 4 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `Paginate the crypto leaderboard API. Returns up to `limit` traders.`, `Fetch per-user stats (all-market, not crypto-filtered).      Returns: {\"trades\":`, `Read all S3 parquet partitions, filter to tracked wallets, return rows.      Ret` to the rest of the system?",
+      "why": "55 weakly-connected nodes found - possible documentation gaps or missing edges."
+    }
+  ]
+}

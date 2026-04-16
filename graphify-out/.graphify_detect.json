@@ -1,0 +1,26 @@
+{
+  "files": {
+    "code": [
+      "/Users/spson/Projects/Claude/leaderboard/scraper/fetch.py",
+      "/Users/spson/Projects/Claude/leaderboard/scraper/backfill_s3.py",
+      "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_parallel.py",
+      "/Users/spson/Projects/Claude/leaderboard/scraper/dune.py",
+      "/Users/spson/Projects/Claude/leaderboard/scraper/discover.py",
+      "/Users/spson/Projects/Claude/leaderboard/scraper/promote.py",
+      "/Users/spson/Projects/Claude/leaderboard/scraper/goldsky_pipeline.py",
+      "/Users/spson/Projects/Claude/leaderboard/scraper/common.py"
+    ],
+    "document": [
+      "/Users/spson/Projects/Claude/leaderboard/CLAUDE.md"
+    ],
+    "paper": [],
+    "image": [],
+    "video": []
+  },
+  "total_files": 9,
+  "total_words": 10013,
+  "needs_graph": false,
+  "warning": "Corpus is ~10,013 words - fits in a single context window. You may not need a graph.",
+  "skipped_sensitive": [],
+  "graphifyignore_patterns": 0
+}

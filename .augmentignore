@@ -1,0 +1,10 @@
+# Scraped data (large, binary)
+data/
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+
+# OS / git internals
+.DS_Store
+.git/
