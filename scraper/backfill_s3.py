@@ -21,6 +21,7 @@ from pathlib import Path
 import duckdb
 
 import requests
+from external import accounts_snapshot, gamma_market, s3_fill
 
 from goldsky_pipeline import (
     ACCOUNTS_FILE,
@@ -102,7 +103,7 @@ def scan_s3_fills(wallets: list[str]) -> list[tuple]:
 
     print("Phase 1: Scanning S3 parquet partitions...")
     t0 = time.time()
-    rows = con.execute(query).fetchall()
+    rows = [s3_fill(row) for row in con.execute(query).fetchall()]
     elapsed = time.time() - t0
     print(f"  {len(rows):,} fill rows fetched in {elapsed:.1f}s")
 
@@ -187,7 +188,7 @@ def build_positions(
         # Position tracking
         update_position(ast["positions"], fill)
 
-        fill_counts[name] = fill_counts.get(name, 0) + 1
+        fill_counts[name] = fill_counts.setdefault(name, 0) + 1
 
     elapsed = time.time() - t0
     print(f"  Positions built in {elapsed:.1f}s")
@@ -204,7 +205,7 @@ def build_positions(
 
 def _book_pnl(state: dict, label: str) -> None:
     """Book PnL for all accounts using the resolution cache. Shared by both phases."""
-    cache = state.get("resolution_cache", {})
+    cache = state["resolution_cache"]
     total_resolved = 0
     total_remaining = 0
 
@@ -238,11 +239,11 @@ def _book_pnl(state: dict, label: str) -> None:
             ast["aggregates"]["welford_mean"] = mean
             ast["aggregates"]["welford_m2"] = m2
 
-            question = entry.get("question", "")
+            question = entry.get("question") or ""
             if question:
                 short = question[:40]
                 tm = ast["aggregates"]["top_markets"]
-                tm[short] = tm.get(short, 0) + abs(pnl)
+                tm[short] = tm.setdefault(short, 0) + abs(pnl)
 
             del positions[tid]
 
@@ -275,7 +276,7 @@ def resolve_all(state: dict) -> None:
     for ast in state["accounts"].values():
         all_token_ids.update(ast["positions"].keys())
 
-    cache = state.get("resolution_cache", {})
+    cache = state["resolution_cache"]
     cached_count = sum(1 for tid in all_token_ids if tid in cache)
     print(f"  {len(all_token_ids):,} unique token_ids | {cached_count:,} already cached | {len(all_token_ids) - cached_count:,} to query")
 
@@ -297,7 +298,7 @@ def resolve_elapsed_markets(state: dict) -> None:
     t0 = time.time()
 
     # Collect unresolved token_ids (not yet in cache)
-    cache = state.get("resolution_cache", {})
+    cache = state["resolution_cache"]
     unresolved: list[str] = []
     for ast in state["accounts"].values():
         for tid in ast["positions"]:
@@ -345,40 +346,24 @@ def resolve_elapsed_markets(state: dict) -> None:
 
                 markets = resp.json()
                 if not isinstance(markets, list):
-                    break
+                    raise ValueError("Gamma markets response must be an array")
 
                 returned_tids: set[str] = set()
-                for market in markets:
-                    outcome_prices_raw = market.get("outcomePrices", "")
-                    clob_ids_raw = market.get("clobTokenIds", "")
-                    end_date_str = market.get("endDate", "")
-
-                    if not outcome_prices_raw or not clob_ids_raw:
-                        continue
-
-                    try:
-                        prices = json.loads(outcome_prices_raw) if isinstance(outcome_prices_raw, str) else outcome_prices_raw
-                        clob_ids = json.loads(clob_ids_raw) if isinstance(clob_ids_raw, str) else clob_ids_raw
-                    except (json.JSONDecodeError, TypeError):
-                        continue
+                for raw in markets:
+                    market = gamma_market(raw, require_end_date=True)
+                    prices = market["prices"]
+                    clob_ids = market["clob_ids"]
+                    end_date_str = market["end_date"]
 
                     # Safety: check endDate is >1hr in the past
-                    if end_date_str:
-                        try:
-                            end_dt = datetime.fromisoformat(end_date_str.replace("Z", "+00:00"))
-                            if end_dt + elapsed_buffer > now:
-                                skipped_not_elapsed += len(clob_ids)
-                                for cid in clob_ids:
-                                    returned_tids.add(cid)
-                                continue
-                        except (ValueError, TypeError):
-                            # Can't parse date — skip to be safe
-                            continue
-                    else:
-                        # No endDate — skip to be safe
+                    end_dt = datetime.fromisoformat(end_date_str.replace("Z", "+00:00"))
+                    if end_dt + elapsed_buffer > now:
+                        skipped_not_elapsed += len(clob_ids)
+                        for cid in clob_ids:
+                            returned_tids.add(cid)
                         continue
 
-                    question = market.get("question", "")[:80]
+                    question = (market["question"] or "")[:80]
                     for j, cid in enumerate(clob_ids):
                         returned_tids.add(cid)
                         if j < len(prices):
@@ -395,6 +380,8 @@ def resolve_elapsed_markets(state: dict) -> None:
 
                 break  # success
 
+            except ValueError:
+                raise
             except Exception as e:
                 print(f"    Gamma error (batch {batch_i + 1}): {e}")
                 break
@@ -428,7 +415,7 @@ def main():
     parser.add_argument("--skip-resolve", action="store_true", help="Skip Gamma resolution phase")
     args = parser.parse_args()
 
-    accounts: list[dict] = json.loads(ACCOUNTS_FILE.read_text())
+    accounts: list[dict] = accounts_snapshot(json.loads(ACCOUNTS_FILE.read_text()))
     wallets = [a["wallet"] for a in accounts]
 
     print(f"Backfilling {len(accounts)} accounts from S3 parquet")
@@ -444,7 +431,7 @@ def main():
         wallet_to_name = {a["wallet"].lower(): a["name"] for a in accounts}
         counts = Counter()
         for wallet, *_ in rows:
-            name = wallet_to_name.get(wallet, wallet)
+            name = wallet_to_name.get(wallet) or wallet
             counts[name] += 1
         print("\n[DRY RUN] Fill counts:")
         for name, count in counts.most_common():

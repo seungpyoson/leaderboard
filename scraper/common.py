@@ -18,6 +18,8 @@ from urllib.parse import urljoin, urlparse
 
 import requests
 
+from external import leaderboard_page, profile_queries
+
 REQUEST_DELAY = 0.5
 LEADERBOARD_URL = "https://data-api.polymarket.com/v2/leaderboard"
 LEADERBOARD_PAGE_SIZE = 50
@@ -52,21 +54,10 @@ def fetch_leaderboard(limit: int) -> list[dict]:
         except (requests.RequestException, json.JSONDecodeError) as exc:
             raise RuntimeError(f"Leaderboard page failed after {len(traders)} rows: {exc}") from exc
 
-        if not isinstance(body, dict) or not isinstance(body.get("data"), list):
-            raise RuntimeError("Leaderboard response lacks a data array")
-        page = body["data"]
-        pagination = body.get("pagination")
-        if not isinstance(pagination, dict) or not isinstance(pagination.get("has_more"), bool):
-            raise RuntimeError("Leaderboard response lacks pagination")
-        if not page or any(
-            not isinstance(row, dict)
-            or not isinstance(row.get("user_id"), str)
-            or not re.fullmatch(r"0x[0-9a-fA-F]{40}", row["user_id"])
-            or not isinstance(row.get("pnl"), (int, float))
-            or not isinstance(row.get("user_name"), str)
-            for row in page
-        ):
-            raise RuntimeError("Leaderboard returned an empty or malformed page")
+        try:
+            page, pagination = leaderboard_page(body)
+        except ValueError as exc:
+            raise RuntimeError(f"Leaderboard returned a malformed page: {exc}") from exc
         traders.extend(page)
         if len(traders) >= limit:
             break
@@ -86,16 +77,6 @@ def fetch_leaderboard(limit: int) -> list[dict]:
     return traders
 
 
-def to_float(val) -> float | None:
-    """Safely coerce a value to float, returning None on failure."""
-    if val is None:
-        return None
-    try:
-        return float(val)
-    except (ValueError, TypeError):
-        return None
-
-
 def extract_profile_data(html: str) -> dict | None:
     """Extract PnL/volume/stats from __NEXT_DATA__ embedded in profile page HTML."""
     match = re.search(r'__NEXT_DATA__.*?>(.*?)</script', html, re.DOTALL)
@@ -107,54 +88,10 @@ def extract_profile_data(html: str) -> dict | None:
     except json.JSONDecodeError:
         return None
 
-    queries = (next_data
-               .get("props", {})
-               .get("pageProps", {})
-               .get("dehydratedState", {})
-               .get("queries", []))
-
-    result = {
-        "pnl": None,
-        "volume": None,
-        "positions_value": None,
-        "biggest_win": None,
-        "trades": None,
-        "markets": None,
-        "join_date": None,
-    }
-
-    for q in queries:
-        qk = q.get("queryKey", [])
-        if not isinstance(qk, list):
-            continue
-        data = q.get("state", {}).get("data", None)
-        key_str = " ".join(str(k) for k in qk)
-
-        if "/api/profile/volume" in key_str and isinstance(data, dict):
-            result["pnl"] = to_float(data.get("pnl"))
-            result["volume"] = to_float(data.get("amount"))
-
-        elif "user-stats" in key_str and isinstance(data, dict):
-            result["biggest_win"] = to_float(data.get("largestWin"))
-            result["trades"] = data.get("trades")
-            join = data.get("joinDate", "")
-            if join and "1969" not in join:
-                result["join_date"] = join[:10]
-
-        elif "/api/profile/marketsTraded" in key_str and isinstance(data, dict):
-            result["markets"] = data.get("traded")
-
-        elif key_str.startswith("positions value"):
-            if isinstance(data, (int, float)):
-                result["positions_value"] = data
-
-        elif "/api/profile/userData" in key_str and isinstance(data, dict):
-            if not result["join_date"]:
-                created = data.get("createdAt", "")
-                if created and "1969" not in created:
-                    result["join_date"] = created[:10]
-
-    return result
+    try:
+        return profile_queries(next_data)
+    except ValueError:
+        return None
 
 
 def _is_polymarket_host(url: str) -> bool:
@@ -187,7 +124,9 @@ def fetch_profile(label: str, profile_url: str) -> dict | None:
         # Follow redirects manually — only if they stay on polymarket.com
         redirects = 0
         while resp.status_code in (301, 302, 303, 307, 308) and redirects < 5:
-            location = resp.headers.get("Location", "")
+            location = resp.headers.get("Location")
+            if not location:
+                raise RuntimeError("Polymarket redirect lacks Location")
             # Resolve relative redirects (e.g. /profile/...) against current URL
             resolved = urljoin(url, location)
             if not _is_polymarket_host(resolved):

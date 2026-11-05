@@ -38,6 +38,7 @@ SCRAPER_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(SCRAPER_DIR))
 
 import goldsky_pipeline as gp  # noqa: E402
+from external import accounts_snapshot
 
 # ---------------------------------------------------------------------------
 # Thread-safety patches (applied at import time, before any work)
@@ -98,11 +99,11 @@ def fetch_worker(
     print(f"\n[{name}] starting fetch ({fills_before:,} fills so far)")
 
     # Maker phase
-    if not ast.get("maker_exhausted", False):
+    if not ast.get("maker_exhausted"):
         gp._fetch_phase(ast, wallet, "maker", state, deadline)
 
     # Taker phase (only if time remains)
-    if not ast.get("taker_exhausted", False) and time.time() < deadline:
+    if not ast.get("taker_exhausted") and time.time() < deadline:
         gp._fetch_phase(ast, wallet, "taker", state, deadline)
 
     fills_after = ast["fills"]["total"]
@@ -136,7 +137,7 @@ def main():
     deadline = start + args.max_hours * 3600
 
     # Load accounts + state
-    accounts_all = json.loads(gp.ACCOUNTS_FILE.read_text())
+    accounts_all = accounts_snapshot(json.loads(gp.ACCOUNTS_FILE.read_text()))
     state = gp.load_state()
 
     accounts = accounts_all
@@ -165,7 +166,7 @@ def main():
     print(f"  Accounts: {len(accounts)} | Workers: {args.workers}")
     print(f"  Existing fills: {total_existing:,}")
     print(f"  Time budget: {args.max_hours}h | Deadline: {deadline_str}")
-    print(f"  Resolution cache: {len(state.get('resolution_cache', {})):,} entries")
+    print(f"  Resolution cache: {len(state['resolution_cache']):,} entries")
     print()
 
     # --- Parallel fetch phase ---
@@ -221,8 +222,8 @@ def main():
             if not ast or not ast.get("positions"):
                 continue
 
-            maker_tip = ast.get("maker_at_tip", False)
-            taker_tip = ast.get("taker_at_tip", False)
+            maker_tip = ast.get("maker_at_tip")
+            taker_tip = ast.get("taker_at_tip")
 
             if maker_tip and taker_tip:
                 n_pos = len(ast["positions"])
@@ -247,7 +248,7 @@ def main():
     # --- Summary ---
     elapsed_total = time.time() - start
     total_fills = sum(s["fills"]["total"] for s in state["accounts"].values())
-    cache_size = len(state.get("resolution_cache", {}))
+    cache_size = len(state["resolution_cache"])
 
     print(f"\n{'='*60}")
     print(f"DONE in {elapsed_total/60:.1f} min")

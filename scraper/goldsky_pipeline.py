@@ -23,6 +23,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import requests
+from external import accounts_snapshot, gamma_market, goldsky_page, goldsky_state
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -128,7 +129,7 @@ def fetch_fills(wallet: str, role: str, last_id: str = ""):
             continue
 
         consecutive_failures = 0
-        events = result["data"]["orderFilledEvents"]
+        events = goldsky_page(result)
         if not events:
             break
 
@@ -261,26 +262,20 @@ def resolve_markets(
                     break  # non-retryable, skip batch
 
                 markets = resp.json()
-                if isinstance(markets, list):
-                    for market in markets:
-                        outcome_prices_raw = market.get("outcomePrices", "")
-                        clob_ids_raw = market.get("clobTokenIds", "")
-                        if not outcome_prices_raw or not clob_ids_raw:
+                if not isinstance(markets, list):
+                    raise ValueError("Gamma markets response must be an array")
+                for raw in markets:
+                    market = gamma_market(raw)
+                    question = (market["question"] or "")[:80]
+                    for cid, price in zip(market["clob_ids"], market["prices"]):
+                        payout = float(price)
+                        if payout not in (0.0, 1.0):
                             continue
-                        try:
-                            prices = json.loads(outcome_prices_raw) if isinstance(outcome_prices_raw, str) else outcome_prices_raw
-                            clob_ids = json.loads(clob_ids_raw) if isinstance(clob_ids_raw, str) else clob_ids_raw
-                        except (json.JSONDecodeError, TypeError):
-                            continue
-                        question = market.get("question", "")[:80]
-                        for j, cid in enumerate(clob_ids):
-                            if j < len(prices):
-                                payout = float(prices[j])
-                                if payout not in (0.0, 1.0):
-                                    continue
-                                cache[cid] = {"payout": payout, "cached_at": today, "question": question}
+                        cache[cid] = {"payout": payout, "cached_at": today, "question": question}
                 break  # success — exit retry loop
 
+            except ValueError:
+                raise
             except Exception as e:
                 print(f"    Gamma error (batch {batch_i + 1}): {e}")
                 break
@@ -348,16 +343,16 @@ def new_account_state(wallet: str) -> dict:
 
 def load_state() -> dict:
     if STATE_FILE.exists():
-        return json.loads(STATE_FILE.read_text())
+        return goldsky_state(json.loads(STATE_FILE.read_text()))
     return {"accounts": {}, "resolution_cache": {}}
 
 
 def save_state(state: dict) -> None:
     # Prune resolution cache entries older than 30 days
     cutoff = (datetime.now(timezone.utc) - timedelta(days=30)).strftime("%Y-%m-%d")
-    cache = state.get("resolution_cache", {})
+    cache = state["resolution_cache"]
     state["resolution_cache"] = {
-        k: v for k, v in cache.items() if v.get("cached_at", "") >= cutoff
+        k: v for k, v in cache.items() if v["cached_at"] >= cutoff
     }
     # Atomic write: temp file + os.replace prevents corruption on crash
     tmp = STATE_FILE.with_suffix(".tmp")
@@ -398,7 +393,7 @@ def write_csv(state: dict, accounts: list[dict]) -> None:
     for acct in accounts:
         name = acct["name"]
         ast = state["accounts"].get(name)
-        if not ast or not ast["fills"].get("total"):
+        if not ast or not ast["fills"]["total"]:
             continue
 
         fills = ast["fills"]
@@ -426,11 +421,11 @@ def write_csv(state: dict, accounts: list[dict]) -> None:
 
         mt_ratio = round(maker / taker, 2) if taker > 0 else (999.0 if maker > 0 else "")
 
-        top_markets = agg.get("top_markets", {})
+        top_markets = agg["top_markets"]
         top_market = max(top_markets, key=top_markets.get) if top_markets else ""
         top_market = top_market.replace("|", "/")  # Prevent pipe breaking CSV parser
 
-        day_bounds = ast.get("day_bounds", {})
+        day_bounds = ast["day_bounds"]
 
         row: dict[str, str | int | float] = {
             "name": name,
@@ -460,7 +455,7 @@ def write_csv(state: dict, accounts: list[dict]) -> None:
             "top_market": top_market,
         }
 
-        vals = [str(row.get(h, "")) for h in CSV_HEADERS]
+        vals = [str(row[h]) for h in CSV_HEADERS]
         lines.append("| " + " | ".join(vals) + " |")
         written += 1
 
@@ -566,7 +561,7 @@ def _resolve_phase(ast: dict, state: dict, deadline: float) -> None:
         return
 
     print(f"  Resolving {len(token_ids)} open positions…")
-    cache = resolve_markets(token_ids, state.get("resolution_cache", {}), deadline)
+    cache = resolve_markets(token_ids, state["resolution_cache"], deadline)
     state["resolution_cache"] = cache
 
     resolved_count = 0
@@ -597,11 +592,11 @@ def _resolve_phase(ast: dict, state: dict, deadline: float) -> None:
         ast["aggregates"]["welford_mean"] = mean
         ast["aggregates"]["welford_m2"] = m2
 
-        question = entry.get("question", "")
+        question = entry.get("question") or ""
         if question:
             short = question[:40]
             tm = ast["aggregates"]["top_markets"]
-            tm[short] = tm.get(short, 0) + abs(pnl)
+            tm[short] = tm.setdefault(short, 0) + abs(pnl)
 
         del positions[tid]
 
@@ -640,8 +635,8 @@ def process_account(name: str, wallet: str, state: dict, deadline: float) -> Non
     ast = state["accounts"][name]
 
     while time.time() < deadline:
-        maker_done = ast.get("maker_exhausted", False)
-        taker_done = ast.get("taker_exhausted", False)
+        maker_done = ast.get("maker_exhausted")
+        taker_done = ast.get("taker_exhausted")
 
         if not maker_done:
             _fetch_phase(ast, wallet, "maker", state, deadline)
@@ -650,8 +645,8 @@ def process_account(name: str, wallet: str, state: dict, deadline: float) -> Non
         else:
             # Both phases done for this run — check fill completeness before resolving
             if ast["positions"]:
-                maker_tip = ast.get("maker_at_tip", False)
-                taker_tip = ast.get("taker_at_tip", False)
+                maker_tip = ast.get("maker_at_tip")
+                taker_tip = ast.get("taker_at_tip")
                 if maker_tip and taker_tip:
                     _resolve_phase(ast, state, deadline)
                     # Remaining positions are open markets — no point re-querying Gamma
@@ -685,7 +680,7 @@ def run_pipeline(max_minutes: int | None = None, account_filter: str | None = No
     start = time.time()
     deadline = start + max_minutes * 60 if max_minutes else float("inf")
 
-    accounts: list[dict] = json.loads(ACCOUNTS_FILE.read_text())
+    accounts: list[dict] = accounts_snapshot(json.loads(ACCOUNTS_FILE.read_text()))
     state = load_state()
 
     if account_filter:
@@ -696,10 +691,12 @@ def run_pipeline(max_minutes: int | None = None, account_filter: str | None = No
     # Accounts closest to completion run first — maximises fully-processed accounts per CI run.
     # Within the same phase, sort by fill count ascending (smallest accounts finish fastest).
     def phase_key(a: dict) -> tuple:
-        ast = state.get("accounts", {}).get(a["name"], {})
-        maker_done = ast.get("maker_exhausted", False)
-        taker_done = ast.get("taker_exhausted", False)
-        fills = ast.get("fills", {}).get("total", 0)
+        ast = state["accounts"].get(a["name"])
+        if ast is None:
+            return (2, 0)
+        maker_done = ast.get("maker_exhausted")
+        taker_done = ast.get("taker_exhausted")
+        fills = ast["fills"]["total"]
         if maker_done and taker_done and not ast.get("positions"):
             return (3, fills)   # fully done — no-op, run last
         if maker_done and taker_done:
@@ -740,13 +737,13 @@ def run_pipeline(max_minutes: int | None = None, account_filter: str | None = No
         process_account(acct["name"], acct["wallet"], state, account_deadline)
 
     # Write CSV with all accounts (not just filtered)
-    all_accounts: list[dict] = json.loads(ACCOUNTS_FILE.read_text())
+    all_accounts: list[dict] = accounts_snapshot(json.loads(ACCOUNTS_FILE.read_text()))
     write_csv(state, all_accounts)
     save_state(state)
 
     elapsed = (time.time() - start) / 60
     total_fills = sum(
-        s.get("fills", {}).get("total", 0) for s in state["accounts"].values()
+        s["fills"]["total"] for s in state["accounts"].values()
     )
     print(f"\nDone in {elapsed:.1f} min | {total_fills:,} total fills across all accounts")
 

@@ -24,6 +24,8 @@ logger = logging.getLogger(__name__)
 
 import requests
 
+from external import dune_execution, dune_results, dune_status
+
 DUNE_API = "https://api.dune.com/api/v1"
 
 # Bridged USDC.e on Polygon (6 decimals) — what Polymarket uses
@@ -123,7 +125,7 @@ def _execute_sql(api_key: str, sql: str) -> str:
         timeout=30,
     )
     _check_response(resp, api_key)
-    return resp.json()["execution_id"]
+    return dune_execution(resp.json())
 
 
 def _poll_results(api_key: str, execution_id: str) -> dict:
@@ -137,7 +139,7 @@ def _poll_results(api_key: str, execution_id: str) -> dict:
         )
         _check_response(resp, api_key)
         status_body = resp.json()
-        state = status_body.get("state", "")
+        state = dune_status(status_body)
 
         if state == "QUERY_STATE_COMPLETED":
             results = requests.get(
@@ -192,15 +194,16 @@ def fetch_capital(wallets: list[str]) -> dict[str, dict]:
         return {}
 
     capital = {}
-    for row in data.get("result", {}).get("rows", []):
-        wallet = row.get("wallet", "").lower()
-        if wallet:
-            capital[wallet] = {
-                "first_seen": row.get("first_seen"),
-                "total_received": row.get("total_received", 0),
-                "total_sent": row.get("total_sent", 0),
-                "net_capital": row.get("net_capital"),
-            }
+    for row in dune_results(data):
+        wallet = row["wallet"].lower()
+        if wallet in capital:
+            raise ValueError(f"Duplicate Dune wallet: {wallet}")
+        capital[wallet] = {
+            "first_seen": row["first_seen"],
+            "total_received": row["total_received"],
+            "total_sent": row["total_sent"],
+            "net_capital": row["net_capital"],
+        }
 
     print(f"  Dune: got capital data for {len(capital)} wallets")
     return capital

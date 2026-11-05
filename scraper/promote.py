@@ -19,18 +19,15 @@ from __future__ import annotations
 
 import fcntl
 import json
-import re
 from pathlib import Path
 
 from common import atomic_write
+from external import accounts_snapshot, candidates_snapshot
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 ACCOUNTS_FILE = REPO_ROOT / "scraper" / "accounts.json"
 CANDIDATES_FILE = REPO_ROOT / "data" / "candidates.json"
 LOCK_FILE = REPO_ROOT / "data" / ".candidates.lock"
-
-VALID_WALLET_RE = re.compile(r"^0x[0-9a-f]{40}$")
-
 
 def main():
     if not CANDIDATES_FILE.exists():
@@ -65,14 +62,10 @@ def _run_promotion():
         print(f"ERROR: failed to read {CANDIDATES_FILE}: {e}")
         raise SystemExit(1)
 
-    if not isinstance(candidates_data, dict) or "candidates" not in candidates_data:
-        print(f"ERROR: {CANDIDATES_FILE} has unexpected structure (expected dict with 'candidates' key)")
-        raise SystemExit(1)
-
-    candidates = candidates_data["candidates"]
-    if not isinstance(candidates, list):
-        print(f"ERROR: {CANDIDATES_FILE} 'candidates' is not a list")
-        raise SystemExit(1)
+    try:
+        candidates = candidates_snapshot(candidates_data)
+    except ValueError as exc:
+        raise RuntimeError(f"Malformed candidate file: {exc}") from exc
 
     approved = [c for c in candidates if isinstance(c, dict) and c.get("status") in ("approved", "auto-approved")]
     if not approved:
@@ -86,24 +79,22 @@ def _run_promotion():
         except (json.JSONDecodeError, OSError) as e:
             print(f"ERROR: failed to read {ACCOUNTS_FILE}: {e}")
             raise SystemExit(1)
-        if not isinstance(accounts, list):
-            print(f"ERROR: {ACCOUNTS_FILE} is not a JSON array")
-            raise SystemExit(1)
+        try:
+            accounts = accounts_snapshot(accounts)
+        except ValueError as exc:
+            raise RuntimeError(f"Malformed accounts file: {exc}") from exc
     else:
         accounts = []
 
-    existing_wallets = {a["wallet"].lower() for a in accounts if isinstance(a, dict) and a.get("wallet")}
+    existing_wallets = {a["wallet"].lower() for a in accounts}
 
     promoted = 0
     for candidate in approved:
-        wallet = (candidate.get("wallet") or "").lower()
-        username = candidate.get("username", wallet[:10])
-        profile_url = candidate.get("profile_url", "")
-
-        if not wallet or not VALID_WALLET_RE.match(wallet):
-            print(f"  SKIP: candidate has missing or malformed wallet address")
-            candidate["status"] = "invalid"
-            continue
+        wallet = candidate["wallet"].lower()
+        username = candidate.get("username")
+        profile_url = candidate.get("profile_url")
+        if not username or not profile_url:
+            raise RuntimeError(f"Approved candidate {wallet} lacks username or profile_url")
 
         if wallet in existing_wallets:
             print(f"  SKIP: {username} already in accounts.json")
@@ -114,19 +105,16 @@ def _run_promotion():
             "name": username,
             "wallet": wallet,
             "profile_url": profile_url,
-            "style": candidate.get("style_guess", ""),
-            "note": f"Auto-discovered via {candidate.get('discovery_source', 'leaderboard')}. "
-                    f"Rank {candidate.get('leaderboard_rank', '?')}.",
+            "style": candidate.get("style_guess"),
+            "note": f"Auto-discovered via {candidate.get('discovery_source')}. "
+                    f"Rank {candidate.get('leaderboard_rank')}.",
         }
         accounts.append(account_entry)
         existing_wallets.add(wallet)
         candidate["status"] = "promoted"
         promoted += 1
-        pnl = candidate.get("pnl", 0)
-        try:
-            pnl_str = f"${float(pnl):,.0f}"
-        except (ValueError, TypeError):
-            pnl_str = str(pnl)
+        pnl = candidate["pnl"]
+        pnl_str = f"${pnl:,.0f}"
         print(f"  PROMOTED: {username} (PnL: {pnl_str})")
 
     # Write accounts FIRST — the authoritative addition.

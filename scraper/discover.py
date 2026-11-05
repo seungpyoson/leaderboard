@@ -33,8 +33,8 @@ from common import (
     fetch_leaderboard as fetch_crypto_leaderboard,
     fetch_profile,
     fmt_money,
-    to_float,
 )
+from external import accounts_snapshot, candidates_snapshot
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 ACCOUNTS_FILE = REPO_ROOT / "scraper" / "accounts.json"
@@ -109,13 +109,10 @@ def load_known_wallets() -> set[str]:
         data = json.loads(ACCOUNTS_FILE.read_text())
     except (json.JSONDecodeError, OSError, UnicodeError) as e:
         raise RuntimeError(f"Failed to load {ACCOUNTS_FILE}: {e}") from e
-    if not isinstance(data, list) or any(
-        not isinstance(acct, dict)
-        or not isinstance(acct.get("wallet"), str)
-        or not VALID_WALLET_RE.fullmatch(acct["wallet"].lower())
-        for acct in data
-    ):
-        raise RuntimeError(f"Malformed known-wallet file: {ACCOUNTS_FILE}")
+    try:
+        data = accounts_snapshot(data)
+    except ValueError as exc:
+        raise RuntimeError(f"Malformed known-wallet file: {ACCOUNTS_FILE}: {exc}") from exc
     return {acct["wallet"].lower() for acct in data}
 
 
@@ -127,15 +124,12 @@ def load_existing_candidates() -> dict[str, dict]:
         data = json.loads(CANDIDATES_FILE.read_text())
     except (json.JSONDecodeError, OSError, UnicodeError) as e:
         raise RuntimeError(f"Failed to load {CANDIDATES_FILE}: {e}") from e
-    if not isinstance(data, dict) or not isinstance(data.get("candidates"), list) or any(
-        not isinstance(c, dict)
-        or not isinstance(c.get("wallet"), str)
-        or not VALID_WALLET_RE.fullmatch(c["wallet"].lower())
-        for c in data["candidates"]
-    ):
-        raise RuntimeError(f"Malformed candidate file: {CANDIDATES_FILE}")
-    candidates = {c["wallet"].lower(): c for c in data["candidates"]}
-    if len(candidates) != len(data["candidates"]):
+    try:
+        rows = candidates_snapshot(data)
+    except ValueError as exc:
+        raise RuntimeError(f"Malformed candidate file: {CANDIDATES_FILE}: {exc}") from exc
+    candidates = {c["wallet"].lower(): c for c in rows}
+    if len(candidates) != len(rows):
         raise RuntimeError(f"Duplicate wallets in candidate file: {CANDIDATES_FILE}")
     return candidates
 
@@ -203,16 +197,16 @@ def main():
     # decisions and known wallets are loaded again under the promotion lock.
     profiles = {}
     for trader in traders:
-        wallet = (trader.get("user_id") or "").lower()
-        if not wallet or wallet in known_wallets:
+        wallet = trader["user_id"].lower()
+        if wallet in known_wallets:
             continue
         prev = existing.get(wallet)
         if prev and prev.get("status") in ("promoted", "rejected", "approved", "auto-rejected", "auto-approved"):
             continue
-        pnl = to_float(trader.get("pnl"))
-        if pnl is None or pnl < PNL_THRESHOLD:
+        pnl = trader["pnl"]
+        if pnl < PNL_THRESHOLD:
             continue
-        raw_username = trader.get("user_name") or ""
+        raw_username = trader["user_name"]
         slug = validate_slug(raw_username, wallet)
         if slug:
             is_wallet_name = raw_username.lower() == wallet or raw_username.lower().startswith(wallet[:20])
@@ -249,9 +243,7 @@ def _merge_and_write(traders: list[dict], profiles: dict[str, dict | None]):
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
     for trader in traders:
-        wallet = (trader.get("user_id") or "").lower()
-        if not wallet:
-            continue
+        wallet = trader["user_id"].lower()
 
         # Skip known wallets
         if wallet in known_wallets:
@@ -265,14 +257,13 @@ def _merge_and_write(traders: list[dict], profiles: dict[str, dict | None]):
             continue
 
         # PnL threshold
-        pnl = to_float(trader.get("pnl"))
-        if pnl is None or pnl < PNL_THRESHOLD:
+        pnl = trader["pnl"]
+        if pnl < PNL_THRESHOLD:
             skipped_pnl += 1
             continue
 
-        raw_username = trader.get("user_name") or ""
-        raw_rank = trader.get("rank")
-        rank = int(raw_rank) if raw_rank is not None else None
+        raw_username = trader["user_name"]
+        rank = trader["rank"]
         # v2 board volume is shares, not USDC; scoring expects USDC.
         volume = prev.get("volume") if prev else None
 
@@ -291,7 +282,7 @@ def _merge_and_write(traders: list[dict], profiles: dict[str, dict | None]):
         trades = prev.get("trades") if prev else None
         markets = prev.get("markets") if prev else None
         efficiency = prev.get("efficiency") if prev else None
-        profile_url = prev.get("profile_url", "") if prev else ""
+        profile_url = prev.get("profile_url") if prev else None
 
         if slug:
             profile_url = f"https://polymarket.com/@{slug}"
@@ -307,8 +298,8 @@ def _merge_and_write(traders: list[dict], profiles: dict[str, dict | None]):
             skipped_slug += 1
             print(f"    WARN: invalid slug for {wallet[:10]}, skipping enrichment")
 
-        style = prev.get("style_guess", "Unknown") if prev else "Unknown"
-        first_seen = prev.get("first_seen", today) if prev else today
+        style = prev.get("style_guess") if prev else None
+        first_seen = prev.get("first_seen") if prev else today
         raw_prev_rank = prev.get("leaderboard_rank") if prev else None
         prev_rank = int(raw_prev_rank) if raw_prev_rank is not None else None
 
@@ -327,7 +318,7 @@ def _merge_and_write(traders: list[dict], profiles: dict[str, dict | None]):
             "style_guess": style,
             "first_seen": first_seen,
             "is_new": prev is None,
-            "status": prev.get("status", "pending") if prev else "pending",
+            "status": prev["status"] if prev else "pending",
             "confidence_score": prev.get("confidence_score") if prev else None,
         }
 
