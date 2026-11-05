@@ -4,8 +4,8 @@
 Pipeline:
   1. Leaderboard API → PnL (crypto-category; v2 volume is shares, not USDC)
   2. User-stats API → markets traded, biggest win (all-market)
-  3. Dune SQL → USDC net capital flows on Polygon (received - sent)
-  4. Derived: ROIC (PnL / net capital)
+  3. Activity API → deposits, withdrawals, peak net deposits
+  4. Derived: ROIC (PnL / peak net deposits)
 
 Outputs data/profiles.json for the static frontend.
 
@@ -18,24 +18,38 @@ from __future__ import annotations
 import argparse
 import json
 import time
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 
 import requests
 
 from common import MIN_LEADERBOARD_COUNT, REQUEST_DELAY, SESSION, atomic_write, fetch_leaderboard, fmt_money, fmt_pct
-from dune import fetch_capital
-from external import UserStats, load_user_stats_response
+from external import ActivityEvent, UserStats, load_activity_response, load_user_stats_response
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 OUTPUT_FILE = REPO_ROOT / "data" / "profiles.json"
 
 USER_STATS_URL = "https://data-api.polymarket.com/v2/user-stats"
+ACTIVITY_URL = "https://data-api.polymarket.com/v2/activity"
+ACTIVITY_PAGE_SIZE = 1000
 USER_STATS_MAX_ATTEMPTS = 6
 USER_STATS_RETRY_BASE_SECONDS = 1
-# 136 past good snapshots had capital coverage from 0.9762 upward.
-MIN_CAPITAL_COVERAGE = 0.97
-MIN_USER_STATS_COVERAGE = MIN_CAPITAL_COVERAGE
+# This gate detects a source outage; honest coverage measures near 93–96%.
+MIN_CAPITAL_COVERAGE = 0.90
+MIN_USER_STATS_COVERAGE = 0.97
+
+
+@dataclass(frozen=True)
+class Capital:
+    first_seen: str
+    total_received: float
+    total_sent: float
+    net_capital: float
+
+
+class ActivityUnavailable(RuntimeError):
+    """A wallet's activity stayed unavailable after transient retries."""
 
 
 def fetch_user_stats(wallet: str) -> UserStats | None:
@@ -47,6 +61,91 @@ def fetch_user_stats(wallet: str) -> UserStats | None:
     resp = SESSION.get(USER_STATS_URL, params={"user": wallet}, timeout=10)
     resp.raise_for_status()
     return load_user_stats_response(resp, wallet)
+
+
+def _activity_page(wallet: str, cursor: str | None):
+    params = {
+        "user": wallet,
+        "type": "DEPOSIT,WITHDRAWAL",
+        "exclude_deposits_withdrawals": "false",
+        "limit": ACTIVITY_PAGE_SIZE,
+        "sort_direction": "ASC",
+    }
+    if cursor is not None:
+        params["cursor"] = cursor
+    for attempt in range(USER_STATS_MAX_ATTEMPTS):
+        try:
+            response = SESSION.get(ACTIVITY_URL, params=params, timeout=10)
+            response.raise_for_status()
+            return load_activity_response(response)
+        except requests.HTTPError as exc:
+            if not 500 <= response.status_code < 600:
+                raise RuntimeError(f"Activity request rejected for {wallet}: HTTP {response.status_code}") from exc
+            failure = exc
+        except (requests.Timeout, requests.ConnectionError) as exc:
+            failure = exc
+        if attempt + 1 == USER_STATS_MAX_ATTEMPTS:
+            raise ActivityUnavailable(
+                f"Activity fetch failed for {wallet} after "
+                f"{USER_STATS_MAX_ATTEMPTS} attempts"
+            ) from failure
+        time.sleep(USER_STATS_RETRY_BASE_SECONDS * 2 ** attempt)
+    raise AssertionError("unreachable")
+
+
+def fetch_activity(wallet: str) -> list[ActivityEvent]:
+    events: list[ActivityEvent] = []
+    cursor = None
+    seen = set()
+    while True:
+        page, pagination = _activity_page(wallet, cursor)
+        if events and page and page[0].timestamp < events[-1].timestamp:
+            raise ValueError(f"Activity for {wallet} is not ascending")
+        if any(a.timestamp > b.timestamp for a, b in zip(page, page[1:])):
+            raise ValueError(f"Activity for {wallet} is not ascending")
+        events.extend(page)
+        time.sleep(REQUEST_DELAY)
+        if not pagination.has_more:
+            return events
+        cursor = pagination.next_cursor
+        if cursor in seen:
+            raise ValueError(f"Activity for {wallet} repeated a cursor")
+        seen.add(cursor)
+
+
+def capital_from_activity(events: list[ActivityEvent]) -> Capital | None:
+    if not events or events[0].type != "DEPOSIT":
+        return None
+    received = sent = balance = peak = 0.0
+    for event in events:
+        if event.type == "DEPOSIT":
+            received += event.usdc_size
+            balance += event.usdc_size
+        else:
+            sent += event.usdc_size
+            balance -= event.usdc_size
+        peak = max(peak, balance)
+    if peak == 0:
+        return None
+    return Capital(
+        first_seen=datetime.fromtimestamp(events[0].timestamp, timezone.utc).strftime("%Y-%m-%d"),
+        total_received=received, total_sent=sent, net_capital=peak,
+    )
+
+
+def fetch_capital(wallets: list[str]) -> dict[str, Capital]:
+    capital = {}
+    for i, wallet in enumerate(wallets):
+        try:
+            result = capital_from_activity(fetch_activity(wallet))
+        except ActivityUnavailable as exc:
+            print(f"  Activity missing for {wallet}: {exc}")
+            result = None
+        if result is not None:
+            capital[wallet.lower()] = result
+        if (i + 1) % 50 == 0:
+            print(f"  Activity: {i + 1}/{len(wallets)}")
+    return capital
 
 
 def main():
@@ -137,7 +236,7 @@ def main():
         )
     print(f"  Stats: done")
 
-    # --- Phase 3: Dune capital data ---
+    # --- Phase 3: Activity capital data ---
     wallets = [r["wallet"] for r in results]
     capital = fetch_capital(wallets)
 
@@ -148,12 +247,7 @@ def main():
             r["total_received"] = cap.total_received
             r["total_sent"] = cap.total_sent
             r["net_capital"] = cap.net_capital
-            # ROIC = PnL / Net Capital × 100
-            # Note: net_capital = total_received - total_sent, which includes
-            # trading flows (exchange payouts/buys). So the denominator is
-            # "net USDC position" not pure "capital deployed." This is a
-            # known trade-off — filtering by contract blacklist was inflating
-            # deposits by 10-50x (see #30 capital flow inflation fix).
+            # ROIC = PnL / peak cumulative net deposits × 100.
             net_cap = cap.net_capital
             # Require minimum $5K net capital to avoid division explosion
             # when net_capital is near-zero (e.g. $145 → 780,000% ROIC)

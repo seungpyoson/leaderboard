@@ -6,7 +6,6 @@ import inspect
 import json
 import sys
 import tempfile
-from types import SimpleNamespace
 import unittest
 from pathlib import Path
 from typing import Union, get_args, get_origin, get_type_hints
@@ -120,17 +119,13 @@ class ExternalBoundaryTests(unittest.TestCase):
             external.UserStats: (lambda body: external.user_stats(body, WALLET),
                 {"data": {"proxy_wallet": WALLET, "trades": 0, "biggest_win": 0,
                           "views": 0}}, ("data",), {"largest_win": "biggest_win"}),
-            external.DuneRow: (external.dune_results,
-                {"result": {"rows": [{"wallet": WALLET, "first_seen": "2026-01-01",
-                                      "total_received": 0, "total_sent": 0, "net_capital": 0}]}},
-                ("result", "rows", 0), {}),
-            external.DuneExecution: (lambda body: external.load_dune_execution_response(Response(body)),
-                {"execution_id": "id"}, (), {}),
-            external.DuneStatus: (lambda body: external.load_dune_status_response(Response(body), "secret"),
-                {"state": "QUERY_STATE_COMPLETED"}, (), {}),
-            external.DuneError: (lambda body: external.load_dune_error_response(
-                SimpleNamespace(**body), "secret"), {"text": "error"}, (),
-                {"message": "text"}),
+            external.ActivityEvent: (external.activity_page,
+                {"data": [{"type": "DEPOSIT", "usdc_size": 0, "timestamp": 1}],
+                 "pagination": {"has_more": False, "next_cursor": None}},
+                ("data", 0), {}),
+            external.ActivityPagination: (external.activity_page,
+                {"data": [], "pagination": {"has_more": False, "next_cursor": None}},
+                ("pagination",), {}),
             external.Candidate: (external.candidates_snapshot,
                 {"candidates": [candidate]}, ("candidates", 0), {}),
             external.Account: (external.accounts_snapshot,
