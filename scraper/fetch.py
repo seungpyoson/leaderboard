@@ -30,12 +30,13 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 OUTPUT_FILE = REPO_ROOT / "data" / "profiles.json"
 
 USER_STATS_URL = "https://data-api.polymarket.com/v2/user-stats"
+MAX_USER_STATS_FAILURE_FRACTION = 0.05
 
 
-def fetch_user_stats(wallet: str) -> dict:
+def fetch_user_stats(wallet: str) -> dict | None:
     """Fetch per-user stats (all-market, not crypto-filtered).
 
-    Returns: {"trades": int|None, "largest_win": float|None}
+    Returns None when the request or response fails.
     """
     try:
         resp = SESSION.get(
@@ -44,16 +45,21 @@ def fetch_user_stats(wallet: str) -> dict:
             timeout=10,
         )
         if resp.status_code != 200:
-            return {"trades": None, "largest_win": None}
-        data = resp.json().get("data")
-        if not isinstance(data, dict):
-            return {"trades": None, "largest_win": None}
+            return None
+        body = resp.json()
+        data = body.get("data") if isinstance(body, dict) else None
+        if not isinstance(data, dict) or type(data.get("trades")) is not int or data["trades"] < 0:
+            return None
+        raw_win = data.get("biggest_win")
+        largest_win = to_float(raw_win)
+        if raw_win is not None and largest_win is None:
+            return None
         return {
-            "trades": data.get("trades"),
-            "largest_win": to_float(data.get("biggest_win")),
+            "trades": data["trades"],
+            "largest_win": largest_win,
         }
     except (requests.RequestException, json.JSONDecodeError):
-        return {"trades": None, "largest_win": None}
+        return None
 
 
 def main():
@@ -116,13 +122,42 @@ def main():
 
     # --- Phase 2: User stats (all-market) ---
     print(f"\nFetching user stats for {len(results)} traders...")
+    failed_wallets = set()
     for i, r in enumerate(results):
         stats = fetch_user_stats(r["wallet"])
-        r["trades"] = stats["trades"]
-        r["largest_win"] = stats["largest_win"]
+        if stats is None:
+            failed_wallets.add(r["wallet"].lower())
+            if len(failed_wallets) / len(results) > MAX_USER_STATS_FAILURE_FRACTION:
+                print(f"::warning title=User stats fetch failure::{len(failed_wallets)}/{len(results)} wallets failed user-stats enrichment")
+                raise RuntimeError(
+                    f"User stats fetch failed for {len(failed_wallets)}/{len(results)} wallets "
+                    f"(maximum {MAX_USER_STATS_FAILURE_FRACTION:.0%}); profiles.json preserved"
+                )
+        else:
+            r["trades"] = stats["trades"]
+            r["largest_win"] = stats["largest_win"]
         if (i + 1) % 50 == 0:
             print(f"  Stats: {i + 1}/{len(results)}")
         time.sleep(REQUEST_DELAY)
+    if failed_wallets:
+        print(f"::warning title=User stats fetch failure::{len(failed_wallets)}/{len(results)} wallets failed user-stats enrichment")
+    if failed_wallets and OUTPUT_FILE.exists():
+        try:
+            previous = json.loads(OUTPUT_FILE.read_text())
+            old_profiles = previous["profiles"]
+            if not isinstance(old_profiles, list) or any(
+                not isinstance(row, dict) or not isinstance(row.get("wallet"), str)
+                for row in old_profiles
+            ):
+                raise ValueError("invalid profiles array")
+        except (OSError, UnicodeError, ValueError, KeyError, TypeError) as exc:
+            raise RuntimeError(f"Cannot preserve failed user stats from {OUTPUT_FILE}: {exc}") from exc
+        old_by_wallet = {row["wallet"].lower(): row for row in old_profiles}
+        for r in results:
+            if r["wallet"].lower() in failed_wallets and r["wallet"].lower() in old_by_wallet:
+                old = old_by_wallet[r["wallet"].lower()]
+                r["trades"] = old.get("trades")
+                r["largest_win"] = old.get("largest_win")
     print(f"  Stats: done")
 
     # --- Phase 3: Dune capital data ---

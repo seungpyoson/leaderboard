@@ -1,6 +1,6 @@
 # Leaderboard — Polymarket Trader Performance
 
-Public static site showing PnL, volume, and efficiency for top Polymarket crypto interval traders.
+Public static site showing PnL and available metrics for top Polymarket crypto interval traders.
 
 ## Stack
 - **Scraper**: Python (requests) — scrapes Polymarket profile page SSR data
@@ -33,17 +33,10 @@ dune-performance.csv ──> fetch.py ──> profiles.json ──> index.html
 - `scraper/promote.py` — manual: move `status: "approved"` candidates into `scraper/accounts.json`
 
 ## Candidate Discovery Workflow
-1. `discover.py` runs weekly (Monday 9AM UTC) or manually via GitHub Actions
-2. Auto-scoring assigns confidence scores: `auto-approved` (>= 0.75), `auto-rejected` (<= 0.30), `pending` (between)
+1. `discover.py` runs daily (9AM UTC) or manually via GitHub Actions
+2. New candidates stay `pending` for manual review because v2 does not provide crypto USD volume. Existing decisions and scores are preserved.
 3. Open `review.html` to review candidates — approve/reject with one click, export updated JSON
 4. Run `python3 scraper/promote.py` to add approved/auto-approved candidates to `accounts.json`
-
-## Candidate Scoring Signals
-- PnL magnitude (30%) — raw profitability, $500K+ = max score
-- Efficiency (25%) — PnL/volume ratio, 5%+ = max score
-- Trade count (20%) — filters lucky one-shot traders, 200+ = max score
-- Markets (15%) — diversification, 20+ = max score
-- Profile enrichment (10%) — binary, confirms real active profile
 
 ## Goldsky Pipeline (`scraper/goldsky_pipeline.py`)
 - Fetches OrderFilled events from Goldsky subgraph (id_gt pagination, maker/taker split)

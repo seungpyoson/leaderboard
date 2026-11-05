@@ -104,16 +104,19 @@ def validate_slug(raw_username: str, wallet: str) -> str | None:
 def load_known_wallets() -> set[str]:
     """Load wallet addresses already in accounts.json (lowercased)."""
     if not ACCOUNTS_FILE.exists():
-        return set()
+        raise RuntimeError(f"Required known-wallet file missing: {ACCOUNTS_FILE}")
     try:
         data = json.loads(ACCOUNTS_FILE.read_text())
-        if not isinstance(data, list):
-            print(f"  ERROR: {ACCOUNTS_FILE} is not a JSON array")
-            return set()
-        return {acct["wallet"].lower() for acct in data}
-    except (json.JSONDecodeError, KeyError, TypeError, OSError) as e:
-        print(f"  ERROR: failed to load {ACCOUNTS_FILE}: {e}")
-        return set()
+    except (json.JSONDecodeError, OSError, UnicodeError) as e:
+        raise RuntimeError(f"Failed to load {ACCOUNTS_FILE}: {e}") from e
+    if not isinstance(data, list) or any(
+        not isinstance(acct, dict)
+        or not isinstance(acct.get("wallet"), str)
+        or not VALID_WALLET_RE.fullmatch(acct["wallet"].lower())
+        for acct in data
+    ):
+        raise RuntimeError(f"Malformed known-wallet file: {ACCOUNTS_FILE}")
+    return {acct["wallet"].lower() for acct in data}
 
 
 def load_existing_candidates() -> dict[str, dict]:
@@ -122,13 +125,19 @@ def load_existing_candidates() -> dict[str, dict]:
         return {}
     try:
         data = json.loads(CANDIDATES_FILE.read_text())
-        if not isinstance(data, dict) or "candidates" not in data:
-            print(f"  ERROR: {CANDIDATES_FILE} has unexpected structure")
-            return {}
-        return {c["wallet"].lower(): c for c in data["candidates"]}
-    except (json.JSONDecodeError, KeyError, TypeError, OSError) as e:
-        print(f"  ERROR: failed to load {CANDIDATES_FILE}: {e}")
-        return {}
+    except (json.JSONDecodeError, OSError, UnicodeError) as e:
+        raise RuntimeError(f"Failed to load {CANDIDATES_FILE}: {e}") from e
+    if not isinstance(data, dict) or not isinstance(data.get("candidates"), list) or any(
+        not isinstance(c, dict)
+        or not isinstance(c.get("wallet"), str)
+        or not VALID_WALLET_RE.fullmatch(c["wallet"].lower())
+        for c in data["candidates"]
+    ):
+        raise RuntimeError(f"Malformed candidate file: {CANDIDATES_FILE}")
+    candidates = {c["wallet"].lower(): c for c in data["candidates"]}
+    if len(candidates) != len(data["candidates"]):
+        raise RuntimeError(f"Duplicate wallets in candidate file: {CANDIDATES_FILE}")
+    return candidates
 
 
 # ── Trust Boundary 4: Fail-closed leaderboard fetch ─────────────────────────
@@ -171,77 +180,6 @@ def validate_output(
     return None
 
 
-# ── Trust Boundary 5: Atomic write with lockfile ─────────────────────────────
-
-
-# ── Auto-scoring ─────────────────────────────────────────────────────────────
-
-# Confidence thresholds — candidates above AUTO_APPROVE are set to "approved",
-# below AUTO_REJECT are set to "rejected", between stays "pending" for review.
-AUTO_APPROVE_THRESHOLD = 0.75
-AUTO_REJECT_THRESHOLD = 0.30
-
-
-def score_candidate(candidate: dict) -> float:
-    """Composite confidence score (0.0–1.0) from available signals.
-
-    Weights:
-      PnL magnitude   30%  — raw profitability
-      Efficiency       25%  — skill signal (PnL/volume)
-      Trade count      20%  — filters lucky one-shot traders
-      Markets          15%  — diversification = systematic, not one lucky bet
-      Profile success  10%  — enrichment worked = real, active profile
-    """
-    score = 0.0
-
-    # PnL magnitude (30%) — log scale, $50K=0.0, $500K+=1.0
-    pnl = candidate.get("pnl")
-    if pnl is not None and pnl > 0:
-        # Map $50K→0, $100K→0.3, $200K→0.6, $500K+→1.0
-        pnl_ratio = min(pnl / 500_000, 1.0)
-        score += 0.30 * pnl_ratio
-
-    # Efficiency (25%) — PnL/volume percentage
-    eff = candidate.get("efficiency")
-    if eff is not None and eff > 0:
-        # Map 0%→0, 2%→0.5, 5%+→1.0
-        eff_ratio = min(eff / 5.0, 1.0)
-        score += 0.25 * eff_ratio
-
-    # Trade count (20%) — more trades = more data = more confidence
-    trades = candidate.get("trades")
-    if trades is not None and trades > 0:
-        # Map 1→0, 50→0.5, 200+→1.0
-        trade_ratio = min(trades / 200, 1.0)
-        score += 0.20 * trade_ratio
-
-    # Markets diversification (15%)
-    markets = candidate.get("markets")
-    if markets is not None and markets > 0:
-        # Map 1→0, 5→0.5, 20+→1.0
-        market_ratio = min(markets / 20, 1.0)
-        score += 0.15 * market_ratio
-
-    # Profile enrichment success (10%) — binary
-    if trades is not None:
-        score += 0.10
-
-    return round(score, 3)
-
-
-def auto_status(score: float, current_status: str, scoring_complete: bool) -> str:
-    """Determine status based on confidence score. Never overrides human decisions."""
-    if current_status in ("promoted", "rejected", "approved"):
-        return current_status
-    if not scoring_complete:
-        return "pending"
-    if score >= AUTO_APPROVE_THRESHOLD:
-        return "auto-approved"
-    if score <= AUTO_REJECT_THRESHOLD:
-        return "auto-rejected"
-    return "pending"
-
-
 # ── Main ─────────────────────────────────────────────────────────────────────
 
 
@@ -260,7 +198,7 @@ def main():
     print("\nFetching leaderboard...")
     traders = fetch_leaderboard()
     print(f"Total leaderboard entries: {len(traders)}")
-    print("::warning title=Discovery scoring incomplete::Polymarket v2 board volume is shares, not USDC; automatic decisions are disabled")
+    print("::warning title=Discovery scoring unavailable::Polymarket v2 board volume is shares, not USDC; new candidates require manual review")
 
     # Filter and enrich
     print("\nFiltering and enriching candidates...")
@@ -280,9 +218,9 @@ def main():
             skipped_known += 1
             continue
 
-        # Skip already-decided candidates (promoted/rejected)
+        # Preserve decisions and their historical scores and values.
         prev = existing.get(wallet)
-        if prev and prev.get("status") in ("promoted", "rejected"):
+        if prev and prev.get("status") in ("promoted", "rejected", "approved", "auto-rejected", "auto-approved"):
             new_candidates.append(prev)
             continue
 
@@ -296,7 +234,7 @@ def main():
         raw_rank = trader.get("rank")
         rank = int(raw_rank) if raw_rank is not None else None
         # v2 board volume is shares, not USDC; scoring expects USDC.
-        volume = None
+        volume = prev.get("volume") if prev else None
 
         # TB2: Validate slug before URL construction — refuse rather than sanitize
         slug = validate_slug(raw_username, wallet)
@@ -310,18 +248,18 @@ def main():
         print(f"  [{len(new_candidates) + 1}] {display_name} — PnL: {fmt_money(pnl)}, rank: {rank}")
 
         # Enrich via profile — only if slug validated
-        trades = None
-        markets = None
-        efficiency = None
-        profile_url = ""
+        trades = prev.get("trades") if prev else None
+        markets = prev.get("markets") if prev else None
+        efficiency = prev.get("efficiency") if prev else None
+        profile_url = prev.get("profile_url", "") if prev else ""
 
         if slug:
             profile_url = f"https://polymarket.com/@{slug}"
             profile_data = fetch_profile(display_name, profile_url)
 
             if profile_data:
-                trades = profile_data.get("trades")
-                markets = profile_data.get("markets")
+                trades = profile_data.get("trades") if profile_data.get("trades") is not None else trades
+                markets = profile_data.get("markets") if profile_data.get("markets") is not None else markets
                 print(f"    Trades: {trades} | Markets: {markets}")
             else:
                 print(f"    WARN: profile enrichment failed, using leaderboard data only")
@@ -329,7 +267,7 @@ def main():
             skipped_slug += 1
             print(f"    WARN: invalid slug for {wallet[:10]}, skipping enrichment")
 
-        style = "Unknown"
+        style = prev.get("style_guess", "Unknown") if prev else "Unknown"
         first_seen = prev.get("first_seen", today) if prev else today
         raw_prev_rank = prev.get("leaderboard_rank") if prev else None
         prev_rank = int(raw_prev_rank) if raw_prev_rank is not None else None
@@ -350,13 +288,8 @@ def main():
             "first_seen": first_seen,
             "is_new": prev is None,
             "status": prev.get("status", "pending") if prev else "pending",
+            "confidence_score": prev.get("confidence_score") if prev else None,
         }
-
-        # Auto-score and set status
-        candidate["confidence_score"] = score_candidate(candidate)
-        candidate["status"] = auto_status(
-            candidate["confidence_score"], candidate["status"], efficiency is not None
-        )
 
         new_candidates.append(candidate)
 
@@ -377,9 +310,7 @@ def main():
     # TB3: Validate output quality before writing
     error = validate_output(new_candidates, existing, len(traders))
     if error:
-        print(f"\n  ERROR: {error}")
-        print("  Refusing to overwrite — candidates.json preserved.")
-        return
+        raise RuntimeError(f"Discovery refused: {error}; candidates.json preserved")
 
     # TB5: Acquire lockfile, then atomic write
     CANDIDATES_FILE.parent.mkdir(parents=True, exist_ok=True)
@@ -387,9 +318,8 @@ def main():
     try:
         fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
     except OSError:
-        print("\n  ERROR: another instance is running (lock held). Aborting.")
         lock_fd.close()
-        return
+        raise RuntimeError("Another discovery instance is running (lock held); candidates.json preserved")
 
     try:
         output = {
@@ -414,16 +344,16 @@ def main():
     if skipped_slug:
         print(f"Skipped enrichment (invalid slug): {skipped_slug}")
 
-    print(f"\n--- Scoring ---")
-    print(f"Auto-approved (score >= {AUTO_APPROVE_THRESHOLD}): {auto_approved}")
-    print(f"Auto-rejected (score <= {AUTO_REJECT_THRESHOLD}): {auto_rejected}")
+    print(f"\n--- Review status ---")
+    print(f"Existing auto-approved: {auto_approved}")
+    print(f"Existing auto-rejected: {auto_rejected}")
     print(f"Pending review: {pending}")
 
     if new_this_run:
         print(f"\n--- New This Run ---")
         for c in new_candidates:
             if c.get("is_new"):
-                print(f"  NEW: {c['username']} — PnL: {fmt_money(c.get('pnl'))}, score: {c.get('confidence_score', 0):.2f}")
+                print(f"  NEW: {c['username']} — PnL: {fmt_money(c.get('pnl'))}, pending review")
 
     # Rank movers (candidates that were previously tracked)
     movers = []

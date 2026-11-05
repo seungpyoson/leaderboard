@@ -105,6 +105,15 @@ def _headers(api_key: str) -> dict:
     return {"X-Dune-API-Key": api_key}
 
 
+def _check_response(resp: requests.Response, api_key: str) -> None:
+    """Include the API error body without exposing the credential it may echo."""
+    try:
+        resp.raise_for_status()
+    except requests.HTTPError:
+        body = resp.text.replace(api_key, "[REDACTED]")[:2000]
+        raise RuntimeError(f"Dune HTTP {resp.status_code}: {body}") from None
+
+
 def _execute_sql(api_key: str, sql: str) -> str:
     """Submit inline SQL to Dune. Returns execution_id."""
     resp = requests.post(
@@ -113,7 +122,7 @@ def _execute_sql(api_key: str, sql: str) -> str:
         json={"sql": sql, "performance": "medium"},
         timeout=30,
     )
-    resp.raise_for_status()
+    _check_response(resp, api_key)
     return resp.json()["execution_id"]
 
 
@@ -126,8 +135,9 @@ def _poll_results(api_key: str, execution_id: str) -> dict:
             headers=_headers(api_key),
             timeout=15,
         )
-        resp.raise_for_status()
-        state = resp.json().get("state", "")
+        _check_response(resp, api_key)
+        status_body = resp.json()
+        state = status_body.get("state", "")
 
         if state == "QUERY_STATE_COMPLETED":
             results = requests.get(
@@ -135,11 +145,11 @@ def _poll_results(api_key: str, execution_id: str) -> dict:
                 headers=_headers(api_key),
                 timeout=30,
             )
-            results.raise_for_status()
+            _check_response(results, api_key)
             return results.json()
 
         if state in ("QUERY_STATE_FAILED", "QUERY_STATE_CANCELLED"):
-            raise RuntimeError(f"Dune query {state}: {resp.json()}")
+            raise RuntimeError(f"Dune query {state}: {str(status_body).replace(api_key, '[REDACTED]')}")
 
         time.sleep(POLL_INTERVAL)
 

@@ -27,6 +27,9 @@
         }
         .filter-btn:hover { border-color: #444; color: #ccc; }
         .filter-btn.active { border-color: #4ade80; color: #4ade80; background: #0a1f0a; }
+        .filter-btn[hidden], .availability[hidden] { display: none; }
+        .availability { color: #aaa; font-size: 12px; margin-bottom: 12px; }
+        th.unavailable { cursor: default; color: #777; }
         .table-wrap { overflow-x: auto; border-radius: 8px; border: 1px solid #1a1a1a; }
         table { width: 100%; border-collapse: collapse; font-size: 12px; }
         thead { position: sticky; top: 0; z-index: 1; }
@@ -89,6 +92,7 @@
             <button class="filter-btn" data-filter="DIR">Directional</button>
         </div>
 
+        <div class="availability" id="availability" hidden>Crypto USD volume and efficiency are unavailable: the current leaderboard API reports volume in shares.</div>
         <div class="table-wrap">
             <table>
                 <thead>
@@ -140,8 +144,40 @@
         const data = await resp.json();
         profiles = data.profiles;
         document.getElementById('updated').textContent = `Last updated: ${data.updated}`;
+        updateAvailability();
         render();
         bindEvents();
+    }
+
+    function updateAvailability() {
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            if (btn.dataset.filter !== 'all') {
+                btn.hidden = !profiles.some(p => p.style === btn.dataset.filter);
+            }
+        });
+        if (activeFilter !== 'all' && !profiles.some(p => p.style === activeFilter)) {
+            activeFilter = 'all';
+            document.querySelectorAll('.filter-btn').forEach(btn =>
+                btn.classList.toggle('active', btn.dataset.filter === 'all'));
+        }
+        const unavailable = ['volume', 'efficiency'].filter(col =>
+            !profiles.some(p => p[col] != null));
+        const notice = document.getElementById('availability');
+        notice.hidden = unavailable.length === 0;
+        notice.textContent = unavailable.length
+            ? `Crypto ${unavailable.join(' and ')} unavailable: the current leaderboard API reports volume in shares.`
+            : '';
+        for (const col of ['volume', 'efficiency']) {
+            const th = document.querySelector(`th[data-col="${col}"]`);
+            const missing = unavailable.includes(col);
+            th.textContent = missing ? `${col === 'volume' ? 'Volume' : 'Efficiency'} (unavailable)`
+                : col === 'volume' ? 'Volume' : 'Efficiency';
+            th.classList.toggle('unavailable', missing);
+            th.setAttribute('aria-disabled', String(missing));
+            th.title = missing
+                ? 'Crypto USD volume is unavailable from the current leaderboard API'
+                : col === 'volume' ? 'Crypto-category volume in USD' : 'Crypto PnL / Crypto Volume * 100';
+        }
     }
 
     function fmtMoney(val) {
@@ -252,6 +288,7 @@
     function bindEvents() {
         document.querySelectorAll('th[data-col]').forEach(th => {
             th.addEventListener('click', () => {
+                if (th.getAttribute('aria-disabled') === 'true') return;
                 const col = th.dataset.col;
                 if (col === sortCol) {
                     sortDir = sortDir === 'desc' ? 'asc' : 'desc';

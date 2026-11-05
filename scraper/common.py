@@ -21,7 +21,7 @@ import requests
 REQUEST_DELAY = 0.5
 LEADERBOARD_URL = "https://data-api.polymarket.com/v2/leaderboard"
 LEADERBOARD_PAGE_SIZE = 50
-MIN_LEADERBOARD_COUNT = 800  # Daily tracked snapshots have held 800 rows since March.
+MIN_LEADERBOARD_COUNT = 800  # Most historical daily tracked snapshots contain 800 rows.
 
 SESSION = requests.Session()
 SESSION.headers.update({
