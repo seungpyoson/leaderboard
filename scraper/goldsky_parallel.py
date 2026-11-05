@@ -6,9 +6,8 @@ patches to parallelize the ~17-hour serial crawl into ~3 hours.
 
 Threading safety:
   - ThreadLocalSession: each thread gets its own requests.Session
-  - save_state disabled during parallel fetch (json.dumps + concurrent
-    dict mutation = RuntimeError). Single save after all workers finish.
-  - Per-account state isolation: workers touch disjoint state["accounts"][name]
+  - State writes occur after fetch and resolution finish.
+  - Per-account state isolation: workers touch disjoint state.accounts[name]
     dicts. No worker reads resolution_cache during fetch.
 
 Usage:
@@ -20,7 +19,6 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import json
 import sys
 import threading
 import time
@@ -38,6 +36,7 @@ SCRAPER_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(SCRAPER_DIR))
 
 import goldsky_pipeline as gp  # noqa: E402
+from external import load_accounts
 
 # ---------------------------------------------------------------------------
 # Thread-safety patches (applied at import time, before any work)
@@ -59,25 +58,11 @@ class ThreadLocalSession:
         return self._get().post(*a, **kw)
 
     def get(self, *a, **kw):
-        return self._get().get(*a, **kw)
+        return self._get().request("GET", *a, **kw)
 
 
 # Swap module-level SESSION before any threads start
 gp.SESSION = ThreadLocalSession()
-
-# Guard save_state: no-op during parallel fetch, real save otherwise
-_parallel_active = False
-_original_save = gp.save_state
-
-
-def _guarded_save(state: dict) -> None:
-    if _parallel_active:
-        return
-    _original_save(state)
-
-
-gp.save_state = _guarded_save
-
 
 # ---------------------------------------------------------------------------
 # Worker
@@ -85,27 +70,27 @@ gp.save_state = _guarded_save
 
 
 def fetch_worker(
-    name: str, wallet: str, state: dict, deadline: float
+    name: str, wallet: str, state: gp.RuntimeState, deadline: float
 ) -> tuple[str, int, int]:
     """Fetch maker + taker fills for one account. No resolution.
 
     Returns (name, fills_before, fills_after) for progress reporting.
     """
     wallet = wallet.lower()
-    ast = state["accounts"][name]  # pre-initialized by caller
-    fills_before = ast["fills"]["total"]
+    ast = state.accounts[name]  # pre-initialized by caller
+    fills_before = ast.fills.total
 
     print(f"\n[{name}] starting fetch ({fills_before:,} fills so far)")
 
     # Maker phase
-    if not ast.get("maker_exhausted", False):
-        gp._fetch_phase(ast, wallet, "maker", state, deadline)
+    if not ast.maker_exhausted:
+        gp._fetch_phase(ast, wallet, "maker", deadline)
 
     # Taker phase (only if time remains)
-    if not ast.get("taker_exhausted", False) and time.time() < deadline:
-        gp._fetch_phase(ast, wallet, "taker", state, deadline)
+    if not ast.taker_exhausted and time.time() < deadline:
+        gp._fetch_phase(ast, wallet, "taker", deadline)
 
-    fills_after = ast["fills"]["total"]
+    fills_after = ast.fills.total
     delta = fills_after - fills_before
     print(f"[{name}] done: {fills_after:,} total (+{delta:,} new)")
     return name, fills_before, fills_after
@@ -136,27 +121,27 @@ def main():
     deadline = start + args.max_hours * 3600
 
     # Load accounts + state
-    accounts_all = json.loads(gp.ACCOUNTS_FILE.read_text())
+    accounts_all = load_accounts(gp.ACCOUNTS_FILE)
     state = gp.load_state()
 
     accounts = accounts_all
     if args.accounts:
         names = set(args.accounts.split(","))
-        accounts = [a for a in accounts_all if a["name"] in names]
-        missing = names - {a["name"] for a in accounts}
+        accounts = [a for a in accounts_all if a.name in names]
+        missing = names - {a.name for a in accounts}
         if missing:
             print(f"WARNING: accounts not found in accounts.json: {missing}")
 
     # Pre-initialize all account states (prevents dict resize during parallel phase)
     for acct in accounts:
-        if acct["name"] not in state["accounts"]:
-            state["accounts"][acct["name"]] = gp.new_account_state(acct["wallet"])
+        if acct.name not in state.accounts:
+            state.accounts[acct.name] = gp.new_account_state(acct.wallet)
 
     # Sort by fill count ascending — smallest accounts finish first
-    accounts.sort(key=lambda a: state["accounts"][a["name"]]["fills"]["total"])
+    accounts.sort(key=lambda a: state.accounts[a.name].fills.total)
 
     total_existing = sum(
-        state["accounts"][a["name"]]["fills"]["total"] for a in accounts
+        state.accounts[a.name].fills.total for a in accounts
     )
     deadline_str = datetime.fromtimestamp(deadline, tz=timezone.utc).strftime(
         "%H:%M UTC"
@@ -165,13 +150,10 @@ def main():
     print(f"  Accounts: {len(accounts)} | Workers: {args.workers}")
     print(f"  Existing fills: {total_existing:,}")
     print(f"  Time budget: {args.max_hours}h | Deadline: {deadline_str}")
-    print(f"  Resolution cache: {len(state.get('resolution_cache', {})):,} entries")
+    print(f"  Resolution cache: {len(state.resolution_cache):,} entries")
     print()
 
     # --- Parallel fetch phase ---
-    global _parallel_active
-    _parallel_active = True
-
     completed = []
     failed = []
 
@@ -179,9 +161,9 @@ def main():
         futures = {}
         for acct in accounts:
             f = pool.submit(
-                fetch_worker, acct["name"], acct["wallet"], state, deadline
+                fetch_worker, acct.name, acct.wallet, state, deadline
             )
-            futures[f] = acct["name"]
+            futures[f] = acct.name
 
         for f in as_completed(futures):
             name = futures[f]
@@ -192,7 +174,9 @@ def main():
                 failed.append((name, str(e)))
                 print(f"\n[{name}] FAILED: {e}")
 
-    _parallel_active = False
+    if failed:
+        names = ", ".join(name for name, _ in failed)
+        raise RuntimeError(f"Parallel Goldsky crawl failed for {names}; state and CSV preserved")
 
     # Save state after parallel phase (single-threaded, safe)
     elapsed_fetch = time.time() - start
@@ -201,13 +185,6 @@ def main():
     print(f"Fetch phase complete in {elapsed_fetch/60:.1f} min")
     print(f"  Completed: {len(completed)} | Failed: {len(failed)}")
     print(f"  New fills: {total_new:,}")
-    gp.save_state(state)
-    print("  State saved.")
-
-    if failed:
-        print(f"\n  Failed accounts:")
-        for name, err in failed:
-            print(f"    {name}: {err}")
 
     # --- Serial resolution phase ---
     if not args.skip_resolution:
@@ -216,16 +193,16 @@ def main():
         resolved_count = 0
 
         for acct in accounts:
-            name = acct["name"]
-            ast = state["accounts"].get(name)
-            if not ast or not ast.get("positions"):
+            name = acct.name
+            ast = state.accounts.get(name)
+            if not ast or not ast.positions:
                 continue
 
-            maker_tip = ast.get("maker_at_tip", False)
-            taker_tip = ast.get("taker_at_tip", False)
+            maker_tip = ast.maker_at_tip
+            taker_tip = ast.taker_at_tip
 
             if maker_tip and taker_tip:
-                n_pos = len(ast["positions"])
+                n_pos = len(ast.positions)
                 print(f"\n[{name}] resolving {n_pos:,} positions...")
                 gp._resolve_phase(ast, state, deadline)
                 resolved_count += 1
@@ -237,17 +214,17 @@ def main():
                     tips.append("taker")
                 print(f"  [{name}] skipped — {'+'.join(tips)} not at tip")
 
-        gp.save_state(state)
-        print(f"\n  Resolved {resolved_count} accounts. State saved.")
+        print(f"\n  Resolved {resolved_count} accounts.")
 
     # --- Output CSV ---
     gp.write_csv(state, accounts_all)
+    gp.save_state(state)
     print(f"\n  CSV written to {gp.CSV_FILE}")
 
     # --- Summary ---
     elapsed_total = time.time() - start
-    total_fills = sum(s["fills"]["total"] for s in state["accounts"].values())
-    cache_size = len(state.get("resolution_cache", {}))
+    total_fills = sum(s.fills.total for s in state.accounts.values())
+    cache_size = len(state.resolution_cache)
 
     print(f"\n{'='*60}")
     print(f"DONE in {elapsed_total/60:.1f} min")
@@ -257,23 +234,23 @@ def main():
     # Per-account summary
     print(f"\n  {'Account':<20} {'Fills':>12} {'Phase':>12} {'PnL':>14}")
     print(f"  {'-'*20} {'-'*12} {'-'*12} {'-'*14}")
-    for acct in sorted(accounts_all, key=lambda a: a["name"]):
-        ast = state["accounts"].get(acct["name"])
+    for acct in sorted(accounts_all, key=lambda a: a.name):
+        ast = state.accounts.get(acct.name)
         if not ast:
             continue
-        fills = ast["fills"]["total"]
-        agg = ast["aggregates"]
-        pnl = agg["total_profit"] - agg["total_loss"]
+        fills = ast.fills.total
+        agg = ast.aggregates
+        pnl = agg.total_profit - agg.total_loss
 
         # Determine phase
-        if ast.get("maker_at_tip") and ast.get("taker_at_tip"):
+        if ast.maker_at_tip and ast.taker_at_tip:
             phase = "complete"
-        elif ast.get("maker_exhausted"):
+        elif ast.maker_exhausted:
             phase = "taker"
         else:
             phase = "maker"
 
-        print(f"  {acct['name']:<20} {fills:>12,} {phase:>12} ${pnl:>13,.2f}")
+        print(f"  {acct.name:<20} {fills:>12,} {phase:>12} ${pnl:>13,.2f}")
 
 
 if __name__ == "__main__":

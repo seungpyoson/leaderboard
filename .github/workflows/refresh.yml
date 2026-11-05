@@ -11,6 +11,7 @@ permissions:
 jobs:
   refresh:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
 
@@ -22,8 +23,6 @@ jobs:
         run: pip install requests
 
       - name: Fetch profiles
-        env:
-          DUNE_API_KEY: ${{ secrets.DUNE_API_KEY }}
         run: python3 scraper/fetch.py
 
       - name: Commit updated data

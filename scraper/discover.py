@@ -19,6 +19,7 @@ Usage:
 from __future__ import annotations
 
 import fcntl
+from dataclasses import asdict
 import json
 import re
 import time
@@ -33,8 +34,8 @@ from common import (
     fetch_leaderboard as fetch_crypto_leaderboard,
     fetch_profile,
     fmt_money,
-    to_float,
 )
+from external import Candidate, LeaderboardRow, ProfileQueries, load_accounts, load_candidates
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 ACCOUNTS_FILE = REPO_ROOT / "scraper" / "accounts.json"
@@ -102,40 +103,31 @@ def validate_slug(raw_username: str, wallet: str) -> str | None:
 
 
 def load_known_wallets() -> set[str]:
-    """Load wallet addresses already in accounts.json (lowercased)."""
+    """Load wallet addresses from the tracked accounts snapshot."""
     if not ACCOUNTS_FILE.exists():
         raise RuntimeError(f"Required known-wallet file missing: {ACCOUNTS_FILE}")
     try:
-        data = json.loads(ACCOUNTS_FILE.read_text())
+        data = load_accounts(ACCOUNTS_FILE)
     except (json.JSONDecodeError, OSError, UnicodeError) as e:
         raise RuntimeError(f"Failed to load {ACCOUNTS_FILE}: {e}") from e
-    if not isinstance(data, list) or any(
-        not isinstance(acct, dict)
-        or not isinstance(acct.get("wallet"), str)
-        or not VALID_WALLET_RE.fullmatch(acct["wallet"].lower())
-        for acct in data
-    ):
-        raise RuntimeError(f"Malformed known-wallet file: {ACCOUNTS_FILE}")
-    return {acct["wallet"].lower() for acct in data}
+    except ValueError as exc:
+        raise RuntimeError(f"Malformed known-wallet file: {ACCOUNTS_FILE}: {exc}") from exc
+    return {acct.wallet.lower() for acct in data}
 
 
-def load_existing_candidates() -> dict[str, dict]:
+def load_existing_candidates() -> dict[str, Candidate]:
     """Load existing candidates keyed by lowercase wallet. Preserves review decisions."""
     if not CANDIDATES_FILE.exists():
         raise RuntimeError(f"Required candidate file missing: {CANDIDATES_FILE}")
     try:
-        data = json.loads(CANDIDATES_FILE.read_text())
+        data = load_candidates(CANDIDATES_FILE)
     except (json.JSONDecodeError, OSError, UnicodeError) as e:
         raise RuntimeError(f"Failed to load {CANDIDATES_FILE}: {e}") from e
-    if not isinstance(data, dict) or not isinstance(data.get("candidates"), list) or any(
-        not isinstance(c, dict)
-        or not isinstance(c.get("wallet"), str)
-        or not VALID_WALLET_RE.fullmatch(c["wallet"].lower())
-        for c in data["candidates"]
-    ):
-        raise RuntimeError(f"Malformed candidate file: {CANDIDATES_FILE}")
-    candidates = {c["wallet"].lower(): c for c in data["candidates"]}
-    if len(candidates) != len(data["candidates"]):
+    except ValueError as exc:
+        raise RuntimeError(f"Malformed candidate file: {CANDIDATES_FILE}: {exc}") from exc
+    rows = data.candidates
+    candidates = {c.wallet.lower(): c for c in rows}
+    if len(candidates) != len(rows):
         raise RuntimeError(f"Duplicate wallets in candidate file: {CANDIDATES_FILE}")
     return candidates
 
@@ -143,7 +135,7 @@ def load_existing_candidates() -> dict[str, dict]:
 # ── Trust Boundary 4: Fail-closed leaderboard fetch ─────────────────────────
 
 
-def fetch_leaderboard() -> list[dict]:
+def fetch_leaderboard() -> list[LeaderboardRow]:
     """Fetch crypto traders; API failures abort discovery before writing."""
     traders = fetch_crypto_leaderboard(DISCOVERY_LIMIT)
     if len(traders) < MIN_LEADERBOARD_COUNT:
@@ -155,7 +147,7 @@ def fetch_leaderboard() -> list[dict]:
 
 
 def validate_output(
-    new_candidates: list[dict], existing: dict[str, dict], traders_fetched: int
+    new_candidates: list[Candidate], existing: dict[str, Candidate], traders_fetched: int
 ) -> str | None:
     """Check data quality before writing. Returns error message or None if OK.
 
@@ -167,9 +159,9 @@ def validate_output(
         return "Leaderboard returned zero data but existing candidates exist"
 
     if existing:
-        fresh_count = sum(1 for c in new_candidates if c.get("status") == "pending")
+        fresh_count = sum(1 for c in new_candidates if c.status == "pending")
         prev_pending = sum(
-            1 for c in existing.values() if c.get("status") == "pending"
+            1 for c in existing.values() if c.status == "pending"
         )
         if prev_pending > 10 and fresh_count < prev_pending * 0.2:
             return (
@@ -203,16 +195,16 @@ def main():
     # decisions and known wallets are loaded again under the promotion lock.
     profiles = {}
     for trader in traders:
-        wallet = (trader.get("user_id") or "").lower()
-        if not wallet or wallet in known_wallets:
+        wallet = trader.user_id.lower()
+        if wallet in known_wallets:
             continue
         prev = existing.get(wallet)
-        if prev and prev.get("status") in ("promoted", "rejected", "approved", "auto-rejected", "auto-approved"):
+        if prev and prev.status in ("promoted", "rejected", "approved", "auto-rejected", "auto-approved"):
             continue
-        pnl = to_float(trader.get("pnl"))
-        if pnl is None or pnl < PNL_THRESHOLD:
+        pnl = trader.pnl
+        if pnl < PNL_THRESHOLD:
             continue
-        raw_username = trader.get("user_name") or ""
+        raw_username = trader.user_name
         slug = validate_slug(raw_username, wallet)
         if slug:
             is_wallet_name = raw_username.lower() == wallet or raw_username.lower().startswith(wallet[:20])
@@ -234,7 +226,7 @@ def main():
         lock_fd.close()
 
 
-def _merge_and_write(traders: list[dict], profiles: dict[str, dict | None]):
+def _merge_and_write(traders: list[LeaderboardRow], profiles: dict[str, ProfileQueries | None]):
     """Re-read promotion state and write candidates while holding its lock."""
     known_wallets = load_known_wallets()
     existing = load_existing_candidates()
@@ -249,9 +241,7 @@ def _merge_and_write(traders: list[dict], profiles: dict[str, dict | None]):
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
     for trader in traders:
-        wallet = (trader.get("user_id") or "").lower()
-        if not wallet:
-            continue
+        wallet = trader.user_id.lower()
 
         # Skip known wallets
         if wallet in known_wallets:
@@ -260,21 +250,20 @@ def _merge_and_write(traders: list[dict], profiles: dict[str, dict | None]):
 
         # Preserve decisions and their historical scores and values.
         prev = existing.get(wallet)
-        if prev and prev.get("status") in ("promoted", "rejected", "approved", "auto-rejected", "auto-approved"):
+        if prev and prev.status in ("promoted", "rejected", "approved", "auto-rejected", "auto-approved"):
             new_candidates.append(prev)
             continue
 
         # PnL threshold
-        pnl = to_float(trader.get("pnl"))
-        if pnl is None or pnl < PNL_THRESHOLD:
+        pnl = trader.pnl
+        if pnl < PNL_THRESHOLD:
             skipped_pnl += 1
             continue
 
-        raw_username = trader.get("user_name") or ""
-        raw_rank = trader.get("rank")
-        rank = int(raw_rank) if raw_rank is not None else None
+        raw_username = trader.user_name
+        rank = trader.rank
         # v2 board volume is shares, not USDC; scoring expects USDC.
-        volume = prev.get("volume") if prev else None
+        volume = prev.volume if prev else None
 
         # TB2: Validate slug before URL construction — refuse rather than sanitize
         slug = validate_slug(raw_username, wallet)
@@ -288,18 +277,18 @@ def _merge_and_write(traders: list[dict], profiles: dict[str, dict | None]):
         print(f"  [{len(new_candidates) + 1}] {display_name} — PnL: {fmt_money(pnl)}, rank: {rank}")
 
         # Enrich via profile — only if slug validated
-        trades = prev.get("trades") if prev else None
-        markets = prev.get("markets") if prev else None
-        efficiency = prev.get("efficiency") if prev else None
-        profile_url = prev.get("profile_url", "") if prev else ""
+        trades = prev.trades if prev else None
+        markets = prev.markets if prev else None
+        efficiency = prev.efficiency if prev else None
+        profile_url = prev.profile_url if prev else None
 
         if slug:
             profile_url = f"https://polymarket.com/@{slug}"
             profile_data = profiles.get(wallet)
 
             if profile_data:
-                trades = profile_data.get("trades") if profile_data.get("trades") is not None else trades
-                markets = profile_data.get("markets") if profile_data.get("markets") is not None else markets
+                trades = profile_data.trades if profile_data.trades is not None else trades
+                markets = profile_data.markets if profile_data.markets is not None else markets
                 print(f"    Trades: {trades} | Markets: {markets}")
             else:
                 print(f"    WARN: profile enrichment failed, using leaderboard data only")
@@ -307,41 +296,40 @@ def _merge_and_write(traders: list[dict], profiles: dict[str, dict | None]):
             skipped_slug += 1
             print(f"    WARN: invalid slug for {wallet[:10]}, skipping enrichment")
 
-        style = prev.get("style_guess", "Unknown") if prev else "Unknown"
-        first_seen = prev.get("first_seen", today) if prev else today
-        raw_prev_rank = prev.get("leaderboard_rank") if prev else None
-        prev_rank = int(raw_prev_rank) if raw_prev_rank is not None else None
+        style = prev.style_guess if prev else None
+        first_seen = prev.first_seen if prev else today
+        prev_rank = prev.leaderboard_rank if prev else None
 
-        candidate = {
-            "wallet": wallet,
-            "username": display_name,
-            "profile_url": profile_url,
-            "discovery_source": "leaderboard",
-            "leaderboard_rank": rank,
-            "prev_rank": prev_rank,
-            "pnl": pnl,
-            "volume": volume,
-            "efficiency": efficiency,
-            "trades": trades,
-            "markets": markets,
-            "style_guess": style,
-            "first_seen": first_seen,
-            "is_new": prev is None,
-            "status": prev.get("status", "pending") if prev else "pending",
-            "confidence_score": prev.get("confidence_score") if prev else None,
-        }
+        candidate = Candidate(
+            wallet=wallet,
+            username=display_name,
+            profile_url=profile_url,
+            discovery_source="leaderboard",
+            leaderboard_rank=rank,
+            prev_rank=prev_rank,
+            pnl=pnl,
+            volume=volume,
+            efficiency=efficiency,
+            trades=trades,
+            markets=markets,
+            style_guess=style,
+            first_seen=first_seen,
+            is_new=prev is None,
+            status=prev.status if prev else "pending",
+            confidence_score=prev.confidence_score if prev else None,
+        )
 
         new_candidates.append(candidate)
 
     # Preserve candidates from previous runs not on current leaderboard
-    current_wallets = {c["wallet"].lower() for c in new_candidates}
+    current_wallets = {c.wallet.lower() for c in new_candidates}
     for wallet, prev in existing.items():
         if wallet not in known_wallets and wallet not in current_wallets:
             new_candidates.append(prev)
 
     # Sort by PnL descending
     new_candidates.sort(
-        key=lambda c: c.get("pnl") if c.get("pnl") is not None else float("-inf"),
+        key=lambda c: c.pnl,
         reverse=True,
     )
 
@@ -352,15 +340,15 @@ def _merge_and_write(traders: list[dict], profiles: dict[str, dict | None]):
 
     output = {
         "updated": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
-        "candidates": new_candidates,
+        "candidates": [asdict(c) for c in new_candidates],
     }
     atomic_write(CANDIDATES_FILE, json.dumps(output, indent=2))
 
     # Summary stats
-    auto_approved = sum(1 for c in new_candidates if c.get("status") == "auto-approved")
-    auto_rejected = sum(1 for c in new_candidates if c.get("status") == "auto-rejected")
-    pending = sum(1 for c in new_candidates if c.get("status") == "pending")
-    new_this_run = sum(1 for c in new_candidates if c.get("is_new"))
+    auto_approved = sum(1 for c in new_candidates if c.status == "auto-approved")
+    auto_rejected = sum(1 for c in new_candidates if c.status == "auto-rejected")
+    pending = sum(1 for c in new_candidates if c.status == "pending")
+    new_this_run = sum(1 for c in new_candidates if c.is_new)
 
     print(f"\n=== Results ===")
     print(f"Candidates written: {len(new_candidates)}")
@@ -377,16 +365,16 @@ def _merge_and_write(traders: list[dict], profiles: dict[str, dict | None]):
     if new_this_run:
         print(f"\n--- New This Run ---")
         for c in new_candidates:
-            if c.get("is_new"):
-                print(f"  NEW: {c['username']} — PnL: {fmt_money(c.get('pnl'))}, pending review")
+            if c.is_new:
+                print(f"  NEW: {c.username} — PnL: {fmt_money(c.pnl)}, pending review")
 
     # Rank movers (candidates that were previously tracked)
     movers = []
     for c in new_candidates:
-        prev_r = c.get("prev_rank")
-        curr_r = c.get("leaderboard_rank")
+        prev_r = c.prev_rank
+        curr_r = c.leaderboard_rank
         if prev_r is not None and curr_r is not None and prev_r != curr_r:
-            movers.append((c["username"], prev_r, curr_r, curr_r - prev_r))
+            movers.append((c.username, prev_r, curr_r, curr_r - prev_r))
     if movers:
         movers.sort(key=lambda m: m[3])  # best movers first (negative = improved)
         print(f"\n--- Rank Changes ---")

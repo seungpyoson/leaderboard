@@ -110,11 +110,11 @@
                         <th data-col="efficiency" title="Crypto PnL / Crypto Volume * 100">Efficiency</th>
                         <th data-col="largest_win" class="col-group" title="Largest single winning trade in USDC (all markets, not crypto-specific)">Best Win</th>
                         <th data-col="trades" title="Distinct markets traded across all categories (not crypto-specific)">Markets</th>
-                        <th data-col="first_seen" class="col-group" title="Date of first USDC transfer involving proxy wallet">1st Seen</th>
-                        <th data-col="total_received" title="Total USDC received by proxy wallet">Received</th>
-                        <th data-col="total_sent" title="Total USDC sent from proxy wallet">Sent</th>
-                        <th data-col="net_capital" title="Net USDC balance: received - sent">Net Capital</th>
-                        <th data-col="roic" title="Crypto PnL / Net Capital * 100. Net Capital includes trading flows, not just external deposits. Wallets with &lt;$100 net capital are excluded.">ROIC *</th>
+                        <th data-col="first_seen" class="col-group" title="Date of first deposit or withdrawal event in Polymarket activity">1st Seen</th>
+                        <th data-col="total_received" title="Total USDC deposited in Polymarket activity">Received</th>
+                        <th data-col="total_sent" title="Total USDC withdrawn in Polymarket activity">Sent</th>
+                        <th data-col="net_capital" title="Peak cumulative net deposits (deposits minus withdrawals) from Polymarket activity">Net Capital</th>
+                        <th data-col="roic" title="Crypto PnL / peak net deposits * 100. Wallets with &lt;$5,000 peak net deposits are excluded.">ROIC *</th>
                         <!-- Hidden: on-chain fills (deferred to #26)
                         <th data-col="total_fills" class="col-group">Fills</th>
                         <th data-col="fills_sent">Maker</th>

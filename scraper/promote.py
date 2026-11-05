@@ -18,19 +18,17 @@ Usage:
 from __future__ import annotations
 
 import fcntl
+from dataclasses import asdict, replace
 import json
-import re
 from pathlib import Path
 
 from common import atomic_write
+from external import Account, load_accounts, load_candidates
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 ACCOUNTS_FILE = REPO_ROOT / "scraper" / "accounts.json"
 CANDIDATES_FILE = REPO_ROOT / "data" / "candidates.json"
 LOCK_FILE = REPO_ROOT / "data" / ".candidates.lock"
-
-VALID_WALLET_RE = re.compile(r"^0x[0-9a-f]{40}$")
-
 
 def main():
     if not CANDIDATES_FILE.exists():
@@ -60,82 +58,76 @@ def _run_promotion():
 
     # Validate and load candidates
     try:
-        candidates_data = json.loads(CANDIDATES_FILE.read_text())
+        candidates_data = load_candidates(CANDIDATES_FILE)
     except (json.JSONDecodeError, OSError) as e:
         print(f"ERROR: failed to read {CANDIDATES_FILE}: {e}")
         raise SystemExit(1)
 
-    if not isinstance(candidates_data, dict) or "candidates" not in candidates_data:
-        print(f"ERROR: {CANDIDATES_FILE} has unexpected structure (expected dict with 'candidates' key)")
-        raise SystemExit(1)
+    except ValueError as exc:
+        raise RuntimeError(f"Malformed candidate file: {exc}") from exc
 
-    candidates = candidates_data["candidates"]
-    if not isinstance(candidates, list):
-        print(f"ERROR: {CANDIDATES_FILE} 'candidates' is not a list")
-        raise SystemExit(1)
+    candidates = list(candidates_data.candidates)
 
-    approved = [c for c in candidates if isinstance(c, dict) and c.get("status") in ("approved", "auto-approved")]
-    if not approved:
+    approved_indices = [i for i, c in enumerate(candidates)
+                        if c.status in ("approved", "auto-approved")]
+
+    # Validate and load existing accounts
+    if not ACCOUNTS_FILE.is_file():
+        raise RuntimeError(f"Required accounts file missing: {ACCOUNTS_FILE}")
+    try:
+        accounts = load_accounts(ACCOUNTS_FILE)
+    except (json.JSONDecodeError, OSError, ValueError) as exc:
+        raise RuntimeError(f"Malformed accounts file: {ACCOUNTS_FILE}: {exc}") from exc
+
+    if not approved_indices:
         print("No candidates with status 'approved' — nothing to promote.")
         return
 
-    # Validate and load existing accounts
-    if ACCOUNTS_FILE.exists():
-        try:
-            accounts = json.loads(ACCOUNTS_FILE.read_text())
-        except (json.JSONDecodeError, OSError) as e:
-            print(f"ERROR: failed to read {ACCOUNTS_FILE}: {e}")
-            raise SystemExit(1)
-        if not isinstance(accounts, list):
-            print(f"ERROR: {ACCOUNTS_FILE} is not a JSON array")
-            raise SystemExit(1)
-    else:
-        accounts = []
-
-    existing_wallets = {a["wallet"].lower() for a in accounts if isinstance(a, dict) and a.get("wallet")}
+    existing_wallets = {a.wallet.lower() for a in accounts}
 
     promoted = 0
-    for candidate in approved:
-        wallet = (candidate.get("wallet") or "").lower()
-        username = candidate.get("username", wallet[:10])
-        profile_url = candidate.get("profile_url", "")
-
-        if not wallet or not VALID_WALLET_RE.match(wallet):
-            print(f"  SKIP: candidate has missing or malformed wallet address")
-            candidate["status"] = "invalid"
-            continue
+    for candidate_index in approved_indices:
+        candidate = candidates[candidate_index]
+        wallet = candidate.wallet.lower()
+        username = candidate.username
+        profile_url = candidate.profile_url
+        if not username or not profile_url:
+            raise RuntimeError(f"Approved candidate {wallet} lacks username or profile_url")
 
         if wallet in existing_wallets:
             print(f"  SKIP: {username} already in accounts.json")
-            candidate["status"] = "promoted"
+            candidates[candidate_index] = replace(candidate, status="promoted")
             continue
 
-        account_entry = {
-            "name": username,
-            "wallet": wallet,
-            "profile_url": profile_url,
-            "style": candidate.get("style_guess", ""),
-            "note": f"Auto-discovered via {candidate.get('discovery_source', 'leaderboard')}. "
-                    f"Rank {candidate.get('leaderboard_rank', '?')}.",
-        }
+        source = candidate.discovery_source
+        rank = candidate.leaderboard_rank
+        note = "Auto-discovered"
+        if source:
+            note += f" via {source}"
+        if rank is not None:
+            note += f". Rank {rank}"
+        account_entry = Account(
+            name=username, wallet=wallet, profile_url=profile_url,
+            style=candidate.style_guess, note=note + ".",
+        )
         accounts.append(account_entry)
         existing_wallets.add(wallet)
-        candidate["status"] = "promoted"
+        candidates[candidate_index] = replace(candidate, status="promoted")
         promoted += 1
-        pnl = candidate.get("pnl", 0)
-        try:
-            pnl_str = f"${float(pnl):,.0f}"
-        except (ValueError, TypeError):
-            pnl_str = str(pnl)
+        pnl = candidate.pnl
+        pnl_str = f"${pnl:,.0f}"
         print(f"  PROMOTED: {username} (PnL: {pnl_str})")
 
     # Write accounts FIRST — the authoritative addition.
     # If crash occurs here, candidates stay "approved" and next run re-promotes
     # (wallet dedup makes this idempotent).
-    atomic_write(ACCOUNTS_FILE, json.dumps(accounts, indent=2) + "\n")
+    atomic_write(ACCOUNTS_FILE, json.dumps([asdict(a) for a in accounts], indent=2) + "\n")
 
     # Then mark candidates as "promoted" — safe because re-promotion is idempotent.
-    atomic_write(CANDIDATES_FILE, json.dumps(candidates_data, indent=2) + "\n")
+    candidate_output = {"candidates": [asdict(c) for c in candidates]}
+    if candidates_data.updated is not None:
+        candidate_output["updated"] = candidates_data.updated
+    atomic_write(CANDIDATES_FILE, json.dumps(candidate_output, indent=2) + "\n")
 
     print(f"\nPromoted {promoted} candidate(s) to {ACCOUNTS_FILE}")
 

@@ -4,8 +4,8 @@
 Pipeline:
   1. Leaderboard API → PnL (crypto-category; v2 volume is shares, not USDC)
   2. User-stats API → markets traded, biggest win (all-market)
-  3. Dune SQL → USDC net capital flows on Polygon (received - sent)
-  4. Derived: ROIC (PnL / net capital)
+  3. Activity API → deposits, withdrawals, peak net deposits
+  4. Derived: ROIC (PnL / peak net deposits)
 
 Outputs data/profiles.json for the static frontend.
 
@@ -18,50 +18,134 @@ from __future__ import annotations
 import argparse
 import json
 import time
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 
 import requests
 
-from common import MIN_LEADERBOARD_COUNT, REQUEST_DELAY, SESSION, atomic_write, fetch_leaderboard, fmt_money, fmt_pct, to_float
-from dune import fetch_capital
+from common import MIN_LEADERBOARD_COUNT, REQUEST_DELAY, SESSION, atomic_write, fetch_leaderboard, fmt_money, fmt_pct
+from external import ActivityEvent, UserStats, load_activity_response, load_user_stats_response
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 OUTPUT_FILE = REPO_ROOT / "data" / "profiles.json"
 
 USER_STATS_URL = "https://data-api.polymarket.com/v2/user-stats"
-USER_STATS_MAX_ATTEMPTS = 3
-# 136 past good snapshots had capital coverage from 0.9762 upward.
-MIN_CAPITAL_COVERAGE = 0.97
+ACTIVITY_URL = "https://data-api.polymarket.com/v2/activity"
+ACTIVITY_PAGE_SIZE = 1000
+USER_STATS_MAX_ATTEMPTS = 6
+USER_STATS_RETRY_BASE_SECONDS = 1
+# This gate detects a source outage; honest coverage measures near 93–96%.
+MIN_CAPITAL_COVERAGE = 0.90
+MIN_USER_STATS_COVERAGE = 0.97
 
 
-def fetch_user_stats(wallet: str) -> dict | None:
+@dataclass(frozen=True)
+class Capital:
+    first_seen: str
+    total_received: float
+    total_sent: float
+    net_capital: float
+
+
+class ActivityUnavailable(RuntimeError):
+    """A wallet's activity stayed unavailable after transient retries."""
+
+
+def fetch_user_stats(wallet: str) -> UserStats | None:
     """Fetch per-user stats (all-market, not crypto-filtered).
 
-    Returns None when the request or response fails.
+    Returns None only for the API's documented ``data: null`` unknown user.
+    Transient request failures are retried by the caller; malformed data refuses.
     """
-    try:
-        resp = SESSION.get(
-            USER_STATS_URL,
-            params={"user": wallet},
-            timeout=10,
-        )
-        if resp.status_code != 200:
-            return None
-        body = resp.json()
-        data = body.get("data") if isinstance(body, dict) else None
-        if not isinstance(data, dict) or type(data.get("trades")) is not int or data["trades"] < 0:
-            return None
-        raw_win = data.get("biggest_win")
-        largest_win = to_float(raw_win)
-        if largest_win is None:
-            return None
-        return {
-            "trades": data["trades"],
-            "largest_win": largest_win,
-        }
-    except (requests.RequestException, json.JSONDecodeError):
+    resp = SESSION.get(USER_STATS_URL, params={"user": wallet}, timeout=10)
+    resp.raise_for_status()
+    return load_user_stats_response(resp, wallet)
+
+
+def _activity_page(wallet: str, cursor: str | None):
+    params = {
+        "user": wallet,
+        "type": "DEPOSIT,WITHDRAWAL",
+        "exclude_deposits_withdrawals": "false",
+        "limit": ACTIVITY_PAGE_SIZE,
+        "sort_direction": "ASC",
+    }
+    if cursor is not None:
+        params["cursor"] = cursor
+    for attempt in range(USER_STATS_MAX_ATTEMPTS):
+        try:
+            response = SESSION.get(ACTIVITY_URL, params=params, timeout=10)
+            response.raise_for_status()
+            return load_activity_response(response)
+        except requests.HTTPError as exc:
+            if not 500 <= response.status_code < 600:
+                raise RuntimeError(f"Activity request rejected for {wallet}: HTTP {response.status_code}") from exc
+            failure = exc
+        except (requests.Timeout, requests.ConnectionError) as exc:
+            failure = exc
+        if attempt + 1 == USER_STATS_MAX_ATTEMPTS:
+            raise ActivityUnavailable(
+                f"Activity fetch failed for {wallet} after "
+                f"{USER_STATS_MAX_ATTEMPTS} attempts"
+            ) from failure
+        time.sleep(USER_STATS_RETRY_BASE_SECONDS * 2 ** attempt)
+    raise AssertionError("unreachable")
+
+
+def fetch_activity(wallet: str) -> list[ActivityEvent]:
+    events: list[ActivityEvent] = []
+    cursor = None
+    seen = set()
+    while True:
+        page, pagination = _activity_page(wallet, cursor)
+        if events and page and page[0].timestamp < events[-1].timestamp:
+            raise ValueError(f"Activity for {wallet} is not ascending")
+        if any(a.timestamp > b.timestamp for a, b in zip(page, page[1:])):
+            raise ValueError(f"Activity for {wallet} is not ascending")
+        events.extend(page)
+        time.sleep(REQUEST_DELAY)
+        if not pagination.has_more:
+            return events
+        cursor = pagination.next_cursor
+        if cursor in seen:
+            raise ValueError(f"Activity for {wallet} repeated a cursor")
+        seen.add(cursor)
+
+
+def capital_from_activity(events: list[ActivityEvent]) -> Capital | None:
+    if not events or events[0].type != "DEPOSIT":
         return None
+    received = sent = balance = peak = 0.0
+    for event in events:
+        if event.type == "DEPOSIT":
+            received += event.usdc_size
+            balance += event.usdc_size
+        else:
+            sent += event.usdc_size
+            balance -= event.usdc_size
+        peak = max(peak, balance)
+    if peak == 0:
+        return None
+    return Capital(
+        first_seen=datetime.fromtimestamp(events[0].timestamp, timezone.utc).strftime("%Y-%m-%d"),
+        total_received=received, total_sent=sent, net_capital=peak,
+    )
+
+
+def fetch_capital(wallets: list[str]) -> dict[str, Capital]:
+    capital = {}
+    for i, wallet in enumerate(wallets):
+        try:
+            result = capital_from_activity(fetch_activity(wallet))
+        except ActivityUnavailable as exc:
+            print(f"  Activity missing for {wallet}: {exc}")
+            result = None
+        if result is not None:
+            capital[wallet.lower()] = result
+        if (i + 1) % 50 == 0:
+            print(f"  Activity: {i + 1}/{len(wallets)}")
+    return capital
 
 
 def main():
@@ -80,12 +164,12 @@ def main():
 
     results = []
     for t in traders:
-        pnl = t.get("pnl")
+        pnl = t.pnl
         # v2 volume is shares, not USDC; the existing volume and efficiency
         # columns require USDC and therefore cannot use it.
         volume = efficiency = style = None
-        raw_username = t.get("user_name") or ""
-        wallet = t["user_id"]
+        raw_username = t.user_name
+        wallet = t.user_id
 
         # API returns "0xABC...-1772168966873" (wallet + epoch-ms) for users
         # without a display name — strip the timestamp suffix
@@ -120,78 +204,57 @@ def main():
     print("::warning title=Volume unavailable::Polymarket v2 board reports shares, not USDC; volume and efficiency are unavailable")
 
     # Already sorted by PnL from API, but ensure it
-    results.sort(key=lambda r: r["pnl"] if r["pnl"] is not None else float("-inf"), reverse=True)
+    results.sort(key=lambda r: r["pnl"], reverse=True)
 
     # --- Phase 2: User stats (all-market) ---
     print(f"\nFetching user stats for {len(results)} traders...")
-    failed_wallets = set()
+    known_stats = 0
     for i, r in enumerate(results):
         stats = None
         for attempt in range(USER_STATS_MAX_ATTEMPTS):
-            stats = fetch_user_stats(r["wallet"])
-            if stats is not None:
+            try:
+                stats = fetch_user_stats(r["wallet"])
                 break
-            if attempt + 1 < USER_STATS_MAX_ATTEMPTS:
-                time.sleep(REQUEST_DELAY)
-        if stats is None:
-            failed_wallets.add(r["wallet"].lower())
-        else:
-            r["trades"] = stats["trades"]
-            r["largest_win"] = stats["largest_win"]
+            except (requests.RequestException, json.JSONDecodeError) as exc:
+                if attempt + 1 == USER_STATS_MAX_ATTEMPTS:
+                    raise RuntimeError(
+                        f"User stats fetch failed for {r['wallet']} after "
+                        f"{USER_STATS_MAX_ATTEMPTS} attempts; profiles.json preserved"
+                    ) from exc
+                time.sleep(USER_STATS_RETRY_BASE_SECONDS * 2 ** attempt)
+        if stats is not None:
+            known_stats += 1
+            r["trades"] = stats.trades
+            r["largest_win"] = stats.largest_win
         if (i + 1) % 50 == 0:
             print(f"  Stats: {i + 1}/{len(results)}")
         time.sleep(REQUEST_DELAY)
-    if failed_wallets and OUTPUT_FILE.exists():
-        try:
-            previous = json.loads(OUTPUT_FILE.read_text())
-            old_profiles = previous["profiles"]
-            if not isinstance(old_profiles, list) or any(
-                not isinstance(row, dict) or not isinstance(row.get("wallet"), str)
-                for row in old_profiles
-            ):
-                raise ValueError("invalid profiles array")
-        except (OSError, UnicodeError, ValueError, KeyError, TypeError) as exc:
-            raise RuntimeError(f"Cannot preserve failed user stats from {OUTPUT_FILE}: {exc}") from exc
-        old_by_wallet = {row["wallet"].lower(): row for row in old_profiles}
-        for r in results:
-            if r["wallet"].lower() in failed_wallets and r["wallet"].lower() in old_by_wallet:
-                old = old_by_wallet[r["wallet"].lower()]
-                if type(old.get("trades")) is not int or old["trades"] < 0 or to_float(old.get("largest_win")) is None:
-                    raise RuntimeError(f"Cannot preserve failed user stats for {r['wallet']}: previous values incomplete")
-                r["trades"] = old.get("trades")
-                r["largest_win"] = old.get("largest_win")
-    unrestored = [r for r in results if r["trades"] is None or r["largest_win"] is None]
-    if unrestored:
+    if known_stats / len(results) < MIN_USER_STATS_COVERAGE:
         raise RuntimeError(
-            f"User stats fetch failed for {len(unrestored)}/{len(results)} wallets after "
-            f"{USER_STATS_MAX_ATTEMPTS} attempts; profiles.json preserved"
+            f"User stats coverage {known_stats}/{len(results)} below "
+            f"{MIN_USER_STATS_COVERAGE:.0%}; profiles.json preserved"
         )
     print(f"  Stats: done")
 
-    # --- Phase 3: Dune capital data ---
-    wallets = [r["wallet"] for r in results if r["wallet"]]
+    # --- Phase 3: Activity capital data ---
+    wallets = [r["wallet"] for r in results]
     capital = fetch_capital(wallets)
 
     for r in results:
-        cap = capital.get(r["wallet"].lower(), {})
-        if cap:
-            r["first_seen"] = cap.get("first_seen")
-            r["total_received"] = cap.get("total_received")
-            r["total_sent"] = cap.get("total_sent")
-            r["net_capital"] = cap.get("net_capital")
-            # ROIC = PnL / Net Capital × 100
-            # Note: net_capital = total_received - total_sent, which includes
-            # trading flows (exchange payouts/buys). So the denominator is
-            # "net USDC position" not pure "capital deployed." This is a
-            # known trade-off — filtering by contract blacklist was inflating
-            # deposits by 10-50x (see #30 capital flow inflation fix).
-            net_cap = to_float(cap.get("net_capital")) or 0
+        cap = capital.get(r["wallet"].lower())
+        if cap is not None:
+            r["first_seen"] = cap.first_seen
+            r["total_received"] = cap.total_received
+            r["total_sent"] = cap.total_sent
+            r["net_capital"] = cap.net_capital
+            # ROIC = PnL / peak cumulative net deposits × 100.
+            net_cap = cap.net_capital
             # Require minimum $5K net capital to avoid division explosion
             # when net_capital is near-zero (e.g. $145 → 780,000% ROIC)
-            if net_cap >= 5000 and r["pnl"] is not None:
+            if net_cap >= 5000:
                 r["roic"] = r["pnl"] / net_cap * 100
 
-    capital_count = sum(r["net_capital"] is not None for r in results)
+    capital_count = sum(type(r["net_capital"]) in (int, float) for r in results)
     if capital_count / len(results) < MIN_CAPITAL_COVERAGE:
         raise RuntimeError(
             f"Capital enrichment coverage {capital_count}/{len(results)} below "
