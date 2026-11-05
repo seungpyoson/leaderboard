@@ -35,8 +35,8 @@ ACTIVITY_URL = "https://data-api.polymarket.com/v2/activity"
 ACTIVITY_PAGE_SIZE = 1000
 USER_STATS_MAX_ATTEMPTS = 6
 USER_STATS_RETRY_BASE_SECONDS = 1
-# Measured 766/800 (95.8%) wallets with deposits; some fund directly and have no deposit events.
-MIN_CAPITAL_COVERAGE = 0.93
+# This gate detects a source outage; honest coverage measures near 93–96%.
+MIN_CAPITAL_COVERAGE = 0.90
 MIN_USER_STATS_COVERAGE = 0.97
 
 
@@ -46,6 +46,10 @@ class Capital:
     total_received: float
     total_sent: float
     net_capital: float
+
+
+class ActivityUnavailable(RuntimeError):
+    """A wallet's activity stayed unavailable after transient retries."""
 
 
 def fetch_user_stats(wallet: str) -> UserStats | None:
@@ -60,25 +64,32 @@ def fetch_user_stats(wallet: str) -> UserStats | None:
 
 
 def _activity_page(wallet: str, cursor: str | None):
-    params = ({"cursor": cursor} if cursor is not None else {
+    params = {
         "user": wallet,
         "type": "DEPOSIT,WITHDRAWAL",
         "exclude_deposits_withdrawals": "false",
         "limit": ACTIVITY_PAGE_SIZE,
         "sort_direction": "ASC",
-    })
+    }
+    if cursor is not None:
+        params["cursor"] = cursor
     for attempt in range(USER_STATS_MAX_ATTEMPTS):
         try:
             response = SESSION.get(ACTIVITY_URL, params=params, timeout=10)
             response.raise_for_status()
             return load_activity_response(response)
-        except (requests.RequestException, json.JSONDecodeError) as exc:
-            if attempt + 1 == USER_STATS_MAX_ATTEMPTS:
-                raise RuntimeError(
-                    f"Activity fetch failed for {wallet} after "
-                    f"{USER_STATS_MAX_ATTEMPTS} attempts; profiles.json preserved"
-                ) from exc
-            time.sleep(USER_STATS_RETRY_BASE_SECONDS * 2 ** attempt)
+        except requests.HTTPError as exc:
+            if not 500 <= response.status_code < 600:
+                raise RuntimeError(f"Activity request rejected for {wallet}: HTTP {response.status_code}") from exc
+            failure = exc
+        except (requests.Timeout, requests.ConnectionError) as exc:
+            failure = exc
+        if attempt + 1 == USER_STATS_MAX_ATTEMPTS:
+            raise ActivityUnavailable(
+                f"Activity fetch failed for {wallet} after "
+                f"{USER_STATS_MAX_ATTEMPTS} attempts"
+            ) from failure
+        time.sleep(USER_STATS_RETRY_BASE_SECONDS * 2 ** attempt)
     raise AssertionError("unreachable")
 
 
@@ -103,7 +114,7 @@ def fetch_activity(wallet: str) -> list[ActivityEvent]:
 
 
 def capital_from_activity(events: list[ActivityEvent]) -> Capital | None:
-    if not any(event.type == "DEPOSIT" for event in events):
+    if not events or events[0].type != "DEPOSIT":
         return None
     received = sent = balance = peak = 0.0
     for event in events:
@@ -114,6 +125,8 @@ def capital_from_activity(events: list[ActivityEvent]) -> Capital | None:
             sent += event.usdc_size
             balance -= event.usdc_size
         peak = max(peak, balance)
+    if peak == 0:
+        return None
     return Capital(
         first_seen=datetime.fromtimestamp(events[0].timestamp, timezone.utc).strftime("%Y-%m-%d"),
         total_received=received, total_sent=sent, net_capital=peak,
@@ -123,7 +136,11 @@ def capital_from_activity(events: list[ActivityEvent]) -> Capital | None:
 def fetch_capital(wallets: list[str]) -> dict[str, Capital]:
     capital = {}
     for i, wallet in enumerate(wallets):
-        result = capital_from_activity(fetch_activity(wallet))
+        try:
+            result = capital_from_activity(fetch_activity(wallet))
+        except ActivityUnavailable as exc:
+            print(f"  Activity missing for {wallet}: {exc}")
+            result = None
         if result is not None:
             capital[wallet.lower()] = result
         if (i + 1) % 50 == 0:
