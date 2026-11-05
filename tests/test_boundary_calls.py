@@ -5,6 +5,9 @@ import json
 import sys
 import tempfile
 import unittest
+from dataclasses import asdict
+from decimal import Decimal
+from datetime import datetime, timezone
 from contextlib import redirect_stdout
 from pathlib import Path
 from unittest.mock import MagicMock, patch
@@ -19,6 +22,7 @@ import fetch
 import goldsky_parallel
 import goldsky_pipeline as gp
 import promote
+import external
 
 
 WALLET = "0x" + "a" * 40
@@ -39,14 +43,131 @@ class Response:
 
 
 def state():
-    account = gp.new_account_state(WALLET)
+    account = asdict(gp.new_account_state(WALLET))
     account["positions"]["1"] = {"net_shares": 1, "cost_basis": 0.5, "fill_count": 1}
     account["aggregates"]["top_markets"]["market"] = 0.5
     return {"accounts": {"user": account}, "resolution_cache": {"1": {
         "payout": 1, "cached_at": "2026-01-01", "question": "market"}}}
 
 
+def runtime_state():
+    return gp.runtime_state(external.goldsky_state(state()))
+
+
 class ProductionBoundaryTests(unittest.TestCase):
+    def test_validated_fills_drive_position_updates(self):
+        event = {"id": "1", "timestamp": "1", "maker": WALLET, "taker": WALLET,
+                 "makerAssetId": "0", "takerAssetId": "1",
+                 "makerAmountFilled": "1000000", "takerAmountFilled": "2000000"}
+        fill = external.goldsky_page({"data": {"orderFilledEvents": [event]}})[0]
+        positions = {}
+        gp.update_position(positions, gp.process_fill(fill, WALLET))
+        self.assertEqual((positions["1"].net_shares, positions["1"].cost_basis), (2, 1))
+
+        source = external.s3_fill((WALLET, "maker", "BUY", Decimal("0.5"),
+                                   Decimal("1"), Decimal("2"), "1", 1))
+        runtime = gp.RuntimeState()
+        account = external.Account(wallet=WALLET, name="user", profile_url="https://example.com",
+                                   style=None, note=None)
+        with redirect_stdout(io.StringIO()):
+            backfill_s3.build_positions([source], [account], runtime)
+        self.assertEqual(runtime.accounts["user"].positions["1"].net_shares, 2)
+
+    def test_serial_late_input_failure_never_writes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            accounts = Path(directory) / "accounts.json"
+            accounts.write_text(json.dumps([
+                {"wallet": WALLET, "name": "first", "profile_url": "https://example.com/first"},
+                {"wallet": "0x" + "b" * 40, "name": "second",
+                 "profile_url": "https://example.com/second"},
+            ]))
+            with patch.object(gp, "ACCOUNTS_FILE", accounts), \
+                    patch.object(gp, "load_state", return_value=gp.RuntimeState()), \
+                    patch.object(gp, "process_account", side_effect=[None, ValueError("late input")]) as process, \
+                    patch.object(gp, "save_state") as save, \
+                    patch.object(gp, "write_csv") as csv, redirect_stdout(io.StringIO()):
+                with self.assertRaisesRegex(ValueError, "late input"):
+                    gp.run_pipeline()
+            self.assertEqual(process.call_count, 2)
+            save.assert_not_called()
+            csv.assert_not_called()
+
+    def test_state_snapshot_is_frozen_and_runtime_roundtrips(self):
+        raw = state()
+        raw["accounts"]["user"]["unused_source_field"] = 12
+        snapshot = external.goldsky_state(raw)
+        with self.assertRaises(AttributeError):
+            snapshot.accounts["user"].get("wallet")
+        with self.assertRaises(TypeError):
+            snapshot.accounts["user"].positions["2"] = external.StatePosition(0, 0, 0)
+        runtime = gp.runtime_state(snapshot)
+        gp.update_position(runtime.accounts["user"].positions, {
+            "token_id": "2", "direction": "BUY", "shares": 2,
+            "usd_amount": 1, "timestamp": 1,
+        })
+        runtime.resolution_cache["1"] = external.StateCacheEntry(
+            payout=1, cached_at=datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+            question="market",
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "state.json"
+            with patch.object(gp, "STATE_FILE", path):
+                gp.save_state(runtime)
+                loaded = gp.load_state()
+            self.assertEqual(loaded.accounts["user"].positions["2"].net_shares, 2)
+            self.assertNotIn("unused_source_field", json.loads(path.read_text())["accounts"]["user"])
+
+    def test_backfill_main_rejects_gamma_before_any_write(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            accounts = root / "accounts.json"
+            tracked_state = root / "goldsky_state.json"
+            accounts.write_text(json.dumps([{"wallet": WALLET, "name": "user",
+                                             "profile_url": "https://polymarket.com/@user"}]))
+            tracked_state.write_text("tracked state must stay untouched")
+            malformed = {"outcomePrices": '["1.01"]', "clobTokenIds": '["1"]'}
+            input_state = runtime_state()
+            input_state.resolution_cache.clear()
+            with patch.object(backfill_s3, "ACCOUNTS_FILE", accounts), \
+                    patch.object(backfill_s3, "STATE_FILE", tracked_state), \
+                    patch.object(backfill_s3, "scan_s3_fills", return_value=[]), \
+                    patch.object(backfill_s3, "load_state", return_value=input_state), \
+                    patch.object(backfill_s3, "build_positions"), \
+                    patch.object(gp.SESSION, "get", return_value=Response([malformed])), \
+                    patch.object(backfill_s3.SESSION, "get", return_value=Response([malformed])), \
+                    patch.object(backfill_s3, "save_state") as save, \
+                    patch.object(backfill_s3, "write_csv") as csv, \
+                    patch.object(sys, "argv", ["backfill_s3.py"]), redirect_stdout(io.StringIO()):
+                with self.assertRaisesRegex(ValueError, "price must be in"):
+                    backfill_s3.main()
+            save.assert_not_called()
+            csv.assert_not_called()
+            self.assertEqual(tracked_state.read_text(), "tracked state must stay untouched")
+
+    def test_backfill_main_rejects_elapsed_gamma_before_any_write(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            accounts = root / "accounts.json"
+            accounts.write_text(json.dumps([{"wallet": WALLET, "name": "user",
+                                             "profile_url": "https://polymarket.com/@user"}]))
+            input_state = runtime_state()
+            input_state.resolution_cache.clear()
+            malformed = {"outcomePrices": '["1.01"]', "clobTokenIds": '["1"]',
+                         "endDate": "2026-01-01T00:00:00Z"}
+            with patch.object(backfill_s3, "ACCOUNTS_FILE", accounts), \
+                    patch.object(backfill_s3, "scan_s3_fills", return_value=[]), \
+                    patch.object(backfill_s3, "load_state", return_value=input_state), \
+                    patch.object(backfill_s3, "build_positions"), \
+                    patch.object(backfill_s3, "resolve_all"), \
+                    patch.object(backfill_s3.SESSION, "get", return_value=Response([malformed])), \
+                    patch.object(backfill_s3, "save_state") as save, \
+                    patch.object(backfill_s3, "write_csv") as csv, \
+                    patch.object(sys, "argv", ["backfill_s3.py"]), redirect_stdout(io.StringIO()):
+                with self.assertRaisesRegex(ValueError, "price must be in"):
+                    backfill_s3.main()
+            save.assert_not_called()
+            csv.assert_not_called()
+
     def test_network_seams_refuse_inner_corruption(self):
         board = {"data": [{"rank": 1, "user_id": WALLET, "pnl": float("nan"),
                             "volume": 0, "user_name": "user", "profile_image": "",
@@ -102,7 +223,8 @@ class ProductionBoundaryTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "finite"):
                 gp.resolve_markets(["1"], {})
 
-        elapsed_state = {"accounts": {"user": {"positions": {"1": {}}}}, "resolution_cache": {}}
+        elapsed_state = gp.RuntimeState(accounts={"user": gp.AccountState(
+            wallet=WALLET, positions={"1": gp.Position()})})
         with patch.object(backfill_s3.SESSION, "get", return_value=Response([market])), \
                 patch.object(backfill_s3, "save_state") as save, redirect_stdout(io.StringIO()):
             with self.assertRaisesRegex(ValueError, "finite"):
@@ -134,7 +256,9 @@ class ProductionBoundaryTests(unittest.TestCase):
             with patch.object(discover, "ACCOUNTS_FILE", accounts), \
                     patch.object(discover, "CANDIDATES_FILE", candidates), \
                     patch.object(discover, "LOCK_FILE", root / ".lock"), \
-                    patch.object(discover, "fetch_leaderboard", return_value=[board]), \
+                    patch.object(discover, "fetch_leaderboard", return_value=[external.LeaderboardRow(
+                        rank=1, user_id=WALLET, user_name="user", profile_image="",
+                        x_username="", pnl=100000, volume=0, verified=False)]), \
                     patch.object(common.SESSION, "get", return_value=response), \
                     redirect_stdout(io.StringIO()):
                 with self.assertRaisesRegex(ValueError, "amount"):
@@ -259,7 +383,7 @@ class ProductionBoundaryTests(unittest.TestCase):
         valid = {"outcomePrices": '["1"]', "clobTokenIds": '["1"]'}
         with patch.object(gp.SESSION, "get", return_value=Response([sparse, valid])):
             cache = gp.resolve_markets(["1"], {})
-        self.assertEqual(cache["1"]["payout"], 1)
+        self.assertEqual(cache["1"].payout, 1)
         with patch.object(gp.SESSION, "get", return_value=Response([{
                 "outcomePrices": '["1"]', "clobTokenIds": '["1"]', "endDate": 7}])):
             with self.assertRaisesRegex(ValueError, "endDate"):
@@ -294,7 +418,7 @@ class ProductionBoundaryTests(unittest.TestCase):
                      "makerAssetId": "1", "takerAssetId": "2",
                      "makerAmountFilled": "bad", "takerAmountFilled": "1"}
             with patch.object(gp, "ACCOUNTS_FILE", accounts), \
-                    patch.object(gp, "load_state", return_value={"accounts": {}, "resolution_cache": {}}), \
+                    patch.object(gp, "load_state", return_value=gp.RuntimeState()), \
                     patch.object(gp.SESSION, "post", return_value=Response({"data": {"orderFilledEvents": [event]}})), \
                     patch.object(goldsky_parallel.sys, "argv", ["goldsky_parallel.py", "--workers", "1"]), \
                     patch.object(gp, "save_state") as save, \
@@ -313,7 +437,7 @@ class ProductionBoundaryTests(unittest.TestCase):
                      "makerAssetId": "1", "takerAssetId": "2",
                      "makerAmountFilled": "NaN", "takerAmountFilled": "1"}
             with patch.object(gp, "ACCOUNTS_FILE", accounts), \
-                    patch.object(gp, "load_state", return_value=state()), \
+                    patch.object(gp, "load_state", return_value=runtime_state()), \
                     patch.object(gp.SESSION, "post", return_value=Response({"data": {"orderFilledEvents": [event]}})), \
                     patch.object(gp, "save_state") as save, \
                     patch.object(gp, "write_csv") as csv, redirect_stdout(io.StringIO()):

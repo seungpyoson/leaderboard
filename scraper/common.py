@@ -18,7 +18,7 @@ from urllib.parse import urljoin, urlparse
 
 import requests
 
-from external import leaderboard_page, profile_queries
+from external import LeaderboardRow, ProfileQueries, load_leaderboard_response, load_profile_response, profile_html
 
 REQUEST_DELAY = 0.5
 LEADERBOARD_URL = "https://data-api.polymarket.com/v2/leaderboard"
@@ -32,11 +32,11 @@ SESSION.headers.update({
 })
 
 
-def fetch_leaderboard(limit: int) -> list[dict]:
+def fetch_leaderboard(limit: int) -> list[LeaderboardRow]:
     """Read the crypto/all-time PnL board, following v2's opaque cursor."""
     if limit < 1:
         raise ValueError("leaderboard limit must be positive")
-    traders: list[dict] = []
+    traders: list[LeaderboardRow] = []
     cursor = None
     seen_cursors = set()
 
@@ -50,20 +50,17 @@ def fetch_leaderboard(limit: int) -> list[dict]:
         try:
             response = SESSION.get(LEADERBOARD_URL, params=params, timeout=30)
             response.raise_for_status()
-            body = response.json()
+            page, pagination = load_leaderboard_response(response)
         except (requests.RequestException, json.JSONDecodeError) as exc:
             raise RuntimeError(f"Leaderboard page failed after {len(traders)} rows: {exc}") from exc
-
-        try:
-            page, pagination = leaderboard_page(body)
         except ValueError as exc:
             raise RuntimeError(f"Leaderboard returned a malformed page: {exc}") from exc
         traders.extend(page)
         if len(traders) >= limit:
             break
-        if not pagination["has_more"]:
+        if not pagination.has_more:
             break
-        cursor = pagination.get("next_cursor")
+        cursor = pagination.next_cursor
         if not isinstance(cursor, str) or not cursor or cursor in seen_cursors:
             raise RuntimeError("Leaderboard returned an invalid next cursor")
         seen_cursors.add(cursor)
@@ -71,20 +68,15 @@ def fetch_leaderboard(limit: int) -> list[dict]:
             time.sleep(REQUEST_DELAY)
 
     traders = traders[:limit]
-    wallets = [row["user_id"].lower() for row in traders]
+    wallets = [row.user_id.lower() for row in traders]
     if len(set(wallets)) != len(wallets):
         raise RuntimeError("Leaderboard returned duplicate wallets")
     return traders
 
 
-def extract_profile_data(html: str) -> dict | None:
+def extract_profile_data(html: str) -> ProfileQueries | None:
     """Extract PnL/volume/stats from __NEXT_DATA__ embedded in profile page HTML."""
-    match = re.search(r'__NEXT_DATA__.*?>(.*?)</script', html, re.DOTALL)
-    if not match:
-        return None
-
-    next_data = json.loads(match.group(1))
-    return profile_queries(next_data)
+    return profile_html(html)
 
 
 def _is_polymarket_host(url: str) -> bool:
@@ -96,7 +88,7 @@ def _is_polymarket_host(url: str) -> bool:
         return False
 
 
-def fetch_profile(label: str, profile_url: str) -> dict | None:
+def fetch_profile(label: str, profile_url: str) -> ProfileQueries | None:
     """Fetch profile page and extract data. Only fetches from polymarket.com.
 
     URL validation uses hostname parsing (not string matching) to prevent
@@ -131,7 +123,7 @@ def fetch_profile(label: str, profile_url: str) -> dict | None:
         if resp.status_code != 200:
             print(f"  WARN: {label} HTTP {resp.status_code}")
             return None
-        return extract_profile_data(resp.text)
+        return load_profile_response(resp)
     except requests.RequestException as e:
         print(f"  ERROR: {label} {e}")
         return None

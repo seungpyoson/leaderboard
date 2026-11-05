@@ -4,11 +4,186 @@ from __future__ import annotations
 
 import math
 import json
-from decimal import Decimal
 import re
+from dataclasses import dataclass
+from decimal import Decimal
+from pathlib import Path
+from typing import Optional
+from types import MappingProxyType
+from typing import Mapping
 
 
 WALLET = re.compile(r"0x[0-9a-fA-F]{40}\Z")
+
+
+@dataclass(frozen=True)
+class LeaderboardRow:
+    rank: int
+    user_id: str
+    user_name: str
+    profile_image: str
+    x_username: str
+    pnl: float
+    volume: float
+    verified: bool
+
+
+@dataclass(frozen=True)
+class Pagination:
+    limit: int
+    offset: int
+    has_more: bool
+    next_cursor: Optional[str]
+
+
+@dataclass(frozen=True)
+class UserStats:
+    trades: int
+    largest_win: float
+
+
+@dataclass(frozen=True)
+class DuneRow:
+    wallet: str
+    first_seen: str
+    total_received: float
+    total_sent: float
+    net_capital: float
+
+
+@dataclass(frozen=True)
+class Candidate:
+    wallet: str
+    status: str
+    pnl: float
+    username: Optional[str]
+    profile_url: Optional[str]
+    discovery_source: Optional[str]
+    style_guess: Optional[str]
+    first_seen: Optional[str]
+    leaderboard_rank: Optional[int]
+    prev_rank: Optional[int]
+    trades: Optional[int]
+    markets: Optional[int]
+    volume: Optional[float]
+    efficiency: Optional[float]
+    confidence_score: Optional[float]
+    is_new: Optional[bool]
+
+
+@dataclass(frozen=True)
+class Account:
+    wallet: str
+    name: str
+    profile_url: str
+    style: Optional[str]
+    note: Optional[str]
+
+
+@dataclass(frozen=True)
+class GoldskyFill:
+    id: str
+    timestamp: str
+    maker: str
+    taker: str
+    makerAssetId: str
+    takerAssetId: str
+    makerAmountFilled: str
+    takerAmountFilled: str
+
+
+@dataclass(frozen=True)
+class GammaMarket:
+    prices: tuple[float, ...]
+    clob_ids: tuple[str, ...]
+    question: Optional[str]
+    end_date: Optional[str]
+
+
+@dataclass(frozen=True)
+class ProfileQueries:
+    pnl: Optional[float]
+    volume: Optional[float]
+    positions_value: Optional[float]
+    biggest_win: Optional[float]
+    trades: Optional[int]
+    markets: Optional[int]
+    join_date: Optional[str]
+
+
+@dataclass(frozen=True)
+class S3Fill:
+    wallet: str
+    role: str
+    direction: str
+    price: float
+    usd_amount: float
+    token_amount: float
+    asset_id: str
+    timestamp: float
+
+
+@dataclass(frozen=True)
+class CandidateDocument:
+    updated: Optional[str]
+    candidates: tuple[Candidate, ...]
+
+
+@dataclass(frozen=True)
+class StateFills:
+    total: int
+    maker: int
+    taker: int
+
+
+@dataclass(frozen=True)
+class StatePosition:
+    net_shares: float
+    cost_basis: float
+    fill_count: int
+
+
+@dataclass(frozen=True)
+class StateAggregates:
+    first_trade: Optional[str]
+    last_trade: Optional[str]
+    total_volume: float
+    total_profit: float
+    total_loss: float
+    wins: int
+    losses: int
+    welford_n: int
+    welford_mean: float
+    welford_m2: float
+    top_markets: Mapping[str, float]
+
+
+@dataclass(frozen=True)
+class StateAccount:
+    wallet: str
+    maker_last_id: str
+    taker_last_id: str
+    maker_exhausted: Optional[bool]
+    taker_exhausted: Optional[bool]
+    maker_at_tip: Optional[bool]
+    taker_at_tip: Optional[bool]
+    fills: StateFills
+    day_bounds: Mapping[str, tuple[int, int]]
+    positions: Mapping[str, StatePosition]
+    aggregates: StateAggregates
+
+
+@dataclass(frozen=True)
+class StateCacheEntry:
+    payout: float
+    cached_at: str
+    question: Optional[str]
+
+
+@dataclass(frozen=True)
+class GoldskyState:
+    accounts: Mapping[str, StateAccount]
+    resolution_cache: Mapping[str, StateCacheEntry]
 
 
 class GoldskyTimeoutError(Exception):
@@ -62,7 +237,7 @@ def _wallet(row: dict, key: str, label: str) -> str:
     return value
 
 
-def leaderboard_page(body) -> tuple[list[dict], dict]:
+def leaderboard_page(body) -> tuple[list[LeaderboardRow], Pagination]:
     body = _object(body, "leaderboard")
     page = body["data"] if "data" in body else None
     if not isinstance(page, list) or not page:
@@ -81,7 +256,11 @@ def leaderboard_page(body) -> tuple[list[dict], dict]:
         rank = _field(row, "rank", "int", label)
         if rank < 0:
             raise ValueError(f"{label}.rank must be nonnegative")
-        rows.append(row)
+        rows.append(LeaderboardRow(
+            rank=rank, user_id=row["user_id"], user_name=row["user_name"],
+            profile_image=row["profile_image"], x_username=row["x_username"],
+            pnl=row["pnl"], volume=row["volume"], verified=row["verified"],
+        ))
     pagination = _object(body["pagination"] if "pagination" in body else None, "leaderboard.pagination")
     for key in ("limit", "offset"):
         value = _field(pagination, key, "int", "leaderboard.pagination")
@@ -89,10 +268,13 @@ def leaderboard_page(body) -> tuple[list[dict], dict]:
             raise ValueError(f"leaderboard.pagination.{key} must be nonnegative")
     _field(pagination, "has_more", "bool", "leaderboard.pagination")
     _field(pagination, "next_cursor", "str", "leaderboard.pagination", optional=True)
-    return rows, pagination
+    return rows, Pagination(
+        limit=pagination["limit"], offset=pagination["offset"],
+        has_more=pagination["has_more"], next_cursor=pagination.get("next_cursor"),
+    )
 
 
-def user_stats(body, wallet: str) -> dict | None:
+def user_stats(body, wallet: str) -> Optional[UserStats]:
     body = _object(body, "user stats")
     if "data" not in body:
         raise ValueError("user stats.data is required")
@@ -109,10 +291,10 @@ def user_stats(body, wallet: str) -> dict | None:
     join_date = _field(row, "join_date", "int", "user stats.data", optional=True)
     if join_date is not None and join_date < 0:
         raise ValueError("user stats.data.join_date must be nonnegative")
-    return {"trades": row["trades"], "largest_win": row["biggest_win"]}
+    return UserStats(trades=row["trades"], largest_win=row["biggest_win"])
 
 
-def dune_results(body) -> list[dict]:
+def dune_results(body) -> list[DuneRow]:
     body = _object(body, "Dune")
     result = _object(body["result"] if "result" in body else None, "Dune.result")
     rows = result["rows"] if "rows" in result else None
@@ -128,7 +310,9 @@ def dune_results(body) -> list[dict]:
             value = _field(row, key, "number", label)
             if key != "net_capital" and value < 0:
                 raise ValueError(f"{label}.{key} must be nonnegative")
-        parsed.append(row)
+        parsed.append(DuneRow(**{key: row[key] for key in (
+            "wallet", "first_seen", "total_received", "total_sent", "net_capital"
+        )}))
     return parsed
 
 
@@ -149,14 +333,15 @@ def dune_status(body) -> str:
     return state
 
 
-def candidates_snapshot(body) -> list[dict]:
+def candidates_snapshot(body) -> list[Candidate]:
     body = _object(body, "candidates snapshot")
     rows = body["candidates"] if "candidates" in body else None
     if not isinstance(rows, list):
         raise ValueError("candidates snapshot.candidates must be an array")
+    parsed = []
     for i, raw in enumerate(rows):
         label = f"candidates snapshot.candidates[{i}]"
-        row = _object(raw, label)
+        row = dict(_object(raw, label))
         _wallet(row, "wallet", label)
         _field(row, "status", "str", label)
         _field(row, "pnl", "number", label)
@@ -175,12 +360,14 @@ def candidates_snapshot(body) -> list[dict]:
             if value is not None and key != "efficiency" and value < 0:
                 raise ValueError(f"{label}.{key} must be nonnegative")
         _field(row, "is_new", "bool", label, optional=True)
-    return rows
+        parsed.append(Candidate(**{key: row.get(key) for key in Candidate.__dataclass_fields__}))
+    return parsed
 
 
-def accounts_snapshot(body) -> list[dict]:
+def accounts_snapshot(body) -> list[Account]:
     if not isinstance(body, list):
         raise ValueError("accounts snapshot must be an array")
+    parsed = []
     for i, raw in enumerate(body):
         label = f"accounts snapshot[{i}]"
         row = _object(raw, label)
@@ -189,10 +376,14 @@ def accounts_snapshot(body) -> list[dict]:
             _field(row, key, "str", label)
         for key in ("style", "note"):
             _field(row, key, "str", label, optional=True)
-    return body
+        parsed.append(Account(
+            wallet=row["wallet"], name=row["name"], profile_url=row["profile_url"],
+            style=row.get("style"), note=row.get("note"),
+        ))
+    return parsed
 
 
-def goldsky_page(body) -> list[dict]:
+def goldsky_page(body) -> list[GoldskyFill]:
     body = _object(body, "Goldsky")
     if "data" not in body and "timeout" in str(body).lower():
         raise GoldskyTimeoutError("Goldsky GraphQL timeout")
@@ -200,6 +391,7 @@ def goldsky_page(body) -> list[dict]:
     events = data["orderFilledEvents"] if "orderFilledEvents" in data else None
     if not isinstance(events, list):
         raise ValueError("Goldsky.data.orderFilledEvents must be an array")
+    parsed = []
     for i, raw in enumerate(events):
         label = f"Goldsky.data.orderFilledEvents[{i}]"
         row = _object(raw, label)
@@ -217,10 +409,11 @@ def goldsky_page(body) -> list[dict]:
                     raise ValueError(f"{label}.{key} must be finite decimal text")
         for key in ("maker", "taker"):
             _wallet(row, key, label)
-    return events
+        parsed.append(GoldskyFill(**{key: row[key] for key in GoldskyFill.__dataclass_fields__}))
+    return parsed
 
 
-def gamma_market(raw, *, require_end_date: bool = False) -> dict | None:
+def gamma_market(raw, *, require_end_date: bool = False) -> Optional[GammaMarket]:
     row = _object(raw, "Gamma market")
     parsed = {}
     for source, output in (("outcomePrices", "prices"), ("clobTokenIds", "clob_ids")):
@@ -236,6 +429,7 @@ def gamma_market(raw, *, require_end_date: bool = False) -> dict | None:
         parsed[output] = value
     if len(parsed["prices"]) != len(parsed["clob_ids"]):
         raise ValueError("Gamma market price/token arrays have different lengths")
+    prices = []
     for price in parsed["prices"]:
         if type(price) not in (str, int, float):
             raise ValueError("Gamma market price must be numeric")
@@ -247,27 +441,34 @@ def gamma_market(raw, *, require_end_date: bool = False) -> dict | None:
             raise ValueError("Gamma market price must be finite")
         if numeric < 0 or numeric > 1:
             raise ValueError("Gamma market price must be in [0, 1]")
+        prices.append(numeric)
     if not all(type(token) is str and token.isdecimal() for token in parsed["clob_ids"]):
         raise ValueError("Gamma market token ids must be decimal text")
     parsed["question"] = _field(row, "question", "str", "Gamma market") if "question" in row else None
     parsed["end_date"] = _field(row, "endDate", "str", "Gamma market") if "endDate" in row else None
     if require_end_date and parsed["end_date"] is None:
         return None  # The elapsed-market path cannot establish the one-hour buffer.
-    return parsed
+    return GammaMarket(
+        prices=tuple(prices), clob_ids=tuple(parsed["clob_ids"]),
+        question=parsed["question"], end_date=parsed["end_date"],
+    )
 
 
-def gamma_markets(body, *, require_end_date: bool = False) -> list[dict]:
+def gamma_markets(body, *, require_end_date: bool = False) -> list[GammaMarket]:
+    if body is None:
+        return []  # Gamma's documented 200 null body is an empty result.
     if not isinstance(body, list):
         raise ValueError("Gamma markets response must be an array")
     parsed = [gamma_market(row, require_end_date=require_end_date) for row in body]
     return [row for row in parsed if row is not None]
 
 
-def goldsky_state(body) -> dict:
+def goldsky_state(body) -> GoldskyState:
     body = _object(body, "Goldsky state")
     accounts = _object(body["accounts"] if "accounts" in body else None, "Goldsky state.accounts")
     cache = _object(body["resolution_cache"] if "resolution_cache" in body else None,
                     "Goldsky state.resolution_cache")
+    parsed_accounts = {}
     for name, raw in accounts.items():
         if type(name) is not str:
             raise ValueError("Goldsky state account name must be text")
@@ -314,6 +515,27 @@ def goldsky_state(body) -> dict:
         for question, value in top.items():
             if type(question) is not str or not _finite_number(value) or value < 0:
                 raise ValueError(f"{label}.aggregates.top_markets entry is malformed")
+        parsed_accounts[name] = StateAccount(
+            wallet=account["wallet"], maker_last_id=account["maker_last_id"],
+            taker_last_id=account["taker_last_id"],
+            maker_exhausted=account.get("maker_exhausted"),
+            taker_exhausted=account.get("taker_exhausted"),
+            maker_at_tip=account.get("maker_at_tip"), taker_at_tip=account.get("taker_at_tip"),
+            fills=StateFills(**{key: fills[key] for key in ("total", "maker", "taker")}),
+            day_bounds=MappingProxyType({day: tuple(pair) for day, pair in bounds.items()}),
+            positions=MappingProxyType({token: StatePosition(
+                net_shares=pos["net_shares"], cost_basis=pos["cost_basis"],
+                fill_count=pos["fill_count"],
+            ) for token, pos in positions.items()}),
+            aggregates=StateAggregates(
+                first_trade=agg.get("first_trade"), last_trade=agg.get("last_trade"),
+                total_volume=agg["total_volume"], total_profit=agg["total_profit"],
+                total_loss=agg["total_loss"], wins=agg["wins"], losses=agg["losses"],
+                welford_n=agg["welford_n"], welford_mean=agg["welford_mean"],
+                welford_m2=agg["welford_m2"], top_markets=MappingProxyType(dict(top)),
+            ),
+        )
+    parsed_cache = {}
     for token, raw in cache.items():
         if type(token) is not str:
             raise ValueError("Goldsky state cache token must be text")
@@ -323,10 +545,17 @@ def goldsky_state(body) -> dict:
             raise ValueError(f"{label}.payout must be 0 or 1")
         _field(entry, "cached_at", "str", label)
         _field(entry, "question", "str", label, optional=True)
-    return body
+        parsed_cache[token] = StateCacheEntry(
+            payout=entry["payout"], cached_at=entry["cached_at"],
+            question=entry.get("question"),
+        )
+    return GoldskyState(
+        accounts=MappingProxyType(parsed_accounts),
+        resolution_cache=MappingProxyType(parsed_cache),
+    )
 
 
-def profile_queries(raw) -> dict:
+def profile_queries(raw) -> ProfileQueries:
     """Parse optional profile-page enrichment; absent metrics stay None."""
     body = _object(raw, "profile page")
     props = _object(body["props"] if "props" in body else None, "profile page.props")
@@ -385,10 +614,10 @@ def profile_queries(raw) -> dict:
             created = _field(data, "createdAt", "str", label, optional=True)
             if created and "1969" not in created:
                 result["join_date"] = created[:10]
-    return result
+    return ProfileQueries(**result)
 
 
-def s3_fill(raw) -> tuple:
+def s3_fill(raw) -> S3Fill:
     if not isinstance(raw, (tuple, list)) or len(raw) != 8:
         raise ValueError("S3 fill must have eight columns")
     wallet, role, direction, price, usd_amount, token_amount, asset_id, timestamp = raw
@@ -408,4 +637,71 @@ def s3_fill(raw) -> tuple:
             raise ValueError(f"S3 fill {label} is outside its domain")
     if type(asset_id) is not str or not asset_id.isdecimal():
         raise ValueError("S3 fill asset_id must be decimal text")
-    return tuple(raw)
+    return S3Fill(
+        wallet=wallet, role=role, direction=direction, price=float(price),
+        usd_amount=float(usd_amount), token_amount=float(token_amount),
+        asset_id=asset_id, timestamp=float(timestamp),
+    )
+
+
+# Raw I/O is confined to these source loaders. Each returns validated records.
+def load_leaderboard_response(response) -> tuple[list[LeaderboardRow], Pagination]:
+    return leaderboard_page(response.json())
+
+
+def load_user_stats_response(response, wallet: str) -> Optional[UserStats]:
+    return user_stats(response.json(), wallet)
+
+
+def load_dune_execution_response(response) -> str:
+    return dune_execution(response.json())
+
+
+def load_dune_status_response(response, api_key: str) -> tuple[str, str]:
+    body = response.json()
+    return dune_status(body), str(body).replace(api_key, "[REDACTED]")
+
+
+def load_dune_results_response(response) -> list[DuneRow]:
+    return dune_results(response.json())
+
+
+def load_dune_error_response(response, api_key: str) -> str:
+    return dune_error_text(response.text, api_key)
+
+
+def load_goldsky_response(response) -> list[GoldskyFill]:
+    return goldsky_page(response.json())
+
+
+def load_gamma_response(response, *, require_end_date: bool = False) -> list[GammaMarket]:
+    return gamma_markets(response.json(), require_end_date=require_end_date)
+
+
+def profile_html(html: str) -> Optional[ProfileQueries]:
+    match = re.search(r'__NEXT_DATA__.*?>(.*?)</script', html, re.DOTALL)
+    if not match:
+        return None
+    return profile_queries(json.loads(match.group(1)))
+
+
+def load_profile_response(response) -> Optional[ProfileQueries]:
+    return profile_html(response.text)
+
+
+def load_accounts(path: Path) -> list[Account]:
+    return accounts_snapshot(json.loads(path.read_text()))
+
+
+def load_candidates(path: Path) -> CandidateDocument:
+    body = _object(json.loads(path.read_text()), "candidates snapshot")
+    updated = _field(body, "updated", "str", "candidates snapshot", optional=True)
+    return CandidateDocument(updated=updated, candidates=tuple(candidates_snapshot(body)))
+
+
+def load_goldsky_state(path: Path):
+    return goldsky_state(json.loads(path.read_text()))
+
+
+def load_s3_rows(connection, query: str) -> list[S3Fill]:
+    return [s3_fill(row) for row in connection.execute(query).fetchall()]

@@ -25,7 +25,7 @@ import requests
 
 from common import MIN_LEADERBOARD_COUNT, REQUEST_DELAY, SESSION, atomic_write, fetch_leaderboard, fmt_money, fmt_pct
 from dune import fetch_capital
-from external import user_stats
+from external import UserStats, load_user_stats_response
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 OUTPUT_FILE = REPO_ROOT / "data" / "profiles.json"
@@ -38,7 +38,7 @@ MIN_CAPITAL_COVERAGE = 0.97
 MIN_USER_STATS_COVERAGE = MIN_CAPITAL_COVERAGE
 
 
-def fetch_user_stats(wallet: str) -> dict | None:
+def fetch_user_stats(wallet: str) -> UserStats | None:
     """Fetch per-user stats (all-market, not crypto-filtered).
 
     Returns None only for the API's documented ``data: null`` unknown user.
@@ -46,7 +46,7 @@ def fetch_user_stats(wallet: str) -> dict | None:
     """
     resp = SESSION.get(USER_STATS_URL, params={"user": wallet}, timeout=10)
     resp.raise_for_status()
-    return user_stats(resp.json(), wallet)
+    return load_user_stats_response(resp, wallet)
 
 
 def main():
@@ -65,12 +65,12 @@ def main():
 
     results = []
     for t in traders:
-        pnl = t["pnl"]
+        pnl = t.pnl
         # v2 volume is shares, not USDC; the existing volume and efficiency
         # columns require USDC and therefore cannot use it.
         volume = efficiency = style = None
-        raw_username = t["user_name"]
-        wallet = t["user_id"]
+        raw_username = t.user_name
+        wallet = t.user_id
 
         # API returns "0xABC...-1772168966873" (wallet + epoch-ms) for users
         # without a display name — strip the timestamp suffix
@@ -125,8 +125,8 @@ def main():
                 time.sleep(USER_STATS_RETRY_BASE_SECONDS * 2 ** attempt)
         if stats is not None:
             known_stats += 1
-            r["trades"] = stats["trades"]
-            r["largest_win"] = stats["largest_win"]
+            r["trades"] = stats.trades
+            r["largest_win"] = stats.largest_win
         if (i + 1) % 50 == 0:
             print(f"  Stats: {i + 1}/{len(results)}")
         time.sleep(REQUEST_DELAY)
@@ -144,17 +144,17 @@ def main():
     for r in results:
         cap = capital.get(r["wallet"].lower())
         if cap is not None:
-            r["first_seen"] = cap["first_seen"]
-            r["total_received"] = cap["total_received"]
-            r["total_sent"] = cap["total_sent"]
-            r["net_capital"] = cap["net_capital"]
+            r["first_seen"] = cap.first_seen
+            r["total_received"] = cap.total_received
+            r["total_sent"] = cap.total_sent
+            r["net_capital"] = cap.net_capital
             # ROIC = PnL / Net Capital × 100
             # Note: net_capital = total_received - total_sent, which includes
             # trading flows (exchange payouts/buys). So the denominator is
             # "net USDC position" not pure "capital deployed." This is a
             # known trade-off — filtering by contract blacklist was inflating
             # deposits by 10-50x (see #30 capital flow inflation fix).
-            net_cap = cap["net_capital"]
+            net_cap = cap.net_capital
             # Require minimum $5K net capital to avoid division explosion
             # when net_capital is near-zero (e.g. $145 → 780,000% ROIC)
             if net_cap >= 5000:

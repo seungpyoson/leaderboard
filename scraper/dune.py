@@ -24,7 +24,8 @@ logger = logging.getLogger(__name__)
 
 import requests
 
-from external import dune_error_text, dune_execution, dune_results, dune_status
+from external import (DuneRow, load_dune_error_response, load_dune_execution_response,
+                      load_dune_results_response, load_dune_status_response)
 
 DUNE_API = "https://api.dune.com/api/v1"
 
@@ -112,7 +113,7 @@ def _check_response(resp: requests.Response, api_key: str) -> None:
     try:
         resp.raise_for_status()
     except requests.HTTPError:
-        body = dune_error_text(resp.text, api_key)
+        body = load_dune_error_response(resp, api_key)
         raise RuntimeError(f"Dune HTTP {resp.status_code}: {body}") from None
 
 
@@ -125,10 +126,10 @@ def _execute_sql(api_key: str, sql: str) -> str:
         timeout=30,
     )
     _check_response(resp, api_key)
-    return dune_execution(resp.json())
+    return load_dune_execution_response(resp)
 
 
-def _poll_results(api_key: str, execution_id: str) -> list[dict]:
+def _poll_results(api_key: str, execution_id: str) -> list[DuneRow]:
     """Poll until query completes, then fetch results."""
     start = time.time()
     while time.time() - start < MAX_POLL_TIME:
@@ -138,8 +139,7 @@ def _poll_results(api_key: str, execution_id: str) -> list[dict]:
             timeout=15,
         )
         _check_response(resp, api_key)
-        status_body = resp.json()
-        state = dune_status(status_body)
+        state, status_text = load_dune_status_response(resp, api_key)
 
         if state == "QUERY_STATE_COMPLETED":
             results = requests.get(
@@ -148,17 +148,17 @@ def _poll_results(api_key: str, execution_id: str) -> list[dict]:
                 timeout=30,
             )
             _check_response(results, api_key)
-            return dune_results(results.json())
+            return load_dune_results_response(results)
 
         if state in ("QUERY_STATE_FAILED", "QUERY_STATE_CANCELLED"):
-            raise RuntimeError(f"Dune query {state}: {str(status_body).replace(api_key, '[REDACTED]')}")
+            raise RuntimeError(f"Dune query {state}: {status_text}")
 
         time.sleep(POLL_INTERVAL)
 
     raise TimeoutError(f"Dune query timed out after {MAX_POLL_TIME}s")
 
 
-def fetch_capital(wallets: list[str]) -> dict[str, dict]:
+def fetch_capital(wallets: list[str]) -> dict[str, DuneRow]:
     """Fetch USDC capital data for proxy wallets.
 
     Returns: {wallet_lower: {"first_seen": str, "total_received": float, "total_sent": float, "net_capital": float}}
@@ -195,17 +195,12 @@ def fetch_capital(wallets: list[str]) -> dict[str, dict]:
         print(f"  ERROR: Dune query failed: {e}")
         return {}
 
-    capital = {}
+    capital: dict[str, DuneRow] = {}
     for row in data:
-        wallet = row["wallet"].lower()
+        wallet = row.wallet.lower()
         if wallet in capital:
             raise ValueError(f"Duplicate Dune wallet: {wallet}")
-        capital[wallet] = {
-            "first_seen": row["first_seen"],
-            "total_received": row["total_received"],
-            "total_sent": row["total_sent"],
-            "net_capital": row["net_capital"],
-        }
+        capital[wallet] = row
 
     print(f"  Dune: got capital data for {len(capital)} wallets")
     return capital

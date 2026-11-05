@@ -13,6 +13,7 @@ import common
 import discover
 import dune
 import fetch
+import external
 
 
 class Response:
@@ -48,9 +49,19 @@ class RefreshTests(unittest.TestCase):
         ]
 
     @staticmethod
+    def board_records(rows):
+        return [external.LeaderboardRow(
+            rank=row.get("rank", 1), user_id=row["user_id"],
+            user_name=row.get("user_name", ""), profile_image=row.get("profile_image", ""),
+            x_username=row.get("x_username", ""), pnl=row["pnl"],
+            volume=row.get("volume", 0), verified=row.get("verified", False),
+        ) for row in rows]
+
+    @staticmethod
     def capital_for(rows, count=800):
-        return {row["user_id"].lower(): {"first_seen": "2026-01-01", "total_received": 5000,
-                "total_sent": 0, "net_capital": 5000} for row in rows[:count]}
+        return {row["user_id"].lower(): external.DuneRow(
+            wallet=row["user_id"], first_seen="2026-01-01", total_received=5000,
+            total_sent=0, net_capital=5000) for row in rows[:count]}
 
     def test_http_error_preserves_profiles_and_exits_nonzero(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -118,7 +129,7 @@ class RefreshTests(unittest.TestCase):
         with patch.object(common.SESSION, "get", side_effect=pages) as get, \
                 patch.object(common.time, "sleep"):
             traders = fetch.fetch_leaderboard(2)
-        self.assertEqual(traders, rows)
+        self.assertEqual(traders, self.board_records(rows))
         self.assertEqual(get.call_args_list[0].kwargs["params"], {
             "category": "crypto", "time_period": "all", "sort_by": "PNL", "limit": 2,
         })
@@ -179,13 +190,13 @@ class RefreshTests(unittest.TestCase):
             with patch.object(discover, "ACCOUNTS_FILE", accounts), \
                     patch.object(discover, "CANDIDATES_FILE", candidates), \
                     patch.object(discover, "LOCK_FILE", lock), \
-                    patch.object(discover, "fetch_leaderboard", return_value=rows), \
+                    patch.object(discover, "fetch_leaderboard", return_value=self.board_records(rows)), \
                     patch.object(discover, "fetch_profile", return_value=None), \
                     patch.object(discover.time, "sleep"), redirect_stdout(io.StringIO()):
                 discover.main()
             fresh = {c["wallet"]: c for c in json.loads(candidates.read_text())["candidates"]}
         for before in old[:3]:
-            self.assertEqual(fresh[before["wallet"]], before)
+            self.assertEqual({k: v for k, v in fresh[before["wallet"]].items() if v is not None}, before)
         pending = fresh[old[3]["wallet"]]
         self.assertEqual(pending["status"], "pending")
         self.assertEqual(pending["volume"], 150_000)
@@ -289,7 +300,7 @@ class RefreshTests(unittest.TestCase):
             with patch.object(discover, "ACCOUNTS_FILE", accounts), \
                     patch.object(discover, "CANDIDATES_FILE", candidates), \
                     patch.object(discover, "LOCK_FILE", root / ".candidates.lock"), \
-                    patch.object(discover, "fetch_leaderboard", return_value=[row]), \
+                    patch.object(discover, "fetch_leaderboard", return_value=self.board_records([row])), \
                     patch.object(discover, "fetch_profile", side_effect=promote_during_fetch), \
                     patch.object(discover.time, "sleep"), redirect_stdout(io.StringIO()):
                 discover.main()
@@ -335,17 +346,17 @@ class RefreshTests(unittest.TestCase):
             with patch.object(discover, "ACCOUNTS_FILE", accounts), \
                     patch.object(discover, "CANDIDATES_FILE", candidates), \
                     patch.object(discover, "LOCK_FILE", root / ".candidates.lock"), \
-                    patch.object(discover, "fetch_leaderboard", return_value=[{"user_id": wallet, "pnl": 100_000}]), \
+                    patch.object(discover, "fetch_leaderboard", return_value=self.board_records([{"user_id": wallet, "pnl": 100_000}])), \
                     redirect_stdout(io.StringIO()):
                 discover.main()
-            self.assertEqual(json.loads(candidates.read_text())["candidates"], [protected])
+            self.assertEqual([{k: v for k, v in c.items() if v is not None} for c in json.loads(candidates.read_text())["candidates"]], [protected])
 
     def test_user_stats_v2_envelope(self):
         wallet = "0x" + "a" * 40
         body = {"data": {"proxy_wallet": wallet, "trades": 12, "biggest_win": 34.5, "views": 0}}
         with patch.object(common.SESSION, "get", return_value=Response(200, body)) as get:
             stats = fetch.fetch_user_stats(wallet)
-        self.assertEqual(stats, {"trades": 12, "largest_win": 34.5})
+        self.assertEqual(stats, external.UserStats(trades=12, largest_win=34.5))
         self.assertEqual(get.call_args.kwargs["params"], {"user": wallet})
 
     def test_user_stats_bad_envelope_is_failure(self):
@@ -376,11 +387,11 @@ class RefreshTests(unittest.TestCase):
         with patch.object(dune, "_get_api_key", return_value="test-key"), \
                 patch.object(dune, "_execute_sql", return_value="test-execution"), \
                 patch.object(dune, "_poll_results", return_value=[
-                    {"wallet": wallet, "first_seen": "2026-01-01", "total_received": 0,
-                     "total_sent": 0, "net_capital": 0}
+                    external.DuneRow(wallet=wallet, first_seen="2026-01-01",
+                                     total_received=0, total_sent=0, net_capital=0)
                 ]), redirect_stdout(io.StringIO()):
             capital = dune.fetch_capital([wallet])
-        self.assertEqual(capital[wallet]["net_capital"], 0)
+        self.assertEqual(capital[wallet].net_capital, 0)
 
     def test_missing_capital_preserves_profiles_with_counts(self):
         rows = self.leaderboard_rows()
@@ -389,8 +400,8 @@ class RefreshTests(unittest.TestCase):
             output.write_text("existing data")
             printed = io.StringIO()
             with patch.object(fetch, "OUTPUT_FILE", output), \
-                    patch.object(fetch, "fetch_leaderboard", return_value=rows), \
-                    patch.object(fetch, "fetch_user_stats", return_value={"trades": 1, "largest_win": 2}), \
+                    patch.object(fetch, "fetch_leaderboard", return_value=self.board_records(rows)), \
+                    patch.object(fetch, "fetch_user_stats", return_value=external.UserStats(trades=1, largest_win=2)), \
                     patch.object(fetch, "fetch_capital", return_value={}), \
                     patch.object(fetch.time, "sleep"), \
                     patch.object(sys, "argv", ["fetch.py"]), \
@@ -407,8 +418,8 @@ class RefreshTests(unittest.TestCase):
             output = Path(directory) / "profiles.json"
             output.write_text("existing data")
             with patch.object(fetch, "OUTPUT_FILE", output), \
-                    patch.object(fetch, "fetch_leaderboard", return_value=rows), \
-                    patch.object(fetch, "fetch_user_stats", return_value={"trades": 1, "largest_win": 2}), \
+                    patch.object(fetch, "fetch_leaderboard", return_value=self.board_records(rows)), \
+                    patch.object(fetch, "fetch_user_stats", return_value=external.UserStats(trades=1, largest_win=2)), \
                     patch.object(dune, "_get_api_key", return_value="test-key"), \
                     patch.object(dune, "_execute_sql", return_value="test-execution"), \
                     patch.object(dune.requests, "get", side_effect=[
@@ -428,8 +439,8 @@ class RefreshTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "profiles.json"
             with patch.object(fetch, "OUTPUT_FILE", output), \
-                    patch.object(fetch, "fetch_leaderboard", return_value=rows), \
-                    patch.object(fetch, "fetch_user_stats", return_value={"trades": 1, "largest_win": 2}), \
+                    patch.object(fetch, "fetch_leaderboard", return_value=self.board_records(rows)), \
+                    patch.object(fetch, "fetch_user_stats", return_value=external.UserStats(trades=1, largest_win=2)), \
                     patch.object(fetch, "fetch_capital", return_value=self.capital_for(rows, 776)), \
                     patch.object(fetch, "atomic_write", wraps=fetch.atomic_write) as atomic, \
                     patch.object(fetch.time, "sleep"), \
@@ -444,8 +455,8 @@ class RefreshTests(unittest.TestCase):
             output = Path(directory) / "profiles.json"
             output.write_text("existing data")
             with patch.object(fetch, "OUTPUT_FILE", output), \
-                    patch.object(fetch, "fetch_leaderboard", return_value=rows), \
-                    patch.object(fetch, "fetch_user_stats", return_value={"trades": 1, "largest_win": 2}), \
+                    patch.object(fetch, "fetch_leaderboard", return_value=self.board_records(rows)), \
+                    patch.object(fetch, "fetch_user_stats", return_value=external.UserStats(trades=1, largest_win=2)), \
                     patch.object(fetch, "fetch_capital", return_value=self.capital_for(rows, 775)), \
                     patch.object(fetch.time, "sleep"), \
                     patch.object(sys, "argv", ["fetch.py"]), redirect_stdout(io.StringIO()):
@@ -462,8 +473,8 @@ class RefreshTests(unittest.TestCase):
             output = Path(directory) / "profiles.json"
             output.write_text("existing data")
             with patch.object(fetch, "OUTPUT_FILE", output), \
-                    patch.object(fetch, "fetch_leaderboard", return_value=rows), \
-                    patch.object(fetch, "fetch_user_stats", return_value={"trades": 1, "largest_win": 2}), \
+                    patch.object(fetch, "fetch_leaderboard", return_value=self.board_records(rows)), \
+                    patch.object(fetch, "fetch_user_stats", return_value=external.UserStats(trades=1, largest_win=2)), \
                     patch.object(dune, "_get_api_key", return_value="test-key"), \
                     patch.object(dune, "_execute_sql", return_value="test-execution"), \
                     patch.object(dune.requests, "get", side_effect=[
@@ -485,7 +496,7 @@ class RefreshTests(unittest.TestCase):
             output.write_text("existing data")
             printed = io.StringIO()
             with patch.object(fetch, "OUTPUT_FILE", output), \
-                    patch.object(fetch, "fetch_leaderboard", return_value=rows), \
+                    patch.object(fetch, "fetch_leaderboard", return_value=self.board_records(rows)), \
                     patch.object(fetch, "fetch_user_stats", return_value=None), \
                     patch.object(fetch, "fetch_capital", side_effect=AssertionError("Dune must not run")), \
                     patch.object(fetch.time, "sleep"), \
@@ -501,13 +512,13 @@ class RefreshTests(unittest.TestCase):
 
         def stats(wallet):
             calls.append(wallet)
-            return None if wallet == failed else {"trades": 1, "largest_win": 2}
+            return None if wallet == failed else external.UserStats(trades=1, largest_win=2)
 
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "profiles.json"
             output.write_text('{"profiles": []}')
             with patch.object(fetch, "OUTPUT_FILE", output), \
-                    patch.object(fetch, "fetch_leaderboard", return_value=rows), \
+                    patch.object(fetch, "fetch_leaderboard", return_value=self.board_records(rows)), \
                     patch.object(fetch, "fetch_user_stats", side_effect=stats), \
                     patch.object(fetch, "fetch_capital", return_value=self.capital_for(rows)), \
                     patch.object(fetch.time, "sleep"), \
@@ -527,7 +538,7 @@ class RefreshTests(unittest.TestCase):
             events.append(("stats", wallet))
             if wallet == failed and calls.count(wallet) == 1:
                 raise common.requests.ConnectionError("temporary")
-            return {"trades": 1, "largest_win": 2}
+            return external.UserStats(trades=1, largest_win=2)
 
         def sleep(delay):
             events.append(("sleep", delay))
@@ -535,7 +546,7 @@ class RefreshTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "profiles.json"
             with patch.object(fetch, "OUTPUT_FILE", output), \
-                    patch.object(fetch, "fetch_leaderboard", return_value=rows), \
+                    patch.object(fetch, "fetch_leaderboard", return_value=self.board_records(rows)), \
                     patch.object(fetch, "fetch_user_stats", side_effect=stats), \
                     patch.object(fetch, "fetch_capital", return_value=self.capital_for(rows)), \
                     patch.object(fetch.time, "sleep", side_effect=sleep), \
@@ -557,8 +568,8 @@ class RefreshTests(unittest.TestCase):
             output.write_text(previous)
             printed = io.StringIO()
             with patch.object(fetch, "OUTPUT_FILE", output), \
-                    patch.object(fetch, "fetch_leaderboard", return_value=rows), \
-                    patch.object(fetch, "fetch_user_stats", side_effect=lambda wallet: (_ for _ in ()).throw(common.requests.ConnectionError("temporary")) if wallet == failed else {"trades": 1, "largest_win": 2}) as stats, \
+                    patch.object(fetch, "fetch_leaderboard", return_value=self.board_records(rows)), \
+                    patch.object(fetch, "fetch_user_stats", side_effect=lambda wallet: (_ for _ in ()).throw(common.requests.ConnectionError("temporary")) if wallet == failed else external.UserStats(trades=1, largest_win=2)) as stats, \
                     patch.object(fetch, "fetch_capital", return_value=self.capital_for(rows)), \
                     patch.object(fetch.time, "sleep"), \
                     patch.object(sys, "argv", ["fetch.py"]), redirect_stdout(printed):
@@ -575,8 +586,8 @@ class RefreshTests(unittest.TestCase):
             previous = json.dumps({"profiles": [{"wallet": failed, "trades": 91, "largest_win": None}]})
             output.write_text(previous)
             with patch.object(fetch, "OUTPUT_FILE", output), \
-                    patch.object(fetch, "fetch_leaderboard", return_value=rows), \
-                    patch.object(fetch, "fetch_user_stats", side_effect=lambda wallet: (_ for _ in ()).throw(common.requests.ConnectionError("temporary")) if wallet == failed else {"trades": 1, "largest_win": 2}), \
+                    patch.object(fetch, "fetch_leaderboard", return_value=self.board_records(rows)), \
+                    patch.object(fetch, "fetch_user_stats", side_effect=lambda wallet: (_ for _ in ()).throw(common.requests.ConnectionError("temporary")) if wallet == failed else external.UserStats(trades=1, largest_win=2)), \
                     patch.object(fetch, "fetch_capital", side_effect=AssertionError("Dune must not run")), \
                     patch.object(fetch.time, "sleep"), \
                     patch.object(sys, "argv", ["fetch.py"]), redirect_stdout(io.StringIO()):
