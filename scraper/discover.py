@@ -122,7 +122,7 @@ def load_known_wallets() -> set[str]:
 def load_existing_candidates() -> dict[str, dict]:
     """Load existing candidates keyed by lowercase wallet. Preserves review decisions."""
     if not CANDIDATES_FILE.exists():
-        return {}
+        raise RuntimeError(f"Required candidate file missing: {CANDIDATES_FILE}")
     try:
         data = json.loads(CANDIDATES_FILE.read_text())
     except (json.JSONDecodeError, OSError, UnicodeError) as e:
@@ -192,13 +192,53 @@ def main():
     # Load data
     known_wallets = load_known_wallets()
     existing = load_existing_candidates()
-    print(f"Known accounts: {len(known_wallets)} | Existing candidates: {len(existing)}")
 
     # TB4: Fetch leaderboard (errors abort before any write)
     print("\nFetching leaderboard...")
     traders = fetch_leaderboard()
     print(f"Total leaderboard entries: {len(traders)}")
     print("::warning title=Discovery scoring unavailable::Polymarket v2 board volume is shares, not USDC; new candidates require manual review")
+
+    # Fetch network data before locking. The first read is only a worklist hint;
+    # decisions and known wallets are loaded again under the promotion lock.
+    profiles = {}
+    for trader in traders:
+        wallet = (trader.get("user_id") or "").lower()
+        if not wallet or wallet in known_wallets:
+            continue
+        prev = existing.get(wallet)
+        if prev and prev.get("status") in ("promoted", "rejected", "approved", "auto-rejected", "auto-approved"):
+            continue
+        pnl = to_float(trader.get("pnl"))
+        if pnl is None or pnl < PNL_THRESHOLD:
+            continue
+        raw_username = trader.get("user_name") or ""
+        slug = validate_slug(raw_username, wallet)
+        if slug:
+            is_wallet_name = raw_username.lower() == wallet or raw_username.lower().startswith(wallet[:20])
+            display_name = raw_username if raw_username and not is_wallet_name else wallet[:10]
+            profiles[wallet] = fetch_profile(display_name, f"https://polymarket.com/@{slug}")
+            time.sleep(REQUEST_DELAY)
+
+    LOCK_FILE.parent.mkdir(parents=True, exist_ok=True)
+    lock_fd = open(LOCK_FILE, "a")
+    try:
+        fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        lock_fd.close()
+        raise RuntimeError("Another discovery instance is running (lock held); candidates.json preserved")
+    try:
+        _merge_and_write(traders, profiles)
+    finally:
+        fcntl.flock(lock_fd, fcntl.LOCK_UN)
+        lock_fd.close()
+
+
+def _merge_and_write(traders: list[dict], profiles: dict[str, dict | None]):
+    """Re-read promotion state and write candidates while holding its lock."""
+    known_wallets = load_known_wallets()
+    existing = load_existing_candidates()
+    print(f"Known accounts: {len(known_wallets)} | Existing candidates: {len(existing)}")
 
     # Filter and enrich
     print("\nFiltering and enriching candidates...")
@@ -255,7 +295,7 @@ def main():
 
         if slug:
             profile_url = f"https://polymarket.com/@{slug}"
-            profile_data = fetch_profile(display_name, profile_url)
+            profile_data = profiles.get(wallet)
 
             if profile_data:
                 trades = profile_data.get("trades") if profile_data.get("trades") is not None else trades
@@ -293,10 +333,8 @@ def main():
 
         new_candidates.append(candidate)
 
-        time.sleep(REQUEST_DELAY)
-
     # Preserve candidates from previous runs not on current leaderboard
-    current_wallets = {c["wallet"] for c in new_candidates}
+    current_wallets = {c["wallet"].lower() for c in new_candidates}
     for wallet, prev in existing.items():
         if wallet not in known_wallets and wallet not in current_wallets:
             new_candidates.append(prev)
@@ -312,24 +350,11 @@ def main():
     if error:
         raise RuntimeError(f"Discovery refused: {error}; candidates.json preserved")
 
-    # TB5: Acquire lockfile, then atomic write
-    CANDIDATES_FILE.parent.mkdir(parents=True, exist_ok=True)
-    lock_fd = open(LOCK_FILE, "w")
-    try:
-        fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
-    except OSError:
-        lock_fd.close()
-        raise RuntimeError("Another discovery instance is running (lock held); candidates.json preserved")
-
-    try:
-        output = {
-            "updated": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
-            "candidates": new_candidates,
-        }
-        atomic_write(CANDIDATES_FILE, json.dumps(output, indent=2))
-    finally:
-        fcntl.flock(lock_fd, fcntl.LOCK_UN)
-        lock_fd.close()
+    output = {
+        "updated": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
+        "candidates": new_candidates,
+    }
+    atomic_write(CANDIDATES_FILE, json.dumps(output, indent=2))
 
     # Summary stats
     auto_approved = sum(1 for c in new_candidates if c.get("status") == "auto-approved")

@@ -30,6 +30,17 @@ class Response:
 
 
 class RefreshTests(unittest.TestCase):
+    @staticmethod
+    def leaderboard_rows():
+        return [
+            {"user_id": f"0x{i:040x}", "user_name": f"user{i}", "pnl": 800 - i}
+            for i in range(800)
+        ]
+
+    @staticmethod
+    def capital_for(rows, count=800):
+        return {row["user_id"].lower(): {"net_capital": 5000} for row in rows[:count]}
+
     def test_http_error_preserves_profiles_and_exits_nonzero(self):
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "profiles.json"
@@ -236,6 +247,90 @@ class RefreshTests(unittest.TestCase):
                     discover.main()
             self.assertEqual(candidates.read_text(), '{"candidates": []}')
 
+    def test_missing_discovery_candidates_refuses(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            accounts = root / "accounts.json"
+            candidates = root / "candidates.json"
+            accounts.write_text("[]")
+            with patch.object(discover, "ACCOUNTS_FILE", accounts), \
+                    patch.object(discover, "CANDIDATES_FILE", candidates), \
+                    patch.object(discover, "LOCK_FILE", root / ".candidates.lock"), \
+                    patch.object(discover, "fetch_leaderboard", return_value=[]), \
+                    redirect_stdout(io.StringIO()):
+                with self.assertRaisesRegex(RuntimeError, "Required candidate file missing"):
+                    discover.main()
+            self.assertFalse(candidates.exists())
+
+    def test_discovery_rechecks_promotion_after_network_fetch(self):
+        wallet = "0x" + "a" * 40
+        row = {"user_id": wallet, "user_name": "trader", "pnl": 100_000, "rank": 1}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            accounts = root / "accounts.json"
+            candidates = root / "candidates.json"
+            accounts.write_text("[]")
+            candidates.write_text(json.dumps({"candidates": [{"wallet": wallet, "status": "pending", "pnl": 90_000}]}))
+
+            def promote_during_fetch(*_args):
+                accounts.write_text(json.dumps([{"wallet": wallet}]))
+                candidates.write_text(json.dumps({"candidates": [{"wallet": wallet, "status": "promoted", "pnl": 90_000}]}))
+                return None
+
+            with patch.object(discover, "ACCOUNTS_FILE", accounts), \
+                    patch.object(discover, "CANDIDATES_FILE", candidates), \
+                    patch.object(discover, "LOCK_FILE", root / ".candidates.lock"), \
+                    patch.object(discover, "fetch_leaderboard", return_value=[row]), \
+                    patch.object(discover, "fetch_profile", side_effect=promote_during_fetch), \
+                    patch.object(discover.time, "sleep"), redirect_stdout(io.StringIO()):
+                discover.main()
+            self.assertEqual(json.loads(candidates.read_text())["candidates"], [])
+
+    def test_discovery_reloads_decisions_while_lock_held(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            accounts = root / "accounts.json"
+            candidates = root / "candidates.json"
+            lock = root / ".candidates.lock"
+            accounts.write_text("[]")
+            candidates.write_text('{"candidates": []}')
+            load_candidates = discover.load_existing_candidates
+            reads = []
+
+            def check_read():
+                reads.append(1)
+                if len(reads) == 2:
+                    with open(lock, "a") as contender:
+                        with self.assertRaises(OSError):
+                            discover.fcntl.flock(contender, discover.fcntl.LOCK_EX | discover.fcntl.LOCK_NB)
+                return load_candidates()
+
+            with patch.object(discover, "ACCOUNTS_FILE", accounts), \
+                    patch.object(discover, "CANDIDATES_FILE", candidates), \
+                    patch.object(discover, "LOCK_FILE", lock), \
+                    patch.object(discover, "load_existing_candidates", side_effect=check_read), \
+                    patch.object(discover, "fetch_leaderboard", return_value=[]), \
+                    redirect_stdout(io.StringIO()):
+                discover.main()
+            self.assertEqual(len(reads), 2)
+
+    def test_discovery_does_not_duplicate_mixed_case_protected_wallet(self):
+        wallet = "0x" + "a" * 40
+        protected = {"wallet": "0x" + "A" * 40, "status": "rejected", "pnl": 90_000}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            accounts = root / "accounts.json"
+            candidates = root / "candidates.json"
+            accounts.write_text("[]")
+            candidates.write_text(json.dumps({"candidates": [protected]}))
+            with patch.object(discover, "ACCOUNTS_FILE", accounts), \
+                    patch.object(discover, "CANDIDATES_FILE", candidates), \
+                    patch.object(discover, "LOCK_FILE", root / ".candidates.lock"), \
+                    patch.object(discover, "fetch_leaderboard", return_value=[{"user_id": wallet, "pnl": 100_000}]), \
+                    redirect_stdout(io.StringIO()):
+                discover.main()
+            self.assertEqual(json.loads(candidates.read_text())["candidates"], [protected])
+
     def test_user_stats_v2_envelope(self):
         wallet = "0x" + "a" * 40
         body = {"data": {"trades": 12, "biggest_win": 34.5}}
@@ -248,6 +343,11 @@ class RefreshTests(unittest.TestCase):
         with patch.object(common.SESSION, "get", return_value=Response(200, {"data": None})):
             self.assertIsNone(fetch.fetch_user_stats("0x" + "a" * 40))
 
+    def test_user_stats_missing_or_null_biggest_win_is_failure(self):
+        for payload in ({"trades": 12}, {"trades": 12, "biggest_win": None}):
+            with self.subTest(payload=payload), patch.object(common.SESSION, "get", return_value=Response(200, {"data": payload})):
+                self.assertIsNone(fetch.fetch_user_stats("0x" + "a" * 40))
+
     def test_dune_error_body_redacts_key(self):
         response = Response(400, {}, "invalid query; key=private-test-key")
         output = io.StringIO()
@@ -259,13 +359,11 @@ class RefreshTests(unittest.TestCase):
         self.assertIn("[REDACTED]", output.getvalue())
         self.assertNotIn("private-test-key", output.getvalue())
 
-    def test_v2_profiles_warn_when_capital_missing(self):
-        rows = [
-            {"user_id": f"0x{i:040x}", "user_name": f"user{i}", "pnl": 800 - i, "volume": 20}
-            for i in range(800)
-        ]
+    def test_missing_capital_preserves_profiles_with_counts(self):
+        rows = self.leaderboard_rows()
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "profiles.json"
+            output.write_text("existing data")
             printed = io.StringIO()
             with patch.object(fetch, "OUTPUT_FILE", output), \
                     patch.object(fetch, "fetch_leaderboard", return_value=rows), \
@@ -274,19 +372,42 @@ class RefreshTests(unittest.TestCase):
                     patch.object(fetch.time, "sleep"), \
                     patch.object(sys, "argv", ["fetch.py"]), \
                     redirect_stdout(printed):
+                with self.assertRaisesRegex(RuntimeError, "0/800"):
+                    fetch.main()
+            self.assertEqual(output.read_text(), "existing data")
+
+    def test_795_of_800_capital_uses_atomic_write(self):
+        rows = self.leaderboard_rows()
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "profiles.json"
+            with patch.object(fetch, "OUTPUT_FILE", output), \
+                    patch.object(fetch, "fetch_leaderboard", return_value=rows), \
+                    patch.object(fetch, "fetch_user_stats", return_value={"trades": 1, "largest_win": 2}), \
+                    patch.object(fetch, "fetch_capital", return_value=self.capital_for(rows, 795)), \
+                    patch.object(fetch, "atomic_write", wraps=fetch.atomic_write) as atomic, \
+                    patch.object(fetch.time, "sleep"), \
+                    patch.object(sys, "argv", ["fetch.py"]), redirect_stdout(io.StringIO()):
                 fetch.main()
-            data = json.loads(output.read_text())
-            self.assertEqual(data["accounts"], 800)
-            self.assertEqual(data["profiles"][0]["wallet"], rows[0]["user_id"])
-            self.assertIsNone(data["profiles"][0]["volume"])
-            self.assertIsNone(data["profiles"][0]["efficiency"])
-            self.assertIn("::warning title=Capital enrichment missing::800/800", printed.getvalue())
+            atomic.assert_called_once()
+            self.assertEqual(json.loads(output.read_text())["accounts"], 800)
+
+    def test_791_of_800_capital_refuses_write(self):
+        rows = self.leaderboard_rows()
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "profiles.json"
+            output.write_text("existing data")
+            with patch.object(fetch, "OUTPUT_FILE", output), \
+                    patch.object(fetch, "fetch_leaderboard", return_value=rows), \
+                    patch.object(fetch, "fetch_user_stats", return_value={"trades": 1, "largest_win": 2}), \
+                    patch.object(fetch, "fetch_capital", return_value=self.capital_for(rows, 791)), \
+                    patch.object(fetch.time, "sleep"), \
+                    patch.object(sys, "argv", ["fetch.py"]), redirect_stdout(io.StringIO()):
+                with self.assertRaisesRegex(RuntimeError, "791/800"):
+                    fetch.main()
+            self.assertEqual(output.read_text(), "existing data")
 
     def test_user_stats_outage_preserves_profiles(self):
-        rows = [
-            {"user_id": f"0x{i:040x}", "user_name": f"user{i}", "pnl": 800 - i}
-            for i in range(800)
-        ]
+        rows = self.leaderboard_rows()
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "profiles.json"
             output.write_text("existing data")
@@ -297,41 +418,60 @@ class RefreshTests(unittest.TestCase):
                     patch.object(fetch, "fetch_capital", side_effect=AssertionError("Dune must not run")), \
                     patch.object(fetch.time, "sleep"), \
                     patch.object(sys, "argv", ["fetch.py"]), redirect_stdout(printed):
-                with self.assertRaises((RuntimeError, SystemExit)):
+                with self.assertRaisesRegex(RuntimeError, "Cannot preserve failed user stats"):
                     fetch.main()
             self.assertEqual(output.read_text(), "existing data")
-            self.assertIn("::warning title=User stats", printed.getvalue())
 
-    def test_user_stats_failure_fraction_boundary(self):
-        rows = [
-            {"user_id": f"0x{i:040x}", "user_name": f"user{i}", "pnl": 800 - i}
-            for i in range(800)
-        ]
-        for failures in (40, 41):
-            with self.subTest(failures=failures), tempfile.TemporaryDirectory() as directory:
-                output = Path(directory) / "profiles.json"
-                output.write_text('{"profiles": []}')
-                stats = [None] * failures + [{"trades": 1, "largest_win": 2}] * (800 - failures)
-                with patch.object(fetch, "OUTPUT_FILE", output), \
-                        patch.object(fetch, "fetch_leaderboard", return_value=rows), \
-                        patch.object(fetch, "fetch_user_stats", side_effect=stats), \
-                        patch.object(fetch, "fetch_capital", return_value={}), \
-                        patch.object(fetch.time, "sleep"), \
-                        patch.object(sys, "argv", ["fetch.py"]), redirect_stdout(io.StringIO()):
-                    if failures == 41:
-                        with self.assertRaisesRegex(RuntimeError, "maximum 5%"):
-                            fetch.main()
-                        self.assertEqual(output.read_text(), '{"profiles": []}')
-                    else:
-                        fetch.main()
-                        self.assertEqual(json.loads(output.read_text())["accounts"], 800)
+    def test_single_unrestored_stats_failure_preserves_profiles(self):
+        rows = self.leaderboard_rows()
+        failed = rows[0]["user_id"]
+        calls = []
 
-    def test_one_user_stats_failure_warns(self):
-        rows = [
-            {"user_id": f"0x{i:040x}", "user_name": f"user{i}", "pnl": 800 - i}
-            for i in range(800)
-        ]
-        stats = [None] + [{"trades": 1, "largest_win": 2}] * 799
+        def stats(wallet):
+            calls.append(wallet)
+            return None if wallet == failed else {"trades": 1, "largest_win": 2}
+
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "profiles.json"
+            output.write_text('{"profiles": []}')
+            with patch.object(fetch, "OUTPUT_FILE", output), \
+                    patch.object(fetch, "fetch_leaderboard", return_value=rows), \
+                    patch.object(fetch, "fetch_user_stats", side_effect=stats), \
+                    patch.object(fetch, "fetch_capital", side_effect=AssertionError("Dune must not run")), \
+                    patch.object(fetch.time, "sleep"), \
+                    patch.object(sys, "argv", ["fetch.py"]), redirect_stdout(io.StringIO()):
+                with self.assertRaisesRegex(RuntimeError, "1/800"):
+                    fetch.main()
+            self.assertEqual(calls.count(failed), 3)
+            self.assertEqual(output.read_text(), '{"profiles": []}')
+
+    def test_transient_stats_failure_is_retried(self):
+        rows = self.leaderboard_rows()
+        failed = rows[0]["user_id"]
+        calls = []
+
+        def stats(wallet):
+            calls.append(wallet)
+            if wallet == failed and calls.count(wallet) == 1:
+                return None
+            return {"trades": 1, "largest_win": 2}
+
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "profiles.json"
+            with patch.object(fetch, "OUTPUT_FILE", output), \
+                    patch.object(fetch, "fetch_leaderboard", return_value=rows), \
+                    patch.object(fetch, "fetch_user_stats", side_effect=stats), \
+                    patch.object(fetch, "fetch_capital", return_value=self.capital_for(rows)), \
+                    patch.object(fetch.time, "sleep") as sleep, \
+                    patch.object(sys, "argv", ["fetch.py"]), redirect_stdout(io.StringIO()):
+                fetch.main()
+            self.assertEqual(calls.count(failed), 2)
+            sleep.assert_any_call(fetch.REQUEST_DELAY)
+            self.assertEqual(json.loads(output.read_text())["profiles"][0]["largest_win"], 2)
+
+    def test_failed_stats_restores_previous_complete_values(self):
+        rows = self.leaderboard_rows()
+        failed = rows[0]["user_id"]
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "profiles.json"
             output.write_text(json.dumps({"profiles": [{"wallet": rows[0]["user_id"],
@@ -339,16 +479,33 @@ class RefreshTests(unittest.TestCase):
             printed = io.StringIO()
             with patch.object(fetch, "OUTPUT_FILE", output), \
                     patch.object(fetch, "fetch_leaderboard", return_value=rows), \
-                    patch.object(fetch, "fetch_user_stats", side_effect=stats), \
-                    patch.object(fetch, "fetch_capital", return_value={}), \
+                    patch.object(fetch, "fetch_user_stats", side_effect=lambda wallet: None if wallet == failed else {"trades": 1, "largest_win": 2}) as stats, \
+                    patch.object(fetch, "fetch_capital", return_value=self.capital_for(rows)), \
                     patch.object(fetch.time, "sleep"), \
                     patch.object(sys, "argv", ["fetch.py"]), redirect_stdout(printed):
                 fetch.main()
+            self.assertEqual(sum(call.args[0] == failed for call in stats.call_args_list), 3)
             fresh = json.loads(output.read_text())
             self.assertEqual(fresh["accounts"], 800)
             self.assertEqual(fresh["profiles"][0]["trades"], 91)
             self.assertEqual(fresh["profiles"][0]["largest_win"], 1234)
-            self.assertIn("::warning title=User stats fetch failure::1/800", printed.getvalue())
+
+    def test_incomplete_previous_stats_refuse_restore(self):
+        rows = self.leaderboard_rows()
+        failed = rows[0]["user_id"]
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "profiles.json"
+            previous = json.dumps({"profiles": [{"wallet": failed, "trades": 91, "largest_win": None}]})
+            output.write_text(previous)
+            with patch.object(fetch, "OUTPUT_FILE", output), \
+                    patch.object(fetch, "fetch_leaderboard", return_value=rows), \
+                    patch.object(fetch, "fetch_user_stats", side_effect=lambda wallet: None if wallet == failed else {"trades": 1, "largest_win": 2}), \
+                    patch.object(fetch, "fetch_capital", side_effect=AssertionError("Dune must not run")), \
+                    patch.object(fetch.time, "sleep"), \
+                    patch.object(sys, "argv", ["fetch.py"]), redirect_stdout(io.StringIO()):
+                with self.assertRaisesRegex(RuntimeError, "Cannot preserve failed user stats"):
+                    fetch.main()
+            self.assertEqual(output.read_text(), previous)
 
 
 if __name__ == "__main__":

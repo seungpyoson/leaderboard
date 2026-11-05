@@ -30,7 +30,8 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 OUTPUT_FILE = REPO_ROOT / "data" / "profiles.json"
 
 USER_STATS_URL = "https://data-api.polymarket.com/v2/user-stats"
-MAX_USER_STATS_FAILURE_FRACTION = 0.05
+USER_STATS_MAX_ATTEMPTS = 3
+MIN_CAPITAL_COVERAGE = 0.99
 
 
 def fetch_user_stats(wallet: str) -> dict | None:
@@ -52,7 +53,7 @@ def fetch_user_stats(wallet: str) -> dict | None:
             return None
         raw_win = data.get("biggest_win")
         largest_win = to_float(raw_win)
-        if raw_win is not None and largest_win is None:
+        if largest_win is None:
             return None
         return {
             "trades": data["trades"],
@@ -124,23 +125,21 @@ def main():
     print(f"\nFetching user stats for {len(results)} traders...")
     failed_wallets = set()
     for i, r in enumerate(results):
-        stats = fetch_user_stats(r["wallet"])
+        stats = None
+        for attempt in range(USER_STATS_MAX_ATTEMPTS):
+            stats = fetch_user_stats(r["wallet"])
+            if stats is not None:
+                break
+            if attempt + 1 < USER_STATS_MAX_ATTEMPTS:
+                time.sleep(REQUEST_DELAY)
         if stats is None:
             failed_wallets.add(r["wallet"].lower())
-            if len(failed_wallets) / len(results) > MAX_USER_STATS_FAILURE_FRACTION:
-                print(f"::warning title=User stats fetch failure::{len(failed_wallets)}/{len(results)} wallets failed user-stats enrichment")
-                raise RuntimeError(
-                    f"User stats fetch failed for {len(failed_wallets)}/{len(results)} wallets "
-                    f"(maximum {MAX_USER_STATS_FAILURE_FRACTION:.0%}); profiles.json preserved"
-                )
         else:
             r["trades"] = stats["trades"]
             r["largest_win"] = stats["largest_win"]
         if (i + 1) % 50 == 0:
             print(f"  Stats: {i + 1}/{len(results)}")
         time.sleep(REQUEST_DELAY)
-    if failed_wallets:
-        print(f"::warning title=User stats fetch failure::{len(failed_wallets)}/{len(results)} wallets failed user-stats enrichment")
     if failed_wallets and OUTPUT_FILE.exists():
         try:
             previous = json.loads(OUTPUT_FILE.read_text())
@@ -156,8 +155,16 @@ def main():
         for r in results:
             if r["wallet"].lower() in failed_wallets and r["wallet"].lower() in old_by_wallet:
                 old = old_by_wallet[r["wallet"].lower()]
+                if type(old.get("trades")) is not int or old["trades"] < 0 or to_float(old.get("largest_win")) is None:
+                    raise RuntimeError(f"Cannot preserve failed user stats for {r['wallet']}: previous values incomplete")
                 r["trades"] = old.get("trades")
                 r["largest_win"] = old.get("largest_win")
+    unrestored = [r for r in results if r["trades"] is None or r["largest_win"] is None]
+    if unrestored:
+        raise RuntimeError(
+            f"User stats fetch failed for {len(unrestored)}/{len(results)} wallets after "
+            f"{USER_STATS_MAX_ATTEMPTS} attempts; profiles.json preserved"
+        )
     print(f"  Stats: done")
 
     # --- Phase 3: Dune capital data ---
@@ -183,9 +190,12 @@ def main():
             if net_cap >= 5000 and r["pnl"] is not None:
                 r["roic"] = r["pnl"] / net_cap * 100
 
-    missing_capital = sum(r["net_capital"] is None for r in results)
-    if missing_capital:
-        print(f"::warning title=Capital enrichment missing::{missing_capital}/{len(results)} profiles lack net_capital; inspect the Dune messages above")
+    capital_count = sum(r["net_capital"] is not None for r in results)
+    if capital_count / len(results) < MIN_CAPITAL_COVERAGE:
+        raise RuntimeError(
+            f"Capital enrichment coverage {capital_count}/{len(results)} below "
+            f"{MIN_CAPITAL_COVERAGE:.0%}; profiles.json preserved"
+        )
 
     # --- Output ---
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
