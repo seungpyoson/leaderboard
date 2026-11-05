@@ -52,6 +52,21 @@ class DuneRow:
 
 
 @dataclass(frozen=True)
+class DuneExecution:
+    execution_id: str
+
+
+@dataclass(frozen=True)
+class DuneStatus:
+    state: str
+
+
+@dataclass(frozen=True)
+class DuneError:
+    message: str
+
+
+@dataclass(frozen=True)
 class Candidate:
     wallet: str
     status: str
@@ -398,9 +413,13 @@ def goldsky_page(body) -> list[GoldskyFill]:
         for key in ("id", "timestamp", "makerAssetId", "takerAssetId",
                     "makerAmountFilled", "takerAmountFilled"):
             value = _field(row, key, "str", label)
+            if key == "id" and not value:
+                raise ValueError(f"{label}.id must be nonempty")
             if key != "id" and not value.isdecimal():
                 raise ValueError(f"{label}.{key} must be decimal text")
             if key in ("makerAmountFilled", "takerAmountFilled"):
+                if int(value) == 0:
+                    raise ValueError(f"{label}.{key} must be positive")
                 try:
                     finite = math.isfinite(float(value))
                 except (ValueError, OverflowError):
@@ -635,6 +654,8 @@ def s3_fill(raw) -> S3Fill:
             raise ValueError(f"S3 fill {label} must be finite numeric")
         if value < 0 or (label == "price" and value > 1):
             raise ValueError(f"S3 fill {label} is outside its domain")
+        if label in ("usd_amount", "token_amount") and value == 0:
+            raise ValueError(f"S3 fill {label} must be positive")
     if type(asset_id) is not str or not asset_id.isdecimal():
         raise ValueError("S3 fill asset_id must be decimal text")
     return S3Fill(
@@ -653,21 +674,25 @@ def load_user_stats_response(response, wallet: str) -> Optional[UserStats]:
     return user_stats(response.json(), wallet)
 
 
-def load_dune_execution_response(response) -> str:
-    return dune_execution(response.json())
+def load_dune_execution_response(response) -> DuneExecution:
+    return DuneExecution(execution_id=dune_execution(response.json()))
 
 
-def load_dune_status_response(response, api_key: str) -> tuple[str, str]:
+def load_dune_status_response(response, api_key: str) -> tuple[DuneStatus, DuneError]:
     body = response.json()
-    return dune_status(body), str(body).replace(api_key, "[REDACTED]")
+    return DuneStatus(state=dune_status(body)), DuneError(
+        message=str(body).replace(api_key, "[REDACTED]")
+    )
 
 
 def load_dune_results_response(response) -> list[DuneRow]:
     return dune_results(response.json())
 
 
-def load_dune_error_response(response, api_key: str) -> str:
-    return dune_error_text(response.text, api_key)
+def load_dune_error_response(response, api_key: str) -> DuneError:
+    if not hasattr(response, "text"):
+        raise ValueError("Dune error.text is required")
+    return DuneError(message=dune_error_text(response.text, api_key))
 
 
 def load_goldsky_response(response) -> list[GoldskyFill]:
@@ -699,7 +724,7 @@ def load_candidates(path: Path) -> CandidateDocument:
     return CandidateDocument(updated=updated, candidates=tuple(candidates_snapshot(body)))
 
 
-def load_goldsky_state(path: Path):
+def load_goldsky_state(path: Path) -> GoldskyState:
     return goldsky_state(json.loads(path.read_text()))
 
 

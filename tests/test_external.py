@@ -1,10 +1,15 @@
 """Class-wide required-field and source-boundary checks."""
 
 import copy
-from dataclasses import FrozenInstanceError, is_dataclass
+from dataclasses import MISSING, FrozenInstanceError, fields, is_dataclass
+import inspect
+import json
 import sys
+import tempfile
+from types import SimpleNamespace
 import unittest
 from pathlib import Path
+from typing import Union, get_args, get_origin, get_type_hints
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scraper"))
@@ -12,6 +17,33 @@ sys.path.insert(0, str(ROOT / "scraper"))
 import external
 
 WALLET = "0x" + "a" * 40
+
+
+class Response:
+    def __init__(self, body):
+        self.body = body
+
+    def json(self):
+        return self.body
+
+
+def load_candidate_fixture(body):
+    with tempfile.TemporaryDirectory() as directory:
+        path = Path(directory) / "candidates.json"
+        path.write_text(json.dumps(body))
+        return external.load_candidates(path)
+
+
+def contains_record(value, record_type):
+    if isinstance(value, record_type):
+        return True
+    if is_dataclass(value):
+        return any(contains_record(getattr(value, field.name), record_type) for field in fields(value))
+    if isinstance(value, dict) or hasattr(value, "values"):
+        return any(contains_record(item, record_type) for item in value.values())
+    if isinstance(value, (list, tuple)):
+        return any(contains_record(item, record_type) for item in value)
+    return False
 
 
 class ExternalBoundaryTests(unittest.TestCase):
@@ -61,105 +93,145 @@ class ExternalBoundaryTests(unittest.TestCase):
             with self.subTest(index=index, value=value), self.assertRaises(ValueError):
                 external.s3_fill(bad)
 
-    def test_every_required_source_field_rejects_absence_or_wrong_type(self):
+    def test_required_record_fields_refuse_missing_or_corrupt_source(self):
         board = {"rank": 1, "user_id": WALLET, "pnl": 0, "volume": 0,
                  "user_name": "", "profile_image": "", "x_username": "", "verified": False}
-        account = {"wallet": WALLET, "name": "user", "profile_url": "https://polymarket.com/@user"}
+        leaderboard = {"data": [board], "pagination": {"limit": 1, "offset": 0,
+                       "has_more": False}}
+        candidate = {"wallet": WALLET, "status": "pending", "pnl": 0}
         state_account = {"wallet": WALLET, "maker_last_id": "", "taker_last_id": "",
                          "fills": {"total": 0, "maker": 0, "taker": 0}, "day_bounds": {},
-                         "positions": {}, "aggregates": {"first_trade": None, "last_trade": None,
+                         "positions": {"1": {"net_shares": 1, "cost_basis": 1,
+                                             "fill_count": 1}},
+                         "aggregates": {"first_trade": None, "last_trade": None,
                          "total_volume": 0, "total_profit": 0, "total_loss": 0,
                          "wins": 0, "losses": 0, "welford_n": 0, "welford_mean": 0,
                          "welford_m2": 0, "top_markets": {}}}
-        cases = [
-            ("leaderboard", external.leaderboard_page,
-             {"data": [board], "pagination": {"limit": 1, "offset": 0,
-              "has_more": False, "next_cursor": None}},
-             [("data",), ("pagination",)] + [("data", 0, key) for key in board]
-             + [("pagination", key) for key in ("limit", "offset", "has_more")]),
-            ("user stats", lambda data: external.user_stats(data, WALLET),
-             {"data": {"proxy_wallet": WALLET, "trades": 0, "biggest_win": 0, "views": 0}},
-             [("data",)] + [("data", key) for key in ("proxy_wallet", "trades", "biggest_win", "views")]),
-            ("Dune execution", external.dune_execution, {"execution_id": "id"}, [("execution_id",)]),
-            ("Dune status", external.dune_status, {"state": "QUERY_STATE_COMPLETED"}, [("state",)]),
-            ("Dune results", external.dune_results,
-             {"result": {"rows": [{"wallet": WALLET, "first_seen": "2026-01-01",
-                                   "total_received": 0, "total_sent": 0, "net_capital": 0}]}},
-             [("result",), ("result", "rows")]
-             + [("result", "rows", 0, key) for key in ("wallet", "first_seen", "total_received", "total_sent", "net_capital")]),
-            ("candidates", external.candidates_snapshot,
-             {"candidates": [{"wallet": WALLET, "status": "pending", "pnl": 0}]},
-             [("candidates",)] + [("candidates", 0, key) for key in ("wallet", "status", "pnl")]),
-            ("accounts", external.accounts_snapshot, [account],
-             [(0, key) for key in ("wallet", "name", "profile_url")]),
-            ("Goldsky fill", external.goldsky_page,
-             {"data": {"orderFilledEvents": [{"id": "1", "timestamp": "1", "maker": WALLET,
-              "taker": WALLET, "makerAssetId": "0", "takerAssetId": "1",
-              "makerAmountFilled": "0", "takerAmountFilled": "0"}]}},
-             [("data",), ("data", "orderFilledEvents")]
-             + [("data", "orderFilledEvents", 0, key) for key in ("id", "timestamp", "maker", "taker",
-               "makerAssetId", "takerAssetId", "makerAmountFilled", "takerAmountFilled")]),
-            ("Gamma market", lambda data: external.gamma_market(data, require_end_date=True),
-             {"outcomePrices": '["0", "1"]', "clobTokenIds": '["1", "2"]', "endDate": "2026-01-01"},
-             [(key,) for key in ("outcomePrices", "clobTokenIds", "endDate")]),
-            ("Goldsky state", external.goldsky_state,
-             {"accounts": {"user": state_account}, "resolution_cache": {"1": {
-              "payout": 0, "cached_at": "2026-01-01", "question": ""}}},
-             [("accounts",), ("resolution_cache",)]
-             + [("accounts", "user", key) for key in ("wallet", "maker_last_id", "taker_last_id",
-               "fills", "day_bounds", "positions", "aggregates")]
-             + [("accounts", "user", "fills", key) for key in ("total", "maker", "taker")]
-             + [("accounts", "user", "aggregates", key) for key in ("total_volume", "total_profit",
-                "total_loss", "wins", "losses", "welford_n", "welford_mean", "welford_m2", "top_markets")]
-             + [("resolution_cache", "1", key) for key in ("payout", "cached_at")]),
-            ("profile page", external.profile_queries,
-             {"props": {"pageProps": {"dehydratedState": {"queries": [
-              {"queryKey": ["user-stats"], "state": {"data": {"trades": 0}}}
-             ]}}}},
-             [("props",), ("props", "pageProps"), ("props", "pageProps", "dehydratedState"),
-              ("props", "pageProps", "dehydratedState", "queries"),
-              ("props", "pageProps", "dehydratedState", "queries", 0, "queryKey"),
-              ("props", "pageProps", "dehydratedState", "queries", 0, "state")]),
-            ("S3 fill", external.s3_fill,
-             [WALLET, "maker", "BUY", 0, 0, 0, "1", 0],
-             [(i,) for i in range(8)]),
-        ]
-        for source, parse, valid, fields in cases:
-            parsed = parse(copy.deepcopy(valid))
-            records = {
-                "leaderboard": lambda value: [value[0][0], value[1]],
-                "user stats": lambda value: [value],
-                "Dune results": lambda value: value,
-                "candidates": lambda value: value,
-                "accounts": lambda value: value,
-                "Goldsky fill": lambda value: value,
-                "Gamma market": lambda value: [value],
-                "Goldsky state": lambda value: [value, next(iter(value.accounts.values()))],
-                "profile page": lambda value: [value],
-                "S3 fill": lambda value: [value],
-            }
-            if source in records:
-                for record in records[source](parsed):
-                    self.assertTrue(is_dataclass(record), source)
-                    self.assertFalse(hasattr(record, "get"), source)
-            for path in fields:
+        state = {"accounts": {"user": state_account},
+                 "resolution_cache": {"1": {"payout": 0, "cached_at": "2026-01-01"}}}
+        fill = {"id": "1", "timestamp": "1", "maker": WALLET, "taker": WALLET,
+                "makerAssetId": "0", "takerAssetId": "1",
+                "makerAmountFilled": "1", "takerAmountFilled": "1"}
+        # Each case supplies a valid source fixture and the location of its record.
+        # The required field names themselves come only from dataclasses.fields.
+        cases = {
+            external.LeaderboardRow: (external.leaderboard_page, leaderboard, ("data", 0), {}),
+            external.Pagination: (external.leaderboard_page, leaderboard, ("pagination",), {}),
+            external.UserStats: (lambda body: external.user_stats(body, WALLET),
+                {"data": {"proxy_wallet": WALLET, "trades": 0, "biggest_win": 0,
+                          "views": 0}}, ("data",), {"largest_win": "biggest_win"}),
+            external.DuneRow: (external.dune_results,
+                {"result": {"rows": [{"wallet": WALLET, "first_seen": "2026-01-01",
+                                      "total_received": 0, "total_sent": 0, "net_capital": 0}]}},
+                ("result", "rows", 0), {}),
+            external.DuneExecution: (lambda body: external.load_dune_execution_response(Response(body)),
+                {"execution_id": "id"}, (), {}),
+            external.DuneStatus: (lambda body: external.load_dune_status_response(Response(body), "secret"),
+                {"state": "QUERY_STATE_COMPLETED"}, (), {}),
+            external.DuneError: (lambda body: external.load_dune_error_response(
+                SimpleNamespace(**body), "secret"), {"text": "error"}, (),
+                {"message": "text"}),
+            external.Candidate: (external.candidates_snapshot,
+                {"candidates": [candidate]}, ("candidates", 0), {}),
+            external.Account: (external.accounts_snapshot,
+                [{"wallet": WALLET, "name": "user", "profile_url": "https://polymarket.com/@user"}],
+                (0,), {}),
+            external.GoldskyFill: (external.goldsky_page,
+                {"data": {"orderFilledEvents": [fill]}}, ("data", "orderFilledEvents", 0), {}),
+            external.GammaMarket: (external.gamma_market,
+                {"outcomePrices": '["0", "1"]', "clobTokenIds": '["1", "2"]'}, (),
+                {"prices": "outcomePrices", "clob_ids": "clobTokenIds"}),
+            external.ProfileQueries: (external.profile_queries,
+                {"props": {"pageProps": {"dehydratedState": {"queries": []}}}}, (), {}),
+            external.S3Fill: (external.s3_fill,
+                [WALLET, "maker", "BUY", 0.5, 1, 2, "1", 1], (),
+                {field.name: index for index, field in enumerate(fields(external.S3Fill))}),
+            external.CandidateDocument: (load_candidate_fixture,
+                {"candidates": [candidate]}, (), {}),
+            external.StateFills: (external.goldsky_state, state,
+                ("accounts", "user", "fills"), {}),
+            external.StatePosition: (external.goldsky_state, state,
+                ("accounts", "user", "positions", "1"), {}),
+            external.StateAggregates: (external.goldsky_state, state,
+                ("accounts", "user", "aggregates"), {}),
+            external.StateAccount: (external.goldsky_state, state,
+                ("accounts", "user"), {}),
+            external.StateCacheEntry: (external.goldsky_state, state,
+                ("resolution_cache", "1"), {}),
+            external.GoldskyState: (external.goldsky_state, state, (), {}),
+        }
+        record_types = {cls for _, cls in inspect.getmembers(external, inspect.isclass)
+                        if cls.__module__ == external.__name__ and is_dataclass(cls)}
+        self.assertEqual(set(cases), record_types, "every external record needs a source fixture")
+        for record_type, (parse, valid, base, aliases) in cases.items():
+            with self.subTest(record=record_type.__name__, mutation="valid"):
+                self.assertTrue(contains_record(parse(copy.deepcopy(valid)), record_type))
+            hints = get_type_hints(record_type)
+            required = [field for field in fields(record_type)
+                        if type(None) not in get_args(hints[field.name])]
+            for field in required:
+                self.assertIs(field.default, MISSING,
+                              f"required field has a default: {record_type.__name__}.{field.name}")
+                self.assertIs(field.default_factory, MISSING,
+                              f"required field has a default factory: {record_type.__name__}.{field.name}")
+                path = base + (aliases.get(field.name, field.name),)
+                target = valid
+                for part in path[:-1]:
+                    target = target[part]
+                key = path[-1]
+                self.assertTrue((isinstance(target, list) and isinstance(key, int) and
+                                 0 <= key < len(target)) or
+                                (isinstance(target, dict) and key in target),
+                                f"fixture lacks required source field {record_type.__name__}.{field.name}")
                 for mutation in ("drop", "corrupt"):
-                    with self.subTest(source=source, field=path, mutation=mutation):
-                        data = copy.deepcopy(valid)
-                        target = data
+                    with self.subTest(record=record_type.__name__, field=field.name,
+                                      mutation=mutation):
+                        body = copy.deepcopy(valid)
+                        target = body
                         for part in path[:-1]:
                             target = target[part]
-                        key = path[-1]
                         if mutation == "drop":
                             del target[key]
-                            if source == "Gamma market":
-                                self.assertIsNone(parse(data))
-                                continue
                         else:
                             value = target[key]
-                            target[key] = "bad" if type(value) in (int, float, bool) else 7
-                        with self.assertRaises(ValueError):
-                            parse(data)
+                            target[key] = 7 if isinstance(value, (str, dict, list)) else "bad"
+                        if record_type is external.GammaMarket and mutation == "drop":
+                            self.assertIsNone(parse(body))
+                        else:
+                            with self.assertRaises(ValueError):
+                                parse(body)
+
+    def test_every_loader_annotation_contains_only_records(self):
+        def record_annotation(annotation):
+            if annotation is type(None):
+                return True
+            origin = get_origin(annotation)
+            if origin in (list, tuple, Union):
+                return all(record_annotation(arg) for arg in get_args(annotation)
+                           if arg is not Ellipsis)
+            return isinstance(annotation, type) and is_dataclass(annotation)
+
+        loaders = [(name, fn) for name, fn in inspect.getmembers(external, inspect.isfunction)
+                   if name.startswith("load_")]
+        self.assertTrue(loaders)
+        for name, loader in loaders:
+            with self.subTest(loader=name):
+                self.assertIn("return", get_type_hints(loader))
+                self.assertTrue(record_annotation(get_type_hints(loader)["return"]))
+
+    def test_fill_producer_domain_rejects_zero_amount_and_empty_id(self):
+        event = {"id": "event", "timestamp": "1", "maker": WALLET, "taker": WALLET,
+                 "makerAssetId": "0", "takerAssetId": "1",
+                 "makerAmountFilled": "1", "takerAmountFilled": "1"}
+        for key in ("id", "makerAmountFilled", "takerAmountFilled"):
+            bad = dict(event, **{key: "" if key == "id" else "0"})
+            with self.subTest(source="Goldsky", field=key), self.assertRaisesRegex(ValueError, key):
+                external.goldsky_page({"data": {"orderFilledEvents": [bad]}})
+        for index in (4, 5):
+            row = [WALLET, "maker", "BUY", 0.5, 1, 2, "1", 1]
+            row[index] = 0
+            with self.subTest(source="S3", index=index), self.assertRaises(ValueError):
+                external.s3_fill(row)
 
     def test_optional_missing_is_none_and_real_zero_is_zero(self):
         stats = external.user_stats({"data": {"proxy_wallet": WALLET, "trades": 0,

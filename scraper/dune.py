@@ -113,8 +113,8 @@ def _check_response(resp: requests.Response, api_key: str) -> None:
     try:
         resp.raise_for_status()
     except requests.HTTPError:
-        body = load_dune_error_response(resp, api_key)
-        raise RuntimeError(f"Dune HTTP {resp.status_code}: {body}") from None
+        error = load_dune_error_response(resp, api_key)
+        raise RuntimeError(f"Dune HTTP {resp.status_code}: {error.message}") from None
 
 
 def _execute_sql(api_key: str, sql: str) -> str:
@@ -126,7 +126,7 @@ def _execute_sql(api_key: str, sql: str) -> str:
         timeout=30,
     )
     _check_response(resp, api_key)
-    return load_dune_execution_response(resp)
+    return load_dune_execution_response(resp).execution_id
 
 
 def _poll_results(api_key: str, execution_id: str) -> list[DuneRow]:
@@ -139,7 +139,8 @@ def _poll_results(api_key: str, execution_id: str) -> list[DuneRow]:
             timeout=15,
         )
         _check_response(resp, api_key)
-        state, status_text = load_dune_status_response(resp, api_key)
+        status, detail = load_dune_status_response(resp, api_key)
+        state = status.state
 
         if state == "QUERY_STATE_COMPLETED":
             results = requests.get(
@@ -151,7 +152,7 @@ def _poll_results(api_key: str, execution_id: str) -> list[DuneRow]:
             return load_dune_results_response(results)
 
         if state in ("QUERY_STATE_FAILED", "QUERY_STATE_CANCELLED"):
-            raise RuntimeError(f"Dune query {state}: {status_text}")
+            raise RuntimeError(f"Dune query {state}: {detail.message}")
 
         time.sleep(POLL_INTERVAL)
 
