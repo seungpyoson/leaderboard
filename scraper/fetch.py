@@ -2,15 +2,15 @@
 """Fetch top crypto traders from Polymarket leaderboard API + enrichment.
 
 Pipeline:
-  1. Leaderboard API → PnL, volume, efficiency (crypto-category)
-  2. User-stats API → trades, largestWin (all-market — caveat in UI)
+  1. Leaderboard API → PnL (crypto-category; v2 volume is shares, not USDC)
+  2. User-stats API → markets traded, biggest win (all-market)
   3. Dune SQL → USDC net capital flows on Polygon (received - sent)
-  4. Derived: ROIC (PnL / net capital), style tag (efficiency > 10% → DIR)
+  4. Derived: ROIC (PnL / net capital)
 
 Outputs data/profiles.json for the static frontend.
 
 Usage:
-    python3 scraper/fetch.py [--limit 100]
+    python3 scraper/fetch.py [--limit 800]
 """
 
 from __future__ import annotations
@@ -23,106 +23,69 @@ from pathlib import Path
 
 import requests
 
-from common import REQUEST_DELAY, SESSION, fmt_money, fmt_pct, to_float
+from common import MIN_LEADERBOARD_COUNT, REQUEST_DELAY, SESSION, atomic_write, fetch_leaderboard, fmt_money, fmt_pct, to_float
 from dune import fetch_capital
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 OUTPUT_FILE = REPO_ROOT / "data" / "profiles.json"
 
-LEADERBOARD_URL = "https://data-api.polymarket.com/v1/leaderboard"
-USER_STATS_URL = "https://data-api.polymarket.com/v1/user-stats"
-PAGE_SIZE = 50  # API max per request
+USER_STATS_URL = "https://data-api.polymarket.com/v2/user-stats"
+USER_STATS_MAX_ATTEMPTS = 3
+# 136 past good snapshots had capital coverage from 0.9762 upward.
+MIN_CAPITAL_COVERAGE = 0.97
 
 
-def fetch_leaderboard(limit: int) -> list[dict]:
-    """Paginate the crypto leaderboard API. Returns up to `limit` traders."""
-    all_traders = []
-    pages_needed = (limit + PAGE_SIZE - 1) // PAGE_SIZE
-
-    for page in range(pages_needed):
-        offset = page * PAGE_SIZE
-        remaining = limit - len(all_traders)
-        batch_size = min(PAGE_SIZE, remaining)
-
-        try:
-            resp = SESSION.get(
-                LEADERBOARD_URL,
-                params={
-                    "category": "CRYPTO",
-                    "timePeriod": "ALL",
-                    "orderBy": "PNL",
-                    "limit": batch_size,
-                    "offset": offset,
-                },
-                timeout=15,
-            )
-        except requests.RequestException as e:
-            print(f"  ERROR: page {page}: {e}")
-            break
-
-        if resp.status_code != 200:
-            print(f"  WARN: page {page} HTTP {resp.status_code}")
-            break
-
-        try:
-            traders = resp.json()
-        except json.JSONDecodeError:
-            print(f"  ERROR: page {page} invalid JSON")
-            break
-
-        if not isinstance(traders, list) or not traders:
-            break
-
-        all_traders.extend(traders)
-
-        if len(traders) < batch_size:
-            break  # last page
-
-        if page < pages_needed - 1:
-            time.sleep(REQUEST_DELAY)
-
-    return all_traders
-
-
-def fetch_user_stats(wallet: str) -> dict:
+def fetch_user_stats(wallet: str) -> dict | None:
     """Fetch per-user stats (all-market, not crypto-filtered).
 
-    Returns: {"trades": int|None, "largest_win": float|None}
+    Returns None when the request or response fails.
     """
     try:
         resp = SESSION.get(
             USER_STATS_URL,
-            params={"proxyAddress": wallet},
+            params={"user": wallet},
             timeout=10,
         )
         if resp.status_code != 200:
-            return {"trades": None, "largest_win": None}
-        data = resp.json()
+            return None
+        body = resp.json()
+        data = body.get("data") if isinstance(body, dict) else None
+        if not isinstance(data, dict) or type(data.get("trades")) is not int or data["trades"] < 0:
+            return None
+        raw_win = data.get("biggest_win")
+        largest_win = to_float(raw_win)
+        if largest_win is None:
+            return None
         return {
-            "trades": data.get("trades"),
-            "largest_win": to_float(data.get("largestWin")),
+            "trades": data["trades"],
+            "largest_win": largest_win,
         }
     except (requests.RequestException, json.JSONDecodeError):
-        return {"trades": None, "largest_win": None}
+        return None
 
 
 def main():
     parser = argparse.ArgumentParser(description="Fetch crypto leaderboard")
-    parser.add_argument("--limit", type=int, default=800, help="Number of traders (default: 800)")
+    parser.add_argument("--limit", type=int, default=MIN_LEADERBOARD_COUNT, help="Number of traders (default: 800)")
     args = parser.parse_args()
+    if args.limit < MIN_LEADERBOARD_COUNT:
+        parser.error(f"--limit must be at least {MIN_LEADERBOARD_COUNT} for tracked output")
 
     # --- Phase 1: Leaderboard (crypto-category) ---
     print(f"Fetching top {args.limit} crypto traders from Polymarket leaderboard API")
     traders = fetch_leaderboard(args.limit)
     print(f"  Got {len(traders)} traders")
+    if len(traders) < args.limit:
+        raise SystemExit(f"ERROR: short leaderboard fetch: {len(traders)}/{args.limit}; profiles.json preserved")
 
     results = []
     for t in traders:
         pnl = t.get("pnl")
-        volume = t.get("vol")
-        efficiency = (pnl / volume * 100) if (pnl is not None and volume and volume > 0) else None
-        raw_username = t.get("userName") or ""
-        wallet = t.get("proxyWallet", "")
+        # v2 volume is shares, not USDC; the existing volume and efficiency
+        # columns require USDC and therefore cannot use it.
+        volume = efficiency = style = None
+        raw_username = t.get("user_name") or ""
+        wallet = t["user_id"]
 
         # API returns "0xABC...-1772168966873" (wallet + epoch-ms) for users
         # without a display name — strip the timestamp suffix
@@ -135,12 +98,6 @@ def main():
             profile_url = f"https://polymarket.com/@{username}"
         else:
             profile_url = f"https://polymarket.com/@{wallet}"
-
-        # Style tag: >10% efficiency → directional, ≤10% → HFT/market-maker
-        if efficiency is not None:
-            style = "DIR" if efficiency > 10 else "HFT/MM"
-        else:
-            style = None
 
         results.append({
             "name": username,
@@ -160,18 +117,55 @@ def main():
             "roic": None,
         })
 
+    print("::warning title=Volume unavailable::Polymarket v2 board reports shares, not USDC; volume and efficiency are unavailable")
+
     # Already sorted by PnL from API, but ensure it
     results.sort(key=lambda r: r["pnl"] if r["pnl"] is not None else float("-inf"), reverse=True)
 
     # --- Phase 2: User stats (all-market) ---
     print(f"\nFetching user stats for {len(results)} traders...")
+    failed_wallets = set()
     for i, r in enumerate(results):
-        stats = fetch_user_stats(r["wallet"])
-        r["trades"] = stats["trades"]
-        r["largest_win"] = stats["largest_win"]
+        stats = None
+        for attempt in range(USER_STATS_MAX_ATTEMPTS):
+            stats = fetch_user_stats(r["wallet"])
+            if stats is not None:
+                break
+            if attempt + 1 < USER_STATS_MAX_ATTEMPTS:
+                time.sleep(REQUEST_DELAY)
+        if stats is None:
+            failed_wallets.add(r["wallet"].lower())
+        else:
+            r["trades"] = stats["trades"]
+            r["largest_win"] = stats["largest_win"]
         if (i + 1) % 50 == 0:
             print(f"  Stats: {i + 1}/{len(results)}")
         time.sleep(REQUEST_DELAY)
+    if failed_wallets and OUTPUT_FILE.exists():
+        try:
+            previous = json.loads(OUTPUT_FILE.read_text())
+            old_profiles = previous["profiles"]
+            if not isinstance(old_profiles, list) or any(
+                not isinstance(row, dict) or not isinstance(row.get("wallet"), str)
+                for row in old_profiles
+            ):
+                raise ValueError("invalid profiles array")
+        except (OSError, UnicodeError, ValueError, KeyError, TypeError) as exc:
+            raise RuntimeError(f"Cannot preserve failed user stats from {OUTPUT_FILE}: {exc}") from exc
+        old_by_wallet = {row["wallet"].lower(): row for row in old_profiles}
+        for r in results:
+            if r["wallet"].lower() in failed_wallets and r["wallet"].lower() in old_by_wallet:
+                old = old_by_wallet[r["wallet"].lower()]
+                if type(old.get("trades")) is not int or old["trades"] < 0 or to_float(old.get("largest_win")) is None:
+                    raise RuntimeError(f"Cannot preserve failed user stats for {r['wallet']}: previous values incomplete")
+                r["trades"] = old.get("trades")
+                r["largest_win"] = old.get("largest_win")
+    unrestored = [r for r in results if r["trades"] is None or r["largest_win"] is None]
+    if unrestored:
+        raise RuntimeError(
+            f"User stats fetch failed for {len(unrestored)}/{len(results)} wallets after "
+            f"{USER_STATS_MAX_ATTEMPTS} attempts; profiles.json preserved"
+        )
     print(f"  Stats: done")
 
     # --- Phase 3: Dune capital data ---
@@ -197,6 +191,13 @@ def main():
             if net_cap >= 5000 and r["pnl"] is not None:
                 r["roic"] = r["pnl"] / net_cap * 100
 
+    capital_count = sum(r["net_capital"] is not None for r in results)
+    if capital_count / len(results) < MIN_CAPITAL_COVERAGE:
+        raise RuntimeError(
+            f"Capital enrichment coverage {capital_count}/{len(results)} below "
+            f"{MIN_CAPITAL_COVERAGE:.0%}; profiles.json preserved"
+        )
+
     # --- Output ---
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
     output = {
@@ -204,7 +205,7 @@ def main():
         "accounts": len(results),
         "profiles": results,
     }
-    OUTPUT_FILE.write_text(json.dumps(output, indent=2))
+    atomic_write(OUTPUT_FILE, json.dumps(output, indent=2))
 
     print(f"\nTop 5:")
     for i, r in enumerate(results[:5]):

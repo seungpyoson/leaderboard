@@ -270,7 +270,7 @@
         const tbody = document.getElementById('candidates-body');
         tbody.innerHTML = filtered.map(c => {
             const st = getStatus(c);
-            const score = c.confidence_score || 0;
+            const score = c.confidence_score;
             const pnl = c.pnl;
             const rank = c.leaderboard_rank;
             const prevRank = c.prev_rank;
@@ -292,7 +292,8 @@
             const newBadge = c.is_new ? '<span class="new-badge">NEW</span>' : '';
 
             const statusCls = 'status-' + esc(st);
-            const scoreFill = '<span class="score-bar"><span class="score-fill" style="width:' + (score*100) + '%;background:' + scoreColor(score) + '"></span></span>' + score.toFixed(2);
+            const scoreFill = score == null ? '\u2014'
+                : '<span class="score-bar"><span class="score-fill" style="width:' + (score*100) + '%;background:' + scoreColor(score) + '"></span></span>' + score.toFixed(2);
 
             return '<tr class="row-' + esc(st) + '">' +
                 '<td><div class="row-actions">' +

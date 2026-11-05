@@ -3,9 +3,8 @@
 Used by fetch.py (daily refresh), discover.py (weekly candidate discovery),
 and promote.py (candidate promotion).
 
-Rate limiting contract: REQUEST_DELAY is defined here but enforced by callers.
-Each caller must sleep(REQUEST_DELAY) between requests. This avoids double-sleeping
-when callers batch multiple operations between requests.
+Rate limiting contract: leaderboard pagination sleeps here; other callers
+sleep REQUEST_DELAY between requests.
 """
 
 from __future__ import annotations
@@ -13,18 +12,78 @@ from __future__ import annotations
 import json
 import re
 import tempfile
+import time
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
 import requests
 
 REQUEST_DELAY = 0.5
+LEADERBOARD_URL = "https://data-api.polymarket.com/v2/leaderboard"
+LEADERBOARD_PAGE_SIZE = 50
+MIN_LEADERBOARD_COUNT = 800  # Most historical daily tracked snapshots contain 800 rows.
 
 SESSION = requests.Session()
 SESSION.headers.update({
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
     "Accept": "text/html,application/xhtml+xml",
 })
+
+
+def fetch_leaderboard(limit: int) -> list[dict]:
+    """Read the crypto/all-time PnL board, following v2's opaque cursor."""
+    if limit < 1:
+        raise ValueError("leaderboard limit must be positive")
+    traders: list[dict] = []
+    cursor = None
+    seen_cursors = set()
+
+    while len(traders) < limit:
+        params = ({"cursor": cursor} if cursor else {
+            "category": "crypto",
+            "time_period": "all",
+            "sort_by": "PNL",
+            "limit": min(LEADERBOARD_PAGE_SIZE, limit),
+        })
+        try:
+            response = SESSION.get(LEADERBOARD_URL, params=params, timeout=30)
+            response.raise_for_status()
+            body = response.json()
+        except (requests.RequestException, json.JSONDecodeError) as exc:
+            raise RuntimeError(f"Leaderboard page failed after {len(traders)} rows: {exc}") from exc
+
+        if not isinstance(body, dict) or not isinstance(body.get("data"), list):
+            raise RuntimeError("Leaderboard response lacks a data array")
+        page = body["data"]
+        pagination = body.get("pagination")
+        if not isinstance(pagination, dict) or not isinstance(pagination.get("has_more"), bool):
+            raise RuntimeError("Leaderboard response lacks pagination")
+        if not page or any(
+            not isinstance(row, dict)
+            or not isinstance(row.get("user_id"), str)
+            or not re.fullmatch(r"0x[0-9a-fA-F]{40}", row["user_id"])
+            or not isinstance(row.get("pnl"), (int, float))
+            or not isinstance(row.get("user_name"), str)
+            for row in page
+        ):
+            raise RuntimeError("Leaderboard returned an empty or malformed page")
+        traders.extend(page)
+        if len(traders) >= limit:
+            break
+        if not pagination["has_more"]:
+            break
+        cursor = pagination.get("next_cursor")
+        if not isinstance(cursor, str) or not cursor or cursor in seen_cursors:
+            raise RuntimeError("Leaderboard returned an invalid next cursor")
+        seen_cursors.add(cursor)
+        if len(traders) < limit:
+            time.sleep(REQUEST_DELAY)
+
+    traders = traders[:limit]
+    wallets = [row["user_id"].lower() for row in traders]
+    if len(set(wallets)) != len(wallets):
+        raise RuntimeError("Leaderboard returned duplicate wallets")
+    return traders
 
 
 def to_float(val) -> float | None:
