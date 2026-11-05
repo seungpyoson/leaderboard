@@ -2,15 +2,15 @@
 """Fetch top crypto traders from Polymarket leaderboard API + enrichment.
 
 Pipeline:
-  1. Leaderboard API → PnL, volume, efficiency (crypto-category)
-  2. User-stats API → trades, largestWin (all-market — caveat in UI)
+  1. Leaderboard API → PnL (crypto-category; v2 volume is shares, not USDC)
+  2. User-stats API → markets traded, biggest win (all-market)
   3. Dune SQL → USDC net capital flows on Polygon (received - sent)
-  4. Derived: ROIC (PnL / net capital), style tag (efficiency > 10% → DIR)
+  4. Derived: ROIC (PnL / net capital)
 
 Outputs data/profiles.json for the static frontend.
 
 Usage:
-    python3 scraper/fetch.py [--limit 100]
+    python3 scraper/fetch.py [--limit 800]
 """
 
 from __future__ import annotations
@@ -23,65 +23,13 @@ from pathlib import Path
 
 import requests
 
-from common import REQUEST_DELAY, SESSION, fmt_money, fmt_pct, to_float
+from common import MIN_LEADERBOARD_COUNT, REQUEST_DELAY, SESSION, atomic_write, fetch_leaderboard, fmt_money, fmt_pct, to_float
 from dune import fetch_capital
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 OUTPUT_FILE = REPO_ROOT / "data" / "profiles.json"
 
-LEADERBOARD_URL = "https://data-api.polymarket.com/v1/leaderboard"
-USER_STATS_URL = "https://data-api.polymarket.com/v1/user-stats"
-PAGE_SIZE = 50  # API max per request
-
-
-def fetch_leaderboard(limit: int) -> list[dict]:
-    """Paginate the crypto leaderboard API. Returns up to `limit` traders."""
-    all_traders = []
-    pages_needed = (limit + PAGE_SIZE - 1) // PAGE_SIZE
-
-    for page in range(pages_needed):
-        offset = page * PAGE_SIZE
-        remaining = limit - len(all_traders)
-        batch_size = min(PAGE_SIZE, remaining)
-
-        try:
-            resp = SESSION.get(
-                LEADERBOARD_URL,
-                params={
-                    "category": "CRYPTO",
-                    "timePeriod": "ALL",
-                    "orderBy": "PNL",
-                    "limit": batch_size,
-                    "offset": offset,
-                },
-                timeout=15,
-            )
-        except requests.RequestException as e:
-            print(f"  ERROR: page {page}: {e}")
-            break
-
-        if resp.status_code != 200:
-            print(f"  WARN: page {page} HTTP {resp.status_code}")
-            break
-
-        try:
-            traders = resp.json()
-        except json.JSONDecodeError:
-            print(f"  ERROR: page {page} invalid JSON")
-            break
-
-        if not isinstance(traders, list) or not traders:
-            break
-
-        all_traders.extend(traders)
-
-        if len(traders) < batch_size:
-            break  # last page
-
-        if page < pages_needed - 1:
-            time.sleep(REQUEST_DELAY)
-
-    return all_traders
+USER_STATS_URL = "https://data-api.polymarket.com/v2/user-stats"
 
 
 def fetch_user_stats(wallet: str) -> dict:
@@ -92,15 +40,17 @@ def fetch_user_stats(wallet: str) -> dict:
     try:
         resp = SESSION.get(
             USER_STATS_URL,
-            params={"proxyAddress": wallet},
+            params={"user": wallet},
             timeout=10,
         )
         if resp.status_code != 200:
             return {"trades": None, "largest_win": None}
-        data = resp.json()
+        data = resp.json().get("data")
+        if not isinstance(data, dict):
+            return {"trades": None, "largest_win": None}
         return {
             "trades": data.get("trades"),
-            "largest_win": to_float(data.get("largestWin")),
+            "largest_win": to_float(data.get("biggest_win")),
         }
     except (requests.RequestException, json.JSONDecodeError):
         return {"trades": None, "largest_win": None}
@@ -108,21 +58,26 @@ def fetch_user_stats(wallet: str) -> dict:
 
 def main():
     parser = argparse.ArgumentParser(description="Fetch crypto leaderboard")
-    parser.add_argument("--limit", type=int, default=800, help="Number of traders (default: 800)")
+    parser.add_argument("--limit", type=int, default=MIN_LEADERBOARD_COUNT, help="Number of traders (default: 800)")
     args = parser.parse_args()
+    if args.limit < MIN_LEADERBOARD_COUNT:
+        parser.error(f"--limit must be at least {MIN_LEADERBOARD_COUNT} for tracked output")
 
     # --- Phase 1: Leaderboard (crypto-category) ---
     print(f"Fetching top {args.limit} crypto traders from Polymarket leaderboard API")
     traders = fetch_leaderboard(args.limit)
     print(f"  Got {len(traders)} traders")
+    if len(traders) < args.limit:
+        raise SystemExit(f"ERROR: short leaderboard fetch: {len(traders)}/{args.limit}; profiles.json preserved")
 
     results = []
     for t in traders:
         pnl = t.get("pnl")
-        volume = t.get("vol")
-        efficiency = (pnl / volume * 100) if (pnl is not None and volume and volume > 0) else None
-        raw_username = t.get("userName") or ""
-        wallet = t.get("proxyWallet", "")
+        # v2 volume is shares, not USDC; the existing volume and efficiency
+        # columns require USDC and therefore cannot use it.
+        volume = efficiency = style = None
+        raw_username = t.get("user_name") or ""
+        wallet = t["user_id"]
 
         # API returns "0xABC...-1772168966873" (wallet + epoch-ms) for users
         # without a display name — strip the timestamp suffix
@@ -135,12 +90,6 @@ def main():
             profile_url = f"https://polymarket.com/@{username}"
         else:
             profile_url = f"https://polymarket.com/@{wallet}"
-
-        # Style tag: >10% efficiency → directional, ≤10% → HFT/market-maker
-        if efficiency is not None:
-            style = "DIR" if efficiency > 10 else "HFT/MM"
-        else:
-            style = None
 
         results.append({
             "name": username,
@@ -159,6 +108,8 @@ def main():
             "net_capital": None,
             "roic": None,
         })
+
+    print("::warning title=Volume unavailable::Polymarket v2 board reports shares, not USDC; volume and efficiency are unavailable")
 
     # Already sorted by PnL from API, but ensure it
     results.sort(key=lambda r: r["pnl"] if r["pnl"] is not None else float("-inf"), reverse=True)
@@ -197,6 +148,10 @@ def main():
             if net_cap >= 5000 and r["pnl"] is not None:
                 r["roic"] = r["pnl"] / net_cap * 100
 
+    missing_capital = sum(r["net_capital"] is None for r in results)
+    if missing_capital:
+        print(f"::warning title=Capital enrichment missing::{missing_capital}/{len(results)} profiles lack net_capital; inspect the Dune messages above")
+
     # --- Output ---
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
     output = {
@@ -204,7 +159,7 @@ def main():
         "accounts": len(results),
         "profiles": results,
     }
-    OUTPUT_FILE.write_text(json.dumps(output, indent=2))
+    atomic_write(OUTPUT_FILE, json.dumps(output, indent=2))
 
     print(f"\nTop 5:")
     for i, r in enumerate(results[:5]):

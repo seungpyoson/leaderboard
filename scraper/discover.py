@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Discover profitable Polymarket crypto traders not yet tracked.
 
-Paginates the Polymarket Data API leaderboard (CRYPTO category), filters out
-known wallets and low-PnL accounts, enriches via profile scraping for trade
-counts, and writes data/candidates.json for manual review.
+Paginates the Polymarket Data API leaderboard (crypto category), filters out
+known wallets and low-PnL accounts, enriches via profile scraping, and writes
+data/candidates.json for manual review.
 
 Trust boundaries enforced:
   1. SESSION validation — no secrets leak via untrusted URLs
@@ -25,15 +25,14 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-import requests
-
 from common import (
+    MIN_LEADERBOARD_COUNT,
     REQUEST_DELAY,
     SESSION,
     atomic_write,
+    fetch_leaderboard as fetch_crypto_leaderboard,
     fetch_profile,
     fmt_money,
-    fmt_pct,
     to_float,
 )
 
@@ -42,11 +41,8 @@ ACCOUNTS_FILE = REPO_ROOT / "scraper" / "accounts.json"
 CANDIDATES_FILE = REPO_ROOT / "data" / "candidates.json"
 LOCK_FILE = REPO_ROOT / "data" / ".candidates.lock"
 
-LEADERBOARD_URL = "https://data-api.polymarket.com/v1/leaderboard"
-
 PNL_THRESHOLD = 50_000  # minimum $50K PnL
-PAGE_SIZE = 50
-MAX_PAGES = 20  # up to 1000 traders
+DISCOVERY_LIMIT = 1000
 
 # Polymarket usernames: alphanumeric, hyphens, underscores (observed pattern)
 VALID_SLUG_RE = re.compile(r"^[a-zA-Z0-9_-]+$")
@@ -139,52 +135,11 @@ def load_existing_candidates() -> dict[str, dict]:
 
 
 def fetch_leaderboard() -> list[dict]:
-    """Paginate the Polymarket leaderboard API for crypto traders.
-
-    Only catches network errors (requests.RequestException). Programming bugs
-    (TypeError, KeyError, etc.) propagate up — fail-closed rather than
-    silently producing degraded data.
-    """
-    all_traders = []
-
-    for page in range(MAX_PAGES):
-        offset = page * PAGE_SIZE
-        params = {
-            "category": "CRYPTO",
-            "timePeriod": "ALL",
-            "orderBy": "PNL",
-            "limit": PAGE_SIZE,
-            "offset": offset,
-        }
-
-        try:
-            resp = SESSION.get(LEADERBOARD_URL, params=params, timeout=30)
-        except requests.RequestException as e:
-            print(f"  ERROR: leaderboard page {page}: {e}")
-            break
-
-        if resp.status_code != 200:
-            print(f"  WARN: leaderboard page {page} HTTP {resp.status_code}")
-            break
-
-        try:
-            traders = resp.json()
-        except json.JSONDecodeError:
-            print(f"  ERROR: leaderboard page {page} invalid JSON")
-            break
-
-        if not isinstance(traders, list) or not traders:
-            break
-
-        all_traders.extend(traders)
-        print(f"  Page {page + 1}: {len(traders)} traders (total: {len(all_traders)})")
-
-        if len(traders) < PAGE_SIZE:
-            break
-
-        time.sleep(REQUEST_DELAY)
-
-    return all_traders
+    """Fetch crypto traders; API failures abort discovery before writing."""
+    traders = fetch_crypto_leaderboard(DISCOVERY_LIMIT)
+    if len(traders) < MIN_LEADERBOARD_COUNT:
+        raise RuntimeError(f"Short discovery leaderboard: {len(traders)}/{MIN_LEADERBOARD_COUNT}")
+    return traders
 
 
 # ── Trust Boundary 3: Output validation ──────────────────────────────────────
@@ -217,24 +172,6 @@ def validate_output(
 
 
 # ── Trust Boundary 5: Atomic write with lockfile ─────────────────────────────
-
-
-# ── Style classification ─────────────────────────────────────────────────────
-
-
-def classify_style(trades: int | None, volume: float | None) -> str:
-    """Heuristic style guess based on trades-to-volume ratio."""
-    if trades is None or volume is None or volume == 0 or trades == 0:
-        return "Unknown"
-
-    avg_trade_size = volume / trades
-
-    if trades > 500 and avg_trade_size < 500:
-        return "HFT/MM"
-    elif trades < 50:
-        return "Directional"
-    else:
-        return "Hybrid"
 
 
 # ── Auto-scoring ─────────────────────────────────────────────────────────────
@@ -292,10 +229,12 @@ def score_candidate(candidate: dict) -> float:
     return round(score, 3)
 
 
-def auto_status(score: float, current_status: str) -> str:
+def auto_status(score: float, current_status: str, scoring_complete: bool) -> str:
     """Determine status based on confidence score. Never overrides human decisions."""
     if current_status in ("promoted", "rejected", "approved"):
         return current_status
+    if not scoring_complete:
+        return "pending"
     if score >= AUTO_APPROVE_THRESHOLD:
         return "auto-approved"
     if score <= AUTO_REJECT_THRESHOLD:
@@ -317,10 +256,11 @@ def main():
     existing = load_existing_candidates()
     print(f"Known accounts: {len(known_wallets)} | Existing candidates: {len(existing)}")
 
-    # TB4: Fetch leaderboard (fail-closed — only catches network errors)
+    # TB4: Fetch leaderboard (errors abort before any write)
     print("\nFetching leaderboard...")
     traders = fetch_leaderboard()
     print(f"Total leaderboard entries: {len(traders)}")
+    print("::warning title=Discovery scoring incomplete::Polymarket v2 board volume is shares, not USDC; automatic decisions are disabled")
 
     # Filter and enrich
     print("\nFiltering and enriching candidates...")
@@ -331,7 +271,7 @@ def main():
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
     for trader in traders:
-        wallet = (trader.get("proxyWallet") or "").lower()
+        wallet = (trader.get("user_id") or "").lower()
         if not wallet:
             continue
 
@@ -352,10 +292,11 @@ def main():
             skipped_pnl += 1
             continue
 
-        raw_username = trader.get("userName") or ""
+        raw_username = trader.get("user_name") or ""
         raw_rank = trader.get("rank")
         rank = int(raw_rank) if raw_rank is not None else None
-        volume = to_float(trader.get("vol"))
+        # v2 board volume is shares, not USDC; scoring expects USDC.
+        volume = None
 
         # TB2: Validate slug before URL construction — refuse rather than sanitize
         slug = validate_slug(raw_username, wallet)
@@ -381,16 +322,14 @@ def main():
             if profile_data:
                 trades = profile_data.get("trades")
                 markets = profile_data.get("markets")
-                if pnl is not None and volume and volume > 0:
-                    efficiency = round(pnl / volume * 100, 2)
-                print(f"    Trades: {trades} | Markets: {markets} | Eff: {fmt_pct(efficiency)}")
+                print(f"    Trades: {trades} | Markets: {markets}")
             else:
                 print(f"    WARN: profile enrichment failed, using leaderboard data only")
         else:
             skipped_slug += 1
             print(f"    WARN: invalid slug for {wallet[:10]}, skipping enrichment")
 
-        style = classify_style(trades, volume)
+        style = "Unknown"
         first_seen = prev.get("first_seen", today) if prev else today
         raw_prev_rank = prev.get("leaderboard_rank") if prev else None
         prev_rank = int(raw_prev_rank) if raw_prev_rank is not None else None
@@ -415,7 +354,9 @@ def main():
 
         # Auto-score and set status
         candidate["confidence_score"] = score_candidate(candidate)
-        candidate["status"] = auto_status(candidate["confidence_score"], candidate["status"])
+        candidate["status"] = auto_status(
+            candidate["confidence_score"], candidate["status"], efficiency is not None
+        )
 
         new_candidates.append(candidate)
 
