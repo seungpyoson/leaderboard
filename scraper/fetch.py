@@ -31,7 +31,8 @@ OUTPUT_FILE = REPO_ROOT / "data" / "profiles.json"
 
 USER_STATS_URL = "https://data-api.polymarket.com/v2/user-stats"
 USER_STATS_MAX_ATTEMPTS = 3
-MIN_CAPITAL_COVERAGE = 0.99
+# 136 past good snapshots had capital coverage from 0.9762 upward.
+MIN_CAPITAL_COVERAGE = 0.97
 
 
 def fetch_user_stats(wallet: str) -> dict | None:

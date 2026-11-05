@@ -359,6 +359,16 @@ class RefreshTests(unittest.TestCase):
         self.assertIn("[REDACTED]", output.getvalue())
         self.assertNotIn("private-test-key", output.getvalue())
 
+    def test_dune_explicit_zero_capital_stays_zero(self):
+        wallet = "0x" + "a" * 40
+        with patch.object(dune, "_get_api_key", return_value="test-key"), \
+                patch.object(dune, "_execute_sql", return_value="test-execution"), \
+                patch.object(dune, "_poll_results", return_value={"result": {"rows": [
+                    {"wallet": wallet, "net_capital": 0}
+                ]}}), redirect_stdout(io.StringIO()):
+            capital = dune.fetch_capital([wallet])
+        self.assertEqual(capital[wallet]["net_capital"], 0)
+
     def test_missing_capital_preserves_profiles_with_counts(self):
         rows = self.leaderboard_rows()
         with tempfile.TemporaryDirectory() as directory:
@@ -376,14 +386,34 @@ class RefreshTests(unittest.TestCase):
                     fetch.main()
             self.assertEqual(output.read_text(), "existing data")
 
-    def test_795_of_800_capital_uses_atomic_write(self):
+    def test_dune_rows_without_net_capital_preserve_profiles(self):
+        rows = self.leaderboard_rows()
+        dune_rows = [{"wallet": row["user_id"]} for row in rows]
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "profiles.json"
+            output.write_text("existing data")
+            with patch.object(fetch, "OUTPUT_FILE", output), \
+                    patch.object(fetch, "fetch_leaderboard", return_value=rows), \
+                    patch.object(fetch, "fetch_user_stats", return_value={"trades": 1, "largest_win": 2}), \
+                    patch.object(dune, "_get_api_key", return_value="test-key"), \
+                    patch.object(dune, "_execute_sql", return_value="test-execution"), \
+                    patch.object(dune, "_poll_results", return_value={"result": {"rows": dune_rows}}), \
+                    patch.object(fetch, "atomic_write") as atomic, \
+                    patch.object(fetch.time, "sleep"), \
+                    patch.object(sys, "argv", ["fetch.py"]), redirect_stdout(io.StringIO()):
+                with self.assertRaisesRegex(RuntimeError, "0/800"):
+                    fetch.main()
+            atomic.assert_not_called()
+            self.assertEqual(output.read_text(), "existing data")
+
+    def test_776_of_800_capital_uses_atomic_write(self):
         rows = self.leaderboard_rows()
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "profiles.json"
             with patch.object(fetch, "OUTPUT_FILE", output), \
                     patch.object(fetch, "fetch_leaderboard", return_value=rows), \
                     patch.object(fetch, "fetch_user_stats", return_value={"trades": 1, "largest_win": 2}), \
-                    patch.object(fetch, "fetch_capital", return_value=self.capital_for(rows, 795)), \
+                    patch.object(fetch, "fetch_capital", return_value=self.capital_for(rows, 776)), \
                     patch.object(fetch, "atomic_write", wraps=fetch.atomic_write) as atomic, \
                     patch.object(fetch.time, "sleep"), \
                     patch.object(sys, "argv", ["fetch.py"]), redirect_stdout(io.StringIO()):
@@ -391,7 +421,7 @@ class RefreshTests(unittest.TestCase):
             atomic.assert_called_once()
             self.assertEqual(json.loads(output.read_text())["accounts"], 800)
 
-    def test_791_of_800_capital_refuses_write(self):
+    def test_775_of_800_capital_refuses_write(self):
         rows = self.leaderboard_rows()
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "profiles.json"
@@ -399,10 +429,10 @@ class RefreshTests(unittest.TestCase):
             with patch.object(fetch, "OUTPUT_FILE", output), \
                     patch.object(fetch, "fetch_leaderboard", return_value=rows), \
                     patch.object(fetch, "fetch_user_stats", return_value={"trades": 1, "largest_win": 2}), \
-                    patch.object(fetch, "fetch_capital", return_value=self.capital_for(rows, 791)), \
+                    patch.object(fetch, "fetch_capital", return_value=self.capital_for(rows, 775)), \
                     patch.object(fetch.time, "sleep"), \
                     patch.object(sys, "argv", ["fetch.py"]), redirect_stdout(io.StringIO()):
-                with self.assertRaisesRegex(RuntimeError, "791/800"):
+                with self.assertRaisesRegex(RuntimeError, "775/800"):
                     fetch.main()
             self.assertEqual(output.read_text(), "existing data")
 
@@ -449,12 +479,17 @@ class RefreshTests(unittest.TestCase):
         rows = self.leaderboard_rows()
         failed = rows[0]["user_id"]
         calls = []
+        events = []
 
         def stats(wallet):
             calls.append(wallet)
+            events.append(("stats", wallet))
             if wallet == failed and calls.count(wallet) == 1:
                 return None
             return {"trades": 1, "largest_win": 2}
+
+        def sleep(delay):
+            events.append(("sleep", delay))
 
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "profiles.json"
@@ -462,11 +497,13 @@ class RefreshTests(unittest.TestCase):
                     patch.object(fetch, "fetch_leaderboard", return_value=rows), \
                     patch.object(fetch, "fetch_user_stats", side_effect=stats), \
                     patch.object(fetch, "fetch_capital", return_value=self.capital_for(rows)), \
-                    patch.object(fetch.time, "sleep") as sleep, \
+                    patch.object(fetch.time, "sleep", side_effect=sleep), \
                     patch.object(sys, "argv", ["fetch.py"]), redirect_stdout(io.StringIO()):
                 fetch.main()
             self.assertEqual(calls.count(failed), 2)
-            sleep.assert_any_call(fetch.REQUEST_DELAY)
+            self.assertEqual(events[:3], [
+                ("stats", failed), ("sleep", fetch.REQUEST_DELAY), ("stats", failed)
+            ])
             self.assertEqual(json.loads(output.read_text())["profiles"][0]["largest_win"], 2)
 
     def test_failed_stats_restores_previous_complete_values(self):

@@ -159,7 +159,7 @@ def _poll_results(api_key: str, execution_id: str) -> dict:
 def fetch_capital(wallets: list[str]) -> dict[str, dict]:
     """Fetch USDC capital data for proxy wallets.
 
-    Returns: {wallet_lower: {"first_seen": str|None, "total_received": float, "total_sent": float, "net_capital": float}}
+    Returns: {wallet_lower: {"first_seen": str|None, "total_received": float, "total_sent": float, "net_capital": float|None}}
     """
     api_key = _get_api_key()
     if not api_key:
@@ -199,7 +199,7 @@ def fetch_capital(wallets: list[str]) -> dict[str, dict]:
                 "first_seen": row.get("first_seen"),
                 "total_received": row.get("total_received", 0),
                 "total_sent": row.get("total_sent", 0),
-                "net_capital": row.get("net_capital", 0),
+                "net_capital": row.get("net_capital"),
             }
 
     print(f"  Dune: got capital data for {len(capital)} wallets")
