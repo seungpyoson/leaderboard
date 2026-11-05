@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-02 19:18 UTC",
+  "updated": "2026-11-05 09:01 UTC",
   "candidates": [
     {
       "wallet": "0xeebde7a0e019a63e6b476eb425505b7b3e6eba30",
@@ -4754,24 +4754,6 @@
       "confidence_score": 0.066
     },
     {
-      "wallet": "0x8b4bca1d794779e66e023d44391b2a86c5ab541b",
-      "username": "0x8b4bca1d",
-      "profile_url": "https://polymarket.com/@0x8b4bca1d794779e66e023d44391b2a86c5ab541b",
-      "discovery_source": "leaderboard",
-      "leaderboard_rank": 279,
-      "prev_rank": 283,
-      "pnl": 109458.7192723543,
-      "volume": 3357297.185569,
-      "efficiency": 3.26,
-      "trades": 512,
-      "markets": 512,
-      "style_guess": "Hybrid",
-      "first_seen": "2026-05-10",
-      "is_new": false,
-      "status": "pending",
-      "confidence_score": 0.679
-    },
-    {
       "wallet": "0xf6ea56fa38789d4552b8e8a4d11d7f464e6e3ea8",
       "username": "NicholasWickerson",
       "profile_url": "https://polymarket.com/@NicholasWickerson",
@@ -5526,6 +5508,24 @@
       "is_new": false,
       "status": "auto-rejected",
       "confidence_score": 0.059
+    },
+    {
+      "wallet": "0x1d4affdc390c00991acf70f6e010c9702b2d46f5",
+      "username": "Carry99",
+      "profile_url": "https://polymarket.com/@Carry99",
+      "discovery_source": "leaderboard",
+      "leaderboard_rank": 305,
+      "prev_rank": null,
+      "pnl": 98375.858432,
+      "volume": null,
+      "efficiency": null,
+      "trades": null,
+      "markets": null,
+      "style_guess": "Unknown",
+      "first_seen": "2026-11-05",
+      "is_new": true,
+      "status": "pending",
+      "confidence_score": null
     },
     {
       "wallet": "0xaba06aaf3d1fe58bb5a5e4b17856599f8e9552ca",
@@ -9092,6 +9092,24 @@
       "confidence_score": 0.042
     },
     {
+      "wallet": "0xcf0c70317fd5e4e4429758b3d80a7b7f3762f2bb",
+      "username": "oxe78sh4w98",
+      "profile_url": "https://polymarket.com/@oxe78sh4w98",
+      "discovery_source": "leaderboard",
+      "leaderboard_rank": 483,
+      "prev_rank": null,
+      "pnl": 70629.468699,
+      "volume": null,
+      "efficiency": null,
+      "trades": null,
+      "markets": null,
+      "style_guess": "Unknown",
+      "first_seen": "2026-11-05",
+      "is_new": true,
+      "status": "pending",
+      "confidence_score": null
+    },
+    {
       "wallet": "0x2a2c53bd278c04da9962fcf96490e17f3dfb9bc1",
       "username": "0x2a2c53bd",
       "profile_url": "https://polymarket.com/@0x2a2c53bd278c04da9962fcf96490e17f3dfb9bc1",
@@ -9450,6 +9468,24 @@
       "is_new": false,
       "status": "auto-rejected",
       "confidence_score": 0.041
+    },
+    {
+      "wallet": "0xc38904e5da4c2e962e2a3c72511bfdddaa42d228",
+      "username": "RLWG",
+      "profile_url": "https://polymarket.com/@RLWG",
+      "discovery_source": "leaderboard",
+      "leaderboard_rank": 502,
+      "prev_rank": null,
+      "pnl": 68569.813953,
+      "volume": null,
+      "efficiency": null,
+      "trades": null,
+      "markets": null,
+      "style_guess": "Unknown",
+      "first_seen": "2026-11-05",
+      "is_new": true,
+      "status": "pending",
+      "confidence_score": null
     },
     {
       "wallet": "0x4582c77130a649d807fac08fd455615f851a8fa2",
@@ -13610,6 +13646,24 @@
       "confidence_score": 0.032
     },
     {
+      "wallet": "0x9783f45ce35f794be38ca47dd0816a5c241383b9",
+      "username": "0x9783f45c",
+      "profile_url": "https://polymarket.com/@0x9783f45ce35f794be38ca47dd0816a5c241383b9",
+      "discovery_source": "leaderboard",
+      "leaderboard_rank": 683,
+      "prev_rank": null,
+      "pnl": 53242.589077,
+      "volume": null,
+      "efficiency": null,
+      "trades": null,
+      "markets": null,
+      "style_guess": "Unknown",
+      "first_seen": "2026-11-05",
+      "is_new": true,
+      "status": "pending",
+      "confidence_score": null
+    },
+    {
       "wallet": "0x84389cfc4a652ea14d8d8be969769b1f69de3680",
       "username": "Atomforge",
       "profile_url": "https://polymarket.com/@Atomforge",
@@ -13896,6 +13950,24 @@
       "is_new": false,
       "status": "auto-rejected",
       "confidence_score": 0.031
+    },
+    {
+      "wallet": "0x8b4bca1d794779e66e023d44391b2a86c5ab541b",
+      "username": "0x8b4bca1d",
+      "profile_url": "https://polymarket.com/@0x8b4bca1d794779e66e023d44391b2a86c5ab541b",
+      "discovery_source": "leaderboard",
+      "leaderboard_rank": 693,
+      "prev_rank": 279,
+      "pnl": 52466.456129,
+      "volume": 3357297.185569,
+      "efficiency": 3.26,
+      "trades": 512,
+      "markets": 512,
+      "style_guess": "Hybrid",
+      "first_seen": "2026-05-10",
+      "is_new": false,
+      "status": "pending",
+      "confidence_score": 0.679
     },
     {
       "wallet": "0x113be982878fc16d7b00828ca646ca93f80411c4",
@@ -14688,6 +14760,24 @@
       "is_new": false,
       "status": "auto-rejected",
       "confidence_score": 0.031
+    },
+    {
+      "wallet": "0x2011550a8fd844aa22b78d0f039bb72befcb71fa",
+      "username": "okeledokelee",
+      "profile_url": "https://polymarket.com/@okeledokelee",
+      "discovery_source": "leaderboard",
+      "leaderboard_rank": 718,
+      "prev_rank": null,
+      "pnl": 50892.648651,
+      "volume": null,
+      "efficiency": null,
+      "trades": null,
+      "markets": null,
+      "style_guess": "Unknown",
+      "first_seen": "2026-11-05",
+      "is_new": true,
+      "status": "pending",
+      "confidence_score": null
     },
     {
       "wallet": "0x0a556827813f7589f95c4e9037d16552a7fa1d25",
