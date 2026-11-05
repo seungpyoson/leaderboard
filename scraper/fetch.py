@@ -25,34 +25,28 @@ import requests
 
 from common import MIN_LEADERBOARD_COUNT, REQUEST_DELAY, SESSION, atomic_write, fetch_leaderboard, fmt_money, fmt_pct
 from dune import fetch_capital
-from external import capital_map, user_stats
+from external import user_stats
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 OUTPUT_FILE = REPO_ROOT / "data" / "profiles.json"
 
 USER_STATS_URL = "https://data-api.polymarket.com/v2/user-stats"
-USER_STATS_MAX_ATTEMPTS = 3
+USER_STATS_MAX_ATTEMPTS = 6
+USER_STATS_RETRY_BASE_SECONDS = 1
 # 136 past good snapshots had capital coverage from 0.9762 upward.
 MIN_CAPITAL_COVERAGE = 0.97
+MIN_USER_STATS_COVERAGE = MIN_CAPITAL_COVERAGE
 
 
 def fetch_user_stats(wallet: str) -> dict | None:
     """Fetch per-user stats (all-market, not crypto-filtered).
 
-    Returns None when the request or response fails.
+    Returns None only for the API's documented ``data: null`` unknown user.
+    Transient request failures are retried by the caller; malformed data refuses.
     """
-    try:
-        resp = SESSION.get(
-            USER_STATS_URL,
-            params={"user": wallet},
-            timeout=10,
-        )
-        if resp.status_code != 200:
-            return None
-        body = resp.json()
-        return user_stats(body, wallet)
-    except (requests.RequestException, json.JSONDecodeError, ValueError):
-        return None
+    resp = SESSION.get(USER_STATS_URL, params={"user": wallet}, timeout=10)
+    resp.raise_for_status()
+    return user_stats(resp.json(), wallet)
 
 
 def main():
@@ -111,37 +105,41 @@ def main():
     print("::warning title=Volume unavailable::Polymarket v2 board reports shares, not USDC; volume and efficiency are unavailable")
 
     # Already sorted by PnL from API, but ensure it
-    results.sort(key=lambda r: r["pnl"] if r["pnl"] is not None else float("-inf"), reverse=True)
+    results.sort(key=lambda r: r["pnl"], reverse=True)
 
     # --- Phase 2: User stats (all-market) ---
     print(f"\nFetching user stats for {len(results)} traders...")
-    failed_wallets = set()
+    known_stats = 0
     for i, r in enumerate(results):
         stats = None
         for attempt in range(USER_STATS_MAX_ATTEMPTS):
-            stats = fetch_user_stats(r["wallet"])
-            if stats is not None:
+            try:
+                stats = fetch_user_stats(r["wallet"])
                 break
-            if attempt + 1 < USER_STATS_MAX_ATTEMPTS:
-                time.sleep(REQUEST_DELAY)
-        if stats is None:
-            failed_wallets.add(r["wallet"].lower())
-        else:
+            except (requests.RequestException, json.JSONDecodeError) as exc:
+                if attempt + 1 == USER_STATS_MAX_ATTEMPTS:
+                    raise RuntimeError(
+                        f"User stats fetch failed for {r['wallet']} after "
+                        f"{USER_STATS_MAX_ATTEMPTS} attempts; profiles.json preserved"
+                    ) from exc
+                time.sleep(USER_STATS_RETRY_BASE_SECONDS * 2 ** attempt)
+        if stats is not None:
+            known_stats += 1
             r["trades"] = stats["trades"]
             r["largest_win"] = stats["largest_win"]
         if (i + 1) % 50 == 0:
             print(f"  Stats: {i + 1}/{len(results)}")
         time.sleep(REQUEST_DELAY)
-    if failed_wallets:
+    if known_stats / len(results) < MIN_USER_STATS_COVERAGE:
         raise RuntimeError(
-            f"User stats fetch failed for {len(failed_wallets)}/{len(results)} wallets after "
-            f"{USER_STATS_MAX_ATTEMPTS} attempts; profiles.json preserved"
+            f"User stats coverage {known_stats}/{len(results)} below "
+            f"{MIN_USER_STATS_COVERAGE:.0%}; profiles.json preserved"
         )
     print(f"  Stats: done")
 
     # --- Phase 3: Dune capital data ---
-    wallets = [r["wallet"] for r in results if r["wallet"]]
-    capital = capital_map(fetch_capital(wallets))
+    wallets = [r["wallet"] for r in results]
+    capital = fetch_capital(wallets)
 
     for r in results:
         cap = capital.get(r["wallet"].lower())
@@ -159,7 +157,7 @@ def main():
             net_cap = cap["net_capital"]
             # Require minimum $5K net capital to avoid division explosion
             # when net_capital is near-zero (e.g. $145 → 780,000% ROIC)
-            if net_cap >= 5000 and r["pnl"] is not None:
+            if net_cap >= 5000:
                 r["roic"] = r["pnl"] / net_cap * 100
 
     capital_count = sum(type(r["net_capital"]) in (int, float) for r in results)

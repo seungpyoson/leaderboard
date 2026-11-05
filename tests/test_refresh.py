@@ -353,9 +353,12 @@ class RefreshTests(unittest.TestCase):
             self.assertIsNone(fetch.fetch_user_stats("0x" + "a" * 40))
 
     def test_user_stats_missing_or_null_biggest_win_is_failure(self):
-        for payload in ({"trades": 12}, {"trades": 12, "biggest_win": None}):
+        wallet = "0x" + "a" * 40
+        for payload in ({"proxy_wallet": wallet, "trades": 12, "views": 0},
+                        {"proxy_wallet": wallet, "trades": 12, "views": 0, "biggest_win": None}):
             with self.subTest(payload=payload), patch.object(common.SESSION, "get", return_value=Response(200, {"data": payload})):
-                self.assertIsNone(fetch.fetch_user_stats("0x" + "a" * 40))
+                with self.assertRaisesRegex(ValueError, "biggest_win"):
+                    fetch.fetch_user_stats(wallet)
 
     def test_dune_error_body_redacts_key(self):
         response = Response(400, {}, "invalid query; key=private-test-key")
@@ -372,10 +375,10 @@ class RefreshTests(unittest.TestCase):
         wallet = "0x" + "a" * 40
         with patch.object(dune, "_get_api_key", return_value="test-key"), \
                 patch.object(dune, "_execute_sql", return_value="test-execution"), \
-                patch.object(dune, "_poll_results", return_value={"result": {"rows": [
+                patch.object(dune, "_poll_results", return_value=[
                     {"wallet": wallet, "first_seen": "2026-01-01", "total_received": 0,
                      "total_sent": 0, "net_capital": 0}
-                ]}}), redirect_stdout(io.StringIO()):
+                ]), redirect_stdout(io.StringIO()):
             capital = dune.fetch_capital([wallet])
         self.assertEqual(capital[wallet]["net_capital"], 0)
 
@@ -408,7 +411,10 @@ class RefreshTests(unittest.TestCase):
                     patch.object(fetch, "fetch_user_stats", return_value={"trades": 1, "largest_win": 2}), \
                     patch.object(dune, "_get_api_key", return_value="test-key"), \
                     patch.object(dune, "_execute_sql", return_value="test-execution"), \
-                    patch.object(dune, "_poll_results", return_value={"result": {"rows": dune_rows}}), \
+                    patch.object(dune.requests, "get", side_effect=[
+                        Response(200, {"state": "QUERY_STATE_COMPLETED"}),
+                        Response(200, {"result": {"rows": dune_rows}}),
+                    ]), \
                     patch.object(fetch, "atomic_write") as atomic, \
                     patch.object(fetch.time, "sleep"), \
                     patch.object(sys, "argv", ["fetch.py"]), redirect_stdout(io.StringIO()):
@@ -449,15 +455,21 @@ class RefreshTests(unittest.TestCase):
 
     def test_string_net_capital_refuses_before_write(self):
         rows = self.leaderboard_rows()
-        capital = self.capital_for(rows)
-        capital[rows[0]["user_id"]]["net_capital"] = "5000"
+        dune_rows = [{"wallet": row["user_id"], "first_seen": "2026-01-01",
+                      "total_received": 5000, "total_sent": 0, "net_capital": 5000} for row in rows]
+        dune_rows[0]["net_capital"] = "5000"
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "profiles.json"
             output.write_text("existing data")
             with patch.object(fetch, "OUTPUT_FILE", output), \
                     patch.object(fetch, "fetch_leaderboard", return_value=rows), \
                     patch.object(fetch, "fetch_user_stats", return_value={"trades": 1, "largest_win": 2}), \
-                    patch.object(fetch, "fetch_capital", return_value=capital), \
+                    patch.object(dune, "_get_api_key", return_value="test-key"), \
+                    patch.object(dune, "_execute_sql", return_value="test-execution"), \
+                    patch.object(dune.requests, "get", side_effect=[
+                        Response(200, {"state": "QUERY_STATE_COMPLETED"}),
+                        Response(200, {"result": {"rows": dune_rows}}),
+                    ]), \
                     patch.object(fetch, "atomic_write") as atomic, \
                     patch.object(fetch.time, "sleep"), \
                     patch.object(sys, "argv", ["fetch.py"]), redirect_stdout(io.StringIO()):
@@ -478,11 +490,11 @@ class RefreshTests(unittest.TestCase):
                     patch.object(fetch, "fetch_capital", side_effect=AssertionError("Dune must not run")), \
                     patch.object(fetch.time, "sleep"), \
                     patch.object(sys, "argv", ["fetch.py"]), redirect_stdout(printed):
-                with self.assertRaisesRegex(RuntimeError, "User stats fetch failed"):
+                with self.assertRaisesRegex(RuntimeError, "User stats coverage 0/800"):
                     fetch.main()
             self.assertEqual(output.read_text(), "existing data")
 
-    def test_single_unrestored_stats_failure_preserves_profiles(self):
+    def test_single_documented_missing_stats_stays_none_with_coverage(self):
         rows = self.leaderboard_rows()
         failed = rows[0]["user_id"]
         calls = []
@@ -497,13 +509,12 @@ class RefreshTests(unittest.TestCase):
             with patch.object(fetch, "OUTPUT_FILE", output), \
                     patch.object(fetch, "fetch_leaderboard", return_value=rows), \
                     patch.object(fetch, "fetch_user_stats", side_effect=stats), \
-                    patch.object(fetch, "fetch_capital", side_effect=AssertionError("Dune must not run")), \
+                    patch.object(fetch, "fetch_capital", return_value=self.capital_for(rows)), \
                     patch.object(fetch.time, "sleep"), \
                     patch.object(sys, "argv", ["fetch.py"]), redirect_stdout(io.StringIO()):
-                with self.assertRaisesRegex(RuntimeError, "1/800"):
-                    fetch.main()
-            self.assertEqual(calls.count(failed), 3)
-            self.assertEqual(output.read_text(), '{"profiles": []}')
+                fetch.main()
+            self.assertEqual(calls.count(failed), 1)
+            self.assertIsNone(json.loads(output.read_text())["profiles"][0]["largest_win"])
 
     def test_transient_stats_failure_is_retried(self):
         rows = self.leaderboard_rows()
@@ -515,7 +526,7 @@ class RefreshTests(unittest.TestCase):
             calls.append(wallet)
             events.append(("stats", wallet))
             if wallet == failed and calls.count(wallet) == 1:
-                return None
+                raise common.requests.ConnectionError("temporary")
             return {"trades": 1, "largest_win": 2}
 
         def sleep(delay):
@@ -532,7 +543,7 @@ class RefreshTests(unittest.TestCase):
                 fetch.main()
             self.assertEqual(calls.count(failed), 2)
             self.assertEqual(events[:3], [
-                ("stats", failed), ("sleep", fetch.REQUEST_DELAY), ("stats", failed)
+                ("stats", failed), ("sleep", fetch.USER_STATS_RETRY_BASE_SECONDS), ("stats", failed)
             ])
             self.assertEqual(json.loads(output.read_text())["profiles"][0]["largest_win"], 2)
 
@@ -547,13 +558,13 @@ class RefreshTests(unittest.TestCase):
             printed = io.StringIO()
             with patch.object(fetch, "OUTPUT_FILE", output), \
                     patch.object(fetch, "fetch_leaderboard", return_value=rows), \
-                    patch.object(fetch, "fetch_user_stats", side_effect=lambda wallet: None if wallet == failed else {"trades": 1, "largest_win": 2}) as stats, \
+                    patch.object(fetch, "fetch_user_stats", side_effect=lambda wallet: (_ for _ in ()).throw(common.requests.ConnectionError("temporary")) if wallet == failed else {"trades": 1, "largest_win": 2}) as stats, \
                     patch.object(fetch, "fetch_capital", return_value=self.capital_for(rows)), \
                     patch.object(fetch.time, "sleep"), \
                     patch.object(sys, "argv", ["fetch.py"]), redirect_stdout(printed):
                 with self.assertRaisesRegex(RuntimeError, "User stats fetch failed"):
                     fetch.main()
-            self.assertEqual(sum(call.args[0] == failed for call in stats.call_args_list), 3)
+            self.assertEqual(sum(call.args[0] == failed for call in stats.call_args_list), fetch.USER_STATS_MAX_ATTEMPTS)
             self.assertEqual(output.read_text(), previous)
 
     def test_incomplete_previous_stats_also_refuse_write(self):
@@ -565,7 +576,7 @@ class RefreshTests(unittest.TestCase):
             output.write_text(previous)
             with patch.object(fetch, "OUTPUT_FILE", output), \
                     patch.object(fetch, "fetch_leaderboard", return_value=rows), \
-                    patch.object(fetch, "fetch_user_stats", side_effect=lambda wallet: None if wallet == failed else {"trades": 1, "largest_win": 2}), \
+                    patch.object(fetch, "fetch_user_stats", side_effect=lambda wallet: (_ for _ in ()).throw(common.requests.ConnectionError("temporary")) if wallet == failed else {"trades": 1, "largest_win": 2}), \
                     patch.object(fetch, "fetch_capital", side_effect=AssertionError("Dune must not run")), \
                     patch.object(fetch.time, "sleep"), \
                     patch.object(sys, "argv", ["fetch.py"]), redirect_stdout(io.StringIO()):

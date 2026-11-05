@@ -83,15 +83,8 @@ def extract_profile_data(html: str) -> dict | None:
     if not match:
         return None
 
-    try:
-        next_data = json.loads(match.group(1))
-    except json.JSONDecodeError:
-        return None
-
-    try:
-        return profile_queries(next_data)
-    except ValueError:
-        return None
+    next_data = json.loads(match.group(1))
+    return profile_queries(next_data)
 
 
 def _is_polymarket_host(url: str) -> bool:

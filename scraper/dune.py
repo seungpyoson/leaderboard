@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 import requests
 
-from external import dune_execution, dune_results, dune_status
+from external import dune_error_text, dune_execution, dune_results, dune_status
 
 DUNE_API = "https://api.dune.com/api/v1"
 
@@ -112,7 +112,7 @@ def _check_response(resp: requests.Response, api_key: str) -> None:
     try:
         resp.raise_for_status()
     except requests.HTTPError:
-        body = resp.text.replace(api_key, "[REDACTED]")[:2000]
+        body = dune_error_text(resp.text, api_key)
         raise RuntimeError(f"Dune HTTP {resp.status_code}: {body}") from None
 
 
@@ -128,7 +128,7 @@ def _execute_sql(api_key: str, sql: str) -> str:
     return dune_execution(resp.json())
 
 
-def _poll_results(api_key: str, execution_id: str) -> dict:
+def _poll_results(api_key: str, execution_id: str) -> list[dict]:
     """Poll until query completes, then fetch results."""
     start = time.time()
     while time.time() - start < MAX_POLL_TIME:
@@ -148,7 +148,7 @@ def _poll_results(api_key: str, execution_id: str) -> dict:
                 timeout=30,
             )
             _check_response(results, api_key)
-            return results.json()
+            return dune_results(results.json())
 
         if state in ("QUERY_STATE_FAILED", "QUERY_STATE_CANCELLED"):
             raise RuntimeError(f"Dune query {state}: {str(status_body).replace(api_key, '[REDACTED]')}")
@@ -161,7 +161,7 @@ def _poll_results(api_key: str, execution_id: str) -> dict:
 def fetch_capital(wallets: list[str]) -> dict[str, dict]:
     """Fetch USDC capital data for proxy wallets.
 
-    Returns: {wallet_lower: {"first_seen": str|None, "total_received": float, "total_sent": float, "net_capital": float|None}}
+    Returns: {wallet_lower: {"first_seen": str, "total_received": float, "total_sent": float, "net_capital": float}}
     """
     api_key = _get_api_key()
     if not api_key:
@@ -189,12 +189,14 @@ def fetch_capital(wallets: list[str]) -> dict[str, dict]:
         execution_id = _execute_sql(api_key, sql)
         print(f"  Dune execution: {execution_id}")
         data = _poll_results(api_key, execution_id)
+    except ValueError:
+        raise
     except Exception as e:
         print(f"  ERROR: Dune query failed: {e}")
         return {}
 
     capital = {}
-    for row in dune_results(data):
+    for row in data:
         wallet = row["wallet"].lower()
         if wallet in capital:
             raise ValueError(f"Duplicate Dune wallet: {wallet}")

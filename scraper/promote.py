@@ -67,24 +67,19 @@ def _run_promotion():
     except ValueError as exc:
         raise RuntimeError(f"Malformed candidate file: {exc}") from exc
 
-    approved = [c for c in candidates if isinstance(c, dict) and c.get("status") in ("approved", "auto-approved")]
+    approved = [c for c in candidates if c["status"] in ("approved", "auto-approved")]
+
+    # Validate and load existing accounts
+    if not ACCOUNTS_FILE.is_file():
+        raise RuntimeError(f"Required accounts file missing: {ACCOUNTS_FILE}")
+    try:
+        accounts = accounts_snapshot(json.loads(ACCOUNTS_FILE.read_text()))
+    except (json.JSONDecodeError, OSError, ValueError) as exc:
+        raise RuntimeError(f"Malformed accounts file: {ACCOUNTS_FILE}: {exc}") from exc
+
     if not approved:
         print("No candidates with status 'approved' — nothing to promote.")
         return
-
-    # Validate and load existing accounts
-    if ACCOUNTS_FILE.exists():
-        try:
-            accounts = json.loads(ACCOUNTS_FILE.read_text())
-        except (json.JSONDecodeError, OSError) as e:
-            print(f"ERROR: failed to read {ACCOUNTS_FILE}: {e}")
-            raise SystemExit(1)
-        try:
-            accounts = accounts_snapshot(accounts)
-        except ValueError as exc:
-            raise RuntimeError(f"Malformed accounts file: {exc}") from exc
-    else:
-        accounts = []
 
     existing_wallets = {a["wallet"].lower() for a in accounts}
 
@@ -101,13 +96,19 @@ def _run_promotion():
             candidate["status"] = "promoted"
             continue
 
+        source = candidate.get("discovery_source")
+        rank = candidate.get("leaderboard_rank")
+        note = "Auto-discovered"
+        if source:
+            note += f" via {source}"
+        if rank is not None:
+            note += f". Rank {rank}"
         account_entry = {
             "name": username,
             "wallet": wallet,
             "profile_url": profile_url,
             "style": candidate.get("style_guess"),
-            "note": f"Auto-discovered via {candidate.get('discovery_source')}. "
-                    f"Rank {candidate.get('leaderboard_rank')}.",
+            "note": note + ".",
         }
         accounts.append(account_entry)
         existing_wallets.add(wallet)

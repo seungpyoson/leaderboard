@@ -21,7 +21,7 @@ from pathlib import Path
 import duckdb
 
 import requests
-from external import accounts_snapshot, gamma_market, s3_fill
+from external import accounts_snapshot, gamma_markets, s3_fill
 
 from goldsky_pipeline import (
     ACCOUNTS_FILE,
@@ -188,7 +188,9 @@ def build_positions(
         # Position tracking
         update_position(ast["positions"], fill)
 
-        fill_counts[name] = fill_counts.setdefault(name, 0) + 1
+        if name not in fill_counts:
+            fill_counts[name] = 0
+        fill_counts[name] += 1
 
     elapsed = time.time() - t0
     print(f"  Positions built in {elapsed:.1f}s")
@@ -239,11 +241,15 @@ def _book_pnl(state: dict, label: str) -> None:
             ast["aggregates"]["welford_mean"] = mean
             ast["aggregates"]["welford_m2"] = m2
 
-            question = entry.get("question") or ""
+            question = entry.get("question")
+            if question is None:
+                question = ""
             if question:
                 short = question[:40]
                 tm = ast["aggregates"]["top_markets"]
-                tm[short] = tm.setdefault(short, 0) + abs(pnl)
+                if short not in tm:
+                    tm[short] = 0
+                tm[short] += abs(pnl)
 
             del positions[tid]
 
@@ -344,13 +350,10 @@ def resolve_elapsed_markets(state: dict) -> None:
                 if resp.status_code != 200:
                     break
 
-                markets = resp.json()
-                if not isinstance(markets, list):
-                    raise ValueError("Gamma markets response must be an array")
+                markets = gamma_markets(resp.json(), require_end_date=True)
 
                 returned_tids: set[str] = set()
-                for raw in markets:
-                    market = gamma_market(raw, require_end_date=True)
+                for market in markets:
                     prices = market["prices"]
                     clob_ids = market["clob_ids"]
                     end_date_str = market["end_date"]
@@ -363,15 +366,17 @@ def resolve_elapsed_markets(state: dict) -> None:
                             returned_tids.add(cid)
                         continue
 
-                    question = (market["question"] or "")[:80]
-                    for j, cid in enumerate(clob_ids):
+                    question = market["question"]
+                    if question is None:
+                        question = ""
+                    question = question[:80]
+                    for cid, price in zip(clob_ids, prices):
                         returned_tids.add(cid)
-                        if j < len(prices):
-                            payout = float(prices[j])
-                            if payout not in (0.0, 1.0):
-                                continue
-                            cache[cid] = {"payout": payout, "cached_at": today, "question": question}
-                            newly_cached += 1
+                        payout = float(price)
+                        if payout not in (0.0, 1.0):
+                            continue
+                        cache[cid] = {"payout": payout, "cached_at": today, "question": question}
+                        newly_cached += 1
 
                 # Count batch members not found in Gamma at all
                 for tid in batch:
@@ -431,7 +436,9 @@ def main():
         wallet_to_name = {a["wallet"].lower(): a["name"] for a in accounts}
         counts = Counter()
         for wallet, *_ in rows:
-            name = wallet_to_name.get(wallet) or wallet
+            name = wallet_to_name.get(wallet)
+            if name is None:
+                name = wallet
             counts[name] += 1
         print("\n[DRY RUN] Fill counts:")
         for name, count in counts.most_common():

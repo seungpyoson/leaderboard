@@ -60,7 +60,7 @@ class ThreadLocalSession:
         return self._get().post(*a, **kw)
 
     def get(self, *a, **kw):
-        return self._get().get(*a, **kw)
+        return self._get().request("GET", *a, **kw)
 
 
 # Swap module-level SESSION before any threads start
@@ -194,6 +194,10 @@ def main():
                 print(f"\n[{name}] FAILED: {e}")
 
     _parallel_active = False
+
+    if failed:
+        names = ", ".join(name for name, _ in failed)
+        raise RuntimeError(f"Parallel Goldsky crawl failed for {names}; state and CSV preserved")
 
     # Save state after parallel phase (single-threaded, safe)
     elapsed_fetch = time.time() - start

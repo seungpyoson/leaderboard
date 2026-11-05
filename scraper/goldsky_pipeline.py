@@ -23,7 +23,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import requests
-from external import accounts_snapshot, gamma_market, goldsky_page, goldsky_state
+from external import GoldskyTimeoutError, accounts_snapshot, gamma_markets, goldsky_page, goldsky_state
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -51,22 +51,13 @@ SESSION = requests.Session()
 # Goldsky client
 # ---------------------------------------------------------------------------
 
-def query_goldsky(graphql_query: str) -> dict | None:
+def query_goldsky(graphql_query: str) -> list[dict] | None:
     """Execute GraphQL query against Goldsky with exponential backoff."""
     for attempt in range(MAX_RETRIES):
         try:
             r = SESSION.post(GOLDSKY_URL, json={"query": graphql_query}, timeout=90)
             if r.status_code == 200:
-                data = r.json()
-                if "data" in data:
-                    return data
-                err = str(data)[:120]
-                if "timeout" in err.lower():
-                    wait = min(5 * (2 ** attempt), 120)
-                    print(f"    Timeout (attempt {attempt + 1}/{MAX_RETRIES}), wait {wait}s…")
-                    time.sleep(wait)
-                    continue
-                print(f"    No data key: {err}")
+                return goldsky_page(r.json())
             elif r.status_code == 429:
                 wait = min(10 * (2 ** attempt), 120)
                 print(f"    Rate limited, wait {wait}s…")
@@ -79,6 +70,13 @@ def query_goldsky(graphql_query: str) -> dict | None:
             print(f"    Timeout (attempt {attempt + 1}), wait {wait}s…")
             time.sleep(wait)
             continue
+        except GoldskyTimeoutError:
+            wait = min(5 * (2 ** attempt), 120)
+            print(f"    GraphQL timeout (attempt {attempt + 1}/{MAX_RETRIES}), wait {wait}s…")
+            time.sleep(wait)
+            continue
+        except ValueError:
+            raise
         except Exception as e:
             print(f"    Error (attempt {attempt + 1}): {e}")
         time.sleep(3 * (attempt + 1))
@@ -120,7 +118,7 @@ def fetch_fills(wallet: str, role: str, last_id: str = ""):
         }}"""
 
         result = query_goldsky(query)
-        if not result:
+        if result is None:
             consecutive_failures += 1
             if consecutive_failures >= 3:
                 print(f"    3 consecutive failures — stopping {role} fetch")
@@ -129,7 +127,7 @@ def fetch_fills(wallet: str, role: str, last_id: str = ""):
             continue
 
         consecutive_failures = 0
-        events = goldsky_page(result)
+        events = result
         if not events:
             break
 
@@ -200,7 +198,9 @@ def update_position(positions: dict, fill: dict) -> None:
     Resolution PnL = payout * net_shares - cost_basis
     """
     tid = fill["token_id"]
-    pos = positions.setdefault(tid, {"net_shares": 0.0, "cost_basis": 0.0, "fill_count": 0})
+    if tid not in positions:
+        positions[tid] = {"net_shares": 0.0, "cost_basis": 0.0, "fill_count": 0}
+    pos = positions[tid]
 
     if fill["direction"] == "BUY":
         pos["net_shares"] += fill["shares"]
@@ -261,12 +261,12 @@ def resolve_markets(
                 if resp.status_code != 200:
                     break  # non-retryable, skip batch
 
-                markets = resp.json()
-                if not isinstance(markets, list):
-                    raise ValueError("Gamma markets response must be an array")
-                for raw in markets:
-                    market = gamma_market(raw)
-                    question = (market["question"] or "")[:80]
+                markets = gamma_markets(resp.json())
+                for market in markets:
+                    question = market["question"]
+                    if question is None:
+                        question = ""
+                    question = question[:80]
                     for cid, price in zip(market["clob_ids"], market["prices"]):
                         payout = float(price)
                         if payout not in (0.0, 1.0):
@@ -342,9 +342,9 @@ def new_account_state(wallet: str) -> dict:
 
 
 def load_state() -> dict:
-    if STATE_FILE.exists():
-        return goldsky_state(json.loads(STATE_FILE.read_text()))
-    return {"accounts": {}, "resolution_cache": {}}
+    if not STATE_FILE.is_file():
+        raise RuntimeError(f"Required Goldsky state file missing: {STATE_FILE}")
+    return goldsky_state(json.loads(STATE_FILE.read_text()))
 
 
 def save_state(state: dict) -> None:
@@ -426,13 +426,19 @@ def write_csv(state: dict, accounts: list[dict]) -> None:
         top_market = top_market.replace("|", "/")  # Prevent pipe breaking CSV parser
 
         day_bounds = ast["day_bounds"]
+        first_trade = agg.get("first_trade")
+        last_trade = agg.get("last_trade")
+        if first_trade is None:
+            first_trade = ""
+        if last_trade is None:
+            last_trade = ""
 
         row: dict[str, str | int | float] = {
             "name": name,
             "profile": acct["profile_url"],
             "started": "",
-            "first_trade": agg.get("first_trade") or "",
-            "last_trade": agg.get("last_trade") or "",
+            "first_trade": first_trade,
+            "last_trade": last_trade,
             "trading_days": len(day_bounds),
             "trading_hours": trading_hours_from_bounds(day_bounds),
             "total_fills": total,
@@ -592,11 +598,15 @@ def _resolve_phase(ast: dict, state: dict, deadline: float) -> None:
         ast["aggregates"]["welford_mean"] = mean
         ast["aggregates"]["welford_m2"] = m2
 
-        question = entry.get("question") or ""
+        question = entry.get("question")
+        if question is None:
+            question = ""
         if question:
             short = question[:40]
             tm = ast["aggregates"]["top_markets"]
-            tm[short] = tm.setdefault(short, 0) + abs(pnl)
+            if short not in tm:
+                tm[short] = 0
+            tm[short] += abs(pnl)
 
         del positions[tid]
 
@@ -680,7 +690,8 @@ def run_pipeline(max_minutes: int | None = None, account_filter: str | None = No
     start = time.time()
     deadline = start + max_minutes * 60 if max_minutes else float("inf")
 
-    accounts: list[dict] = accounts_snapshot(json.loads(ACCOUNTS_FILE.read_text()))
+    all_accounts: list[dict] = accounts_snapshot(json.loads(ACCOUNTS_FILE.read_text()))
+    accounts = all_accounts
     state = load_state()
 
     if account_filter:
@@ -737,7 +748,6 @@ def run_pipeline(max_minutes: int | None = None, account_filter: str | None = No
         process_account(acct["name"], acct["wallet"], state, account_deadline)
 
     # Write CSV with all accounts (not just filtered)
-    all_accounts: list[dict] = accounts_snapshot(json.loads(ACCOUNTS_FILE.read_text()))
     write_csv(state, all_accounts)
     save_state(state)
 

@@ -300,8 +300,7 @@ def _merge_and_write(traders: list[dict], profiles: dict[str, dict | None]):
 
         style = prev.get("style_guess") if prev else None
         first_seen = prev.get("first_seen") if prev else today
-        raw_prev_rank = prev.get("leaderboard_rank") if prev else None
-        prev_rank = int(raw_prev_rank) if raw_prev_rank is not None else None
+        prev_rank = prev.get("leaderboard_rank") if prev else None
 
         candidate = {
             "wallet": wallet,
@@ -332,7 +331,7 @@ def _merge_and_write(traders: list[dict], profiles: dict[str, dict | None]):
 
     # Sort by PnL descending
     new_candidates.sort(
-        key=lambda c: c.get("pnl") if c.get("pnl") is not None else float("-inf"),
+        key=lambda c: c["pnl"],
         reverse=True,
     )
 

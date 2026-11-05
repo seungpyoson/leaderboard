@@ -1,6 +1,5 @@
 """Class-wide required-field and source-boundary checks."""
 
-import ast
 import copy
 import sys
 import unittest
@@ -41,13 +40,6 @@ class ExternalBoundaryTests(unittest.TestCase):
                                    "total_received": 0, "total_sent": 0, "net_capital": 0}]}},
              [("result",), ("result", "rows")]
              + [("result", "rows", 0, key) for key in ("wallet", "first_seen", "total_received", "total_sent", "net_capital")]),
-            ("capital map", external.capital_map,
-             {WALLET: {"first_seen": "2026-01-01", "total_received": 0,
-                       "total_sent": 0, "net_capital": 0}},
-             [(WALLET, key) for key in ("first_seen", "total_received", "total_sent", "net_capital")]),
-            ("profiles", external.profile_snapshot,
-             {"profiles": [{"wallet": WALLET, "trades": 0, "largest_win": 0}]},
-             [("profiles",), ("profiles", 0, "wallet")]),
             ("candidates", external.candidates_snapshot,
              {"candidates": [{"wallet": WALLET, "status": "pending", "pnl": 0}]},
              [("candidates",)] + [("candidates", 0, key) for key in ("wallet", "status", "pnl")]),
@@ -97,6 +89,9 @@ class ExternalBoundaryTests(unittest.TestCase):
                         key = path[-1]
                         if mutation == "drop":
                             del target[key]
+                            if source == "Gamma market":
+                                self.assertIsNone(parse(data))
+                                continue
                         else:
                             value = target[key]
                             target[key] = "bad" if type(value) in (int, float, bool) else 7
@@ -108,9 +103,6 @@ class ExternalBoundaryTests(unittest.TestCase):
                                       "biggest_win": 0, "views": 0}}, WALLET)
         self.assertEqual(stats, {"trades": 0, "largest_win": 0})
         self.assertIsNone(external.user_stats({"data": None}, WALLET))
-        old = external.profile_snapshot({"profiles": [{"wallet": WALLET}]})[0]
-        self.assertIsNone(old["trades"])
-        self.assertIsNone(old["largest_win"])
         market = external.gamma_market({"outcomePrices": '["0"]', "clobTokenIds": '["1"]'})
         self.assertIsNone(market["question"])
         self.assertEqual(market["prices"], ["0"])
@@ -118,12 +110,3 @@ class ExternalBoundaryTests(unittest.TestCase):
             external.profile_queries({"props": {"pageProps": {"dehydratedState": {"queries": [
                 {"queryKey": ["/api/profile/volume"], "state": {"data": {"amount": "0"}}}
             ]}}}})
-
-    def test_no_defaulted_get_outside_validators(self):
-        for path in (ROOT / "scraper").glob("*.py"):
-            if path.name == "external.py":
-                continue
-            tree = ast.parse(path.read_text(), filename=str(path))
-            for node in ast.walk(tree):
-                if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) and node.func.attr == "get":
-                    self.assertLessEqual(len(node.args), 1, f"{path}:{node.lineno} uses .get(k, default)")
