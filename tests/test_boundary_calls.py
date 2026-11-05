@@ -17,7 +17,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scraper"))
 import backfill_s3
 import common
 import discover
-import dune
 import fetch
 import goldsky_parallel
 import goldsky_pipeline as gp
@@ -196,20 +195,12 @@ class ProductionBoundaryTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "trades"):
                 fetch.fetch_user_stats(WALLET)
 
-        with patch.object(dune.requests, "post", return_value=Response({"execution_id": 0})):
-            with self.assertRaisesRegex(ValueError, "execution_id"):
-                dune._execute_sql("test-key", "SELECT 1")
-        with patch.object(dune.requests, "get", return_value=Response({"state": 1})):
-            with self.assertRaisesRegex(ValueError, "state"):
-                dune._poll_results("test-key", "id")
-        with patch.object(dune.requests, "get", side_effect=[
-            Response({"state": "QUERY_STATE_COMPLETED"}),
-            Response({"result": {"rows": [{"wallet": WALLET, "first_seen": "2026-01-01",
-                                           "total_received": float("inf"), "total_sent": 0,
-                                           "net_capital": 0}]}}),
-        ]):
-            with self.assertRaisesRegex(ValueError, "total_received"):
-                dune._poll_results("test-key", "id")
+        with patch.object(common.SESSION, "get", return_value=Response({
+            "data": [{"type": "DEPOSIT", "usdc_size": float("inf"), "timestamp": 1}],
+            "pagination": {"has_more": False, "next_cursor": None},
+        })):
+            with self.assertRaisesRegex(ValueError, "usdc_size"):
+                fetch.fetch_activity(WALLET)
 
         event = {"id": "1", "timestamp": "1", "maker": WALLET, "taker": WALLET,
                  "makerAssetId": "1", "takerAssetId": "2",

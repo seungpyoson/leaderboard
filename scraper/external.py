@@ -43,27 +43,16 @@ class UserStats:
 
 
 @dataclass(frozen=True)
-class DuneRow:
-    wallet: str
-    first_seen: str
-    total_received: float
-    total_sent: float
-    net_capital: float
+class ActivityEvent:
+    type: str
+    usdc_size: float
+    timestamp: int
 
 
 @dataclass(frozen=True)
-class DuneExecution:
-    execution_id: str
-
-
-@dataclass(frozen=True)
-class DuneStatus:
-    state: str
-
-
-@dataclass(frozen=True)
-class DuneError:
-    message: str
+class ActivityPagination:
+    has_more: bool
+    next_cursor: Optional[str]
 
 
 @dataclass(frozen=True)
@@ -205,12 +194,6 @@ class GoldskyTimeoutError(Exception):
     """The API reported a transient GraphQL timeout."""
 
 
-def dune_error_text(raw, api_key: str) -> str:
-    if type(raw) is not str:
-        raise ValueError("Dune error body must be text")
-    return raw.replace(api_key, "[REDACTED]")[:2000]
-
-
 def _finite_number(value) -> bool:
     if type(value) not in (int, float):
         return False
@@ -309,43 +292,33 @@ def user_stats(body, wallet: str) -> Optional[UserStats]:
     return UserStats(trades=row["trades"], largest_win=row["biggest_win"])
 
 
-def dune_results(body) -> list[DuneRow]:
-    body = _object(body, "Dune")
-    result = _object(body["result"] if "result" in body else None, "Dune.result")
-    rows = result["rows"] if "rows" in result else None
+def activity_page(body) -> tuple[list[ActivityEvent], ActivityPagination]:
+    body = _object(body, "activity")
+    rows = body["data"] if "data" in body else None
     if not isinstance(rows, list):
-        raise ValueError("Dune.result.rows must be an array")
+        raise ValueError("activity.data must be an array")
     parsed = []
     for i, raw in enumerate(rows):
-        label = f"Dune.result.rows[{i}]"
+        label = f"activity.data[{i}]"
         row = _object(raw, label)
-        _wallet(row, "wallet", label)
-        _field(row, "first_seen", "str", label)
-        for key in ("total_received", "total_sent", "net_capital"):
-            value = _field(row, key, "number", label)
-            if key != "net_capital" and value < 0:
-                raise ValueError(f"{label}.{key} must be nonnegative")
-        parsed.append(DuneRow(**{key: row[key] for key in (
-            "wallet", "first_seen", "total_received", "total_sent", "net_capital"
-        )}))
-    return parsed
-
-
-def dune_execution(body) -> str:
-    body = _object(body, "Dune execution")
-    execution_id = _field(body, "execution_id", "str", "Dune execution")
-    if not execution_id:
-        raise ValueError("Dune execution.execution_id must be nonempty")
-    return execution_id
-
-
-def dune_status(body) -> str:
-    body = _object(body, "Dune status")
-    state = _field(body, "state", "str", "Dune status")
-    if state not in {"QUERY_STATE_PENDING", "QUERY_STATE_EXECUTING", "QUERY_STATE_COMPLETED",
-                     "QUERY_STATE_FAILED", "QUERY_STATE_CANCELLED"}:
-        raise ValueError(f"Dune status.state is unknown: {state}")
-    return state
+        kind = _field(row, "type", "str", label)
+        if kind not in ("DEPOSIT", "WITHDRAWAL"):
+            raise ValueError(f"{label}.type must be DEPOSIT or WITHDRAWAL")
+        amount = _field(row, "usdc_size", "number", label)
+        if amount < 0:
+            raise ValueError(f"{label}.usdc_size must be nonnegative")
+        timestamp = _field(row, "timestamp", "int", label)
+        if timestamp < 0:
+            raise ValueError(f"{label}.timestamp must be nonnegative")
+        parsed.append(ActivityEvent(type=kind, usdc_size=amount, timestamp=timestamp))
+    page = _object(body["pagination"] if "pagination" in body else None, "activity.pagination")
+    has_more = _field(page, "has_more", "bool", "activity.pagination")
+    cursor = _field(page, "next_cursor", "str", "activity.pagination", optional=True)
+    if has_more and (not parsed or not cursor):
+        raise ValueError("activity.pagination requires data and next_cursor when has_more")
+    if not has_more and cursor is not None:
+        raise ValueError("activity.pagination.next_cursor must be null at end")
+    return parsed, ActivityPagination(has_more=has_more, next_cursor=cursor)
 
 
 def candidates_snapshot(body) -> list[Candidate]:
@@ -674,25 +647,8 @@ def load_user_stats_response(response, wallet: str) -> Optional[UserStats]:
     return user_stats(response.json(), wallet)
 
 
-def load_dune_execution_response(response) -> DuneExecution:
-    return DuneExecution(execution_id=dune_execution(response.json()))
-
-
-def load_dune_status_response(response, api_key: str) -> tuple[DuneStatus, DuneError]:
-    body = response.json()
-    return DuneStatus(state=dune_status(body)), DuneError(
-        message=str(body).replace(api_key, "[REDACTED]")
-    )
-
-
-def load_dune_results_response(response) -> list[DuneRow]:
-    return dune_results(response.json())
-
-
-def load_dune_error_response(response, api_key: str) -> DuneError:
-    if not hasattr(response, "text"):
-        raise ValueError("Dune error.text is required")
-    return DuneError(message=dune_error_text(response.text, api_key))
+def load_activity_response(response) -> tuple[list[ActivityEvent], ActivityPagination]:
+    return activity_page(response.json())
 
 
 def load_goldsky_response(response) -> list[GoldskyFill]:
