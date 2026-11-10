@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-09 09:01 UTC",
+  "updated": "2026-11-10 09:01 UTC",
   "candidates": [
     {
       "wallet": "0xeebde7a0e019a63e6b476eb425505b7b3e6eba30",
@@ -8938,8 +8938,8 @@
       "discovery_source": "leaderboard",
       "style_guess": null,
       "first_seen": "2026-11-08",
-      "leaderboard_rank": 471,
-      "prev_rank": 482,
+      "leaderboard_rank": 469,
+      "prev_rank": 471,
       "trades": null,
       "markets": null,
       "volume": null,
@@ -9344,24 +9344,6 @@
       "is_new": false
     },
     {
-      "wallet": "0xab155a20ff29debee4128e9dd1ea6ab8541c46e5",
-      "status": "pending",
-      "pnl": 69086.798366,
-      "username": "Eager47259",
-      "profile_url": "https://polymarket.com/@Eager47259",
-      "discovery_source": "leaderboard",
-      "style_guess": null,
-      "first_seen": "2026-11-09",
-      "leaderboard_rank": 491,
-      "prev_rank": null,
-      "trades": null,
-      "markets": null,
-      "volume": null,
-      "efficiency": null,
-      "confidence_score": null,
-      "is_new": true
-    },
-    {
       "wallet": "0x40604cb1f958c03bea0b18aa43e4cb0d62f33ec3",
       "status": "auto-rejected",
       "pnl": 68943.769341,
@@ -9701,6 +9683,24 @@
       "volume": 682238.7006329999,
       "efficiency": null,
       "confidence_score": 0.041,
+      "is_new": false
+    },
+    {
+      "wallet": "0xab155a20ff29debee4128e9dd1ea6ab8541c46e5",
+      "status": "pending",
+      "pnl": 67664.956229,
+      "username": "Eager47259",
+      "profile_url": "https://polymarket.com/@Eager47259",
+      "discovery_source": "leaderboard",
+      "style_guess": null,
+      "first_seen": "2026-11-09",
+      "leaderboard_rank": 508,
+      "prev_rank": 491,
+      "trades": null,
+      "markets": null,
+      "volume": null,
+      "efficiency": null,
+      "confidence_score": null,
       "is_new": false
     },
     {
@@ -13034,6 +13034,24 @@
       "is_new": true
     },
     {
+      "wallet": "0x18c18e0c8c3154360b4f730ec8b9d8013ceb2183",
+      "status": "pending",
+      "pnl": 54878.531035,
+      "username": "0x18c18e0c",
+      "profile_url": "https://polymarket.com/@0x18c18e0c8c3154360b4f730ec8b9d8013ceb2183",
+      "discovery_source": "leaderboard",
+      "style_guess": null,
+      "first_seen": "2026-11-09",
+      "leaderboard_rank": 662,
+      "prev_rank": 716,
+      "trades": null,
+      "markets": null,
+      "volume": null,
+      "efficiency": null,
+      "confidence_score": null,
+      "is_new": false
+    },
+    {
       "wallet": "0x7bdeab151b9265a89f9c2a3261e68c6a1c948c91",
       "status": "auto-rejected",
       "pnl": 54784.002206,
@@ -13610,6 +13628,24 @@
       "is_new": false
     },
     {
+      "wallet": "0x2011550a8fd844aa22b78d0f039bb72befcb71fa",
+      "status": "pending",
+      "pnl": 53291.035197,
+      "username": "okeledokelee",
+      "profile_url": "https://polymarket.com/@okeledokelee",
+      "discovery_source": "leaderboard",
+      "style_guess": "Unknown",
+      "first_seen": "2026-11-05",
+      "leaderboard_rank": 682,
+      "prev_rank": 695,
+      "trades": null,
+      "markets": null,
+      "volume": null,
+      "efficiency": null,
+      "confidence_score": null,
+      "is_new": false
+    },
+    {
       "wallet": "0xd8d83d7a90aeef514406cc16ec224cb02440bcbe",
       "status": "auto-rejected",
       "pnl": 53282.481761,
@@ -13654,7 +13690,7 @@
       "discovery_source": "leaderboard",
       "style_guess": "Unknown",
       "first_seen": "2026-11-05",
-      "leaderboard_rank": 683,
+      "leaderboard_rank": 685,
       "prev_rank": 683,
       "trades": null,
       "markets": null,
@@ -13762,7 +13798,7 @@
       "discovery_source": "leaderboard",
       "style_guess": "Hybrid",
       "first_seen": "2026-05-10",
-      "leaderboard_rank": 686,
+      "leaderboard_rank": 689,
       "prev_rank": 686,
       "trades": 512,
       "markets": 512,
@@ -14003,24 +14039,6 @@
       "volume": 3348259.6829830008,
       "efficiency": 1.57,
       "confidence_score": 0.56,
-      "is_new": false
-    },
-    {
-      "wallet": "0x2011550a8fd844aa22b78d0f039bb72befcb71fa",
-      "status": "pending",
-      "pnl": 52424.852246,
-      "username": "okeledokelee",
-      "profile_url": "https://polymarket.com/@okeledokelee",
-      "discovery_source": "leaderboard",
-      "style_guess": "Unknown",
-      "first_seen": "2026-11-05",
-      "leaderboard_rank": 695,
-      "prev_rank": 706,
-      "trades": null,
-      "markets": null,
-      "volume": null,
-      "efficiency": null,
-      "confidence_score": null,
       "is_new": false
     },
     {
@@ -14798,24 +14816,6 @@
       "is_new": false
     },
     {
-      "wallet": "0x18c18e0c8c3154360b4f730ec8b9d8013ceb2183",
-      "status": "pending",
-      "pnl": 50945.195107,
-      "username": "0x18c18e0c",
-      "profile_url": "https://polymarket.com/@0x18c18e0c8c3154360b4f730ec8b9d8013ceb2183",
-      "discovery_source": "leaderboard",
-      "style_guess": null,
-      "first_seen": "2026-11-09",
-      "leaderboard_rank": 716,
-      "prev_rank": null,
-      "trades": null,
-      "markets": null,
-      "volume": null,
-      "efficiency": null,
-      "confidence_score": null,
-      "is_new": true
-    },
-    {
       "wallet": "0xb52ee3e874f645058d93fcf7c99dcdc96750d3c8",
       "status": "auto-rejected",
       "pnl": 50922.308704,
@@ -14922,6 +14922,24 @@
       "efficiency": null,
       "confidence_score": 0.03,
       "is_new": false
+    },
+    {
+      "wallet": "0x129246beaac356e104c397f0985c11b7469be5a6",
+      "status": "pending",
+      "pnl": 50773.399256,
+      "username": "OhioAI",
+      "profile_url": "https://polymarket.com/@OhioAI",
+      "discovery_source": "leaderboard",
+      "style_guess": null,
+      "first_seen": "2026-11-10",
+      "leaderboard_rank": 721,
+      "prev_rank": null,
+      "trades": null,
+      "markets": null,
+      "volume": null,
+      "efficiency": null,
+      "confidence_score": null,
+      "is_new": true
     },
     {
       "wallet": "0x3d8a89a20aa73fba0f30d080e8120de9f9555724",
