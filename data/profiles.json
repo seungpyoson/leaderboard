@@ -1,12 +1,12 @@
 {
-  "updated": "2026-11-15 08:20 UTC",
+  "updated": "2026-11-16 08:31 UTC",
   "accounts": 800,
   "profiles": [
     {
       "name": "0xf705fa045201391d9632b7f3cde06a5e24453ca7",
       "wallet": "0xf705fa045201391d9632b7f3cde06a5e24453ca7",
       "profile_url": "https://polymarket.com/@0xf705fa045201391d9632b7f3cde06a5e24453ca7",
-      "pnl": 2819728.752525,
+      "pnl": 2788940.523069,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -38,17 +38,17 @@
       "name": "justdance",
       "wallet": "0xcc500cbcc8b7cf5bd21975ebbea34f21b5644c82",
       "profile_url": "https://polymarket.com/@justdance",
-      "pnl": 1905457.933952,
+      "pnl": 1914649.851933,
       "volume": null,
       "efficiency": null,
       "style": null,
       "trades": 22801,
       "largest_win": 82742.474261,
       "first_seen": "2024-05-01",
-      "total_received": 1411786.9258440002,
+      "total_received": 1451786.9258440002,
       "total_sent": 3043019.9999909997,
       "net_capital": 96358.48381199999,
-      "roic": 1977.4677418852289
+      "roic": 1987.0070347605026
     },
     {
       "name": "k9Q2mX4L8A7ZP3R",
@@ -70,7 +70,7 @@
       "name": "Tokor",
       "wallet": "0xa19cbababc312f9df185e49d7004c249ed1ade6b",
       "profile_url": "https://polymarket.com/@Tokor",
-      "pnl": 1205898.846969,
+      "pnl": 1205707.242297,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -80,13 +80,13 @@
       "total_received": 386673.79999999993,
       "total_sent": 1201001.0,
       "net_capital": 385672.79999999993,
-      "roic": 312.67407164026093
+      "roic": 312.62439101149994
     },
     {
       "name": "coinman2",
       "wallet": "0x55be7aa03ecfbe37aa5460db791205f7ac9ddca3",
       "profile_url": "https://polymarket.com/@coinman2",
-      "pnl": 1120237.756101,
+      "pnl": 1120895.363397,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -96,7 +96,7 @@
       "total_received": 830580.75861,
       "total_sent": 2148057.9999909997,
       "net_capital": 199776.818791,
-      "roic": 560.7446163575946
+      "roic": 561.073787329472
     },
     {
       "name": "BoneReader",
@@ -278,7 +278,7 @@
       "name": "easyclap",
       "wallet": "0x71a70f24538d885d1b45f9cea158a2cdf2e56fcf",
       "profile_url": "https://polymarket.com/@easyclap",
-      "pnl": 686569.282174,
+      "pnl": 683239.483441,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -288,13 +288,13 @@
       "total_received": 666789.538319,
       "total_sent": 1431545.999995,
       "net_capital": 276227.341827,
-      "roic": 248.55225323928843
+      "roic": 247.34679735973057
     },
     {
       "name": "HaileyWelch",
       "wallet": "0x80cd8310aa624521e9e1b2b53b568cafb0ef0273",
       "profile_url": "https://polymarket.com/@HaileyWelch",
-      "pnl": 646907.303034,
+      "pnl": 646930.840973,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -304,13 +304,13 @@
       "total_received": 1458154.178351,
       "total_sent": 2245009.9999909997,
       "net_capital": 637583.3946380002,
-      "roic": 101.46238256429085
+      "roic": 101.46607430708056
     },
     {
       "name": "kingofcoinflips",
       "wallet": "0xe9c6312464b52aa3eff13d822b003282075995c9",
       "profile_url": "https://polymarket.com/@kingofcoinflips",
-      "pnl": 639239.016325,
+      "pnl": 644510.991372,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -318,9 +318,9 @@
       "largest_win": 68464.260551,
       "first_seen": "2025-08-23",
       "total_received": 716387.732712,
-      "total_sent": 1349999.999994,
+      "total_sent": 1389999.999994,
       "net_capital": 249976.080746,
-      "roic": 255.72007306352202
+      "roic": 257.8290648643643
     },
     {
       "name": "rwo",
@@ -342,7 +342,7 @@
       "name": "Sharky6999",
       "wallet": "0x751a2b86cab503496efd325c8344e10159349ea1",
       "profile_url": "https://polymarket.com/@Sharky6999",
-      "pnl": 625877.749669,
+      "pnl": 630875.359046,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -352,7 +352,7 @@
       "total_received": 687761.547111,
       "total_sent": 674988.599999,
       "net_capital": 200660.21730800008,
-      "roic": 311.9092354556356
+      "roic": 314.39981851392514
     },
     {
       "name": "Account88888",
@@ -390,7 +390,7 @@
       "name": "0x50f7",
       "wallet": "0xee65685de42f8de9a03b4c53ee77d56a20d2cfc9",
       "profile_url": "https://polymarket.com/@0x50f7",
-      "pnl": 576870.302589,
+      "pnl": 577978.180299,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -400,7 +400,7 @@
       "total_received": 605236.065557,
       "total_sent": 906984.786564,
       "net_capital": 355219.075557,
-      "roic": 162.3984583835878
+      "roic": 162.7103441426121
     },
     {
       "name": "02a923d2f6edbc894e76357104e654b27a0d9071e",
@@ -470,7 +470,7 @@
       "name": "mo-money",
       "wallet": "0x32ed2e546b187ca15e2841edc82b22c713cf8ec3",
       "profile_url": "https://polymarket.com/@mo-money",
-      "pnl": 535854.94057,
+      "pnl": 536537.895185,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -478,9 +478,9 @@
       "largest_win": 2719.576037,
       "first_seen": "2026-02-03",
       "total_received": 20812.983567000003,
-      "total_sent": 579465.0595039999,
+      "total_sent": 607852.8534899999,
       "net_capital": 19817.303567,
-      "roic": 2703.9750325181058
+      "roic": 2707.42128650867
     },
     {
       "name": "0xf247584e41117bbBe4Cc06E4d2C95741792a5216",
@@ -630,7 +630,7 @@
       "name": "easypredict",
       "wallet": "0x388537259dc9e693c1c9b96fdf07a63f6b7aca77",
       "profile_url": "https://polymarket.com/@easypredict",
-      "pnl": 477835.731428,
+      "pnl": 477939.75145,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -640,13 +640,13 @@
       "total_received": 522818.421788,
       "total_sent": 933014.6047949999,
       "net_capital": 322519.949101,
-      "roic": 148.15695362718836
+      "roic": 148.1892059025251
     },
     {
       "name": "x6916Cc00AA1c3e75ECf4081DF7caE7D2f3592fd4",
       "wallet": "0x6916cc00aa1c3e75ecf4081df7cae7d2f3592fd4",
       "profile_url": "https://polymarket.com/@x6916Cc00AA1c3e75ECf4081DF7caE7D2f3592fd4",
-      "pnl": 474558.358661,
+      "pnl": 477069.599201,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -656,7 +656,7 @@
       "total_received": 61181.031521,
       "total_sent": 99999.999999,
       "net_capital": 61181.031521,
-      "roic": 775.6625654441783
+      "roic": 779.767171851702
     },
     {
       "name": "vidarx",
@@ -723,22 +723,6 @@
       "roic": 43.30288190486386
     },
     {
-      "name": "bosona",
-      "wallet": "0xc2ad03f79ca3f3c17d8c7de2612ce0c89b7d40ed",
-      "profile_url": "https://polymarket.com/@bosona",
-      "pnl": 449611.823667,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 112325,
-      "largest_win": 2799.931152,
-      "first_seen": "2026-05-21",
-      "total_received": 21452.300000000003,
-      "total_sent": 500911.9491389999,
-      "net_capital": 20382.210000000003,
-      "roic": 2205.9032051332997
-    },
-    {
       "name": "0x1461cC6e",
       "wallet": "0x1461cc6e1a05e20710c416307db62c28f1d122d8",
       "profile_url": "https://polymarket.com/@0x1461cC6e",
@@ -755,10 +739,26 @@
       "roic": 24.92639143735025
     },
     {
+      "name": "bosona",
+      "wallet": "0xc2ad03f79ca3f3c17d8c7de2612ce0c89b7d40ed",
+      "profile_url": "https://polymarket.com/@bosona",
+      "pnl": 448206.219253,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 112325,
+      "largest_win": 2799.931152,
+      "first_seen": "2026-05-21",
+      "total_received": 21452.300000000003,
+      "total_sent": 517023.4187989999,
+      "net_capital": 20382.210000000003,
+      "roic": 2199.0069734979666
+    },
+    {
       "name": "LondonBridge",
       "wallet": "0xfb1c3c1ab4fb2d0cbcbb9538c8d4d357dd95963e",
       "profile_url": "https://polymarket.com/@LondonBridge",
-      "pnl": 441537.989738,
+      "pnl": 441881.314547,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -769,6 +769,22 @@
       "total_sent": null,
       "net_capital": null,
       "roic": null
+    },
+    {
+      "name": "almach",
+      "wallet": "0x3725d52f3c252e8374999cc8617292ea2608ad88",
+      "profile_url": "https://polymarket.com/@almach",
+      "pnl": 434325.772611,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 107604,
+      "largest_win": 2573.803468,
+      "first_seen": "2026-05-21",
+      "total_received": 21617.299556999995,
+      "total_sent": 503002.93556699995,
+      "net_capital": 20412.619556999998,
+      "roic": 2127.731677936744
     },
     {
       "name": "0x0eA574F3204C5c9C0cdEad90392ea0990F4D17e4",
@@ -785,22 +801,6 @@
       "total_sent": 445821.436453,
       "net_capital": 75010.439999,
       "roic": 578.4211684517305
-    },
-    {
-      "name": "almach",
-      "wallet": "0x3725d52f3c252e8374999cc8617292ea2608ad88",
-      "profile_url": "https://polymarket.com/@almach",
-      "pnl": 433179.784378,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 107604,
-      "largest_win": 2573.803468,
-      "first_seen": "2026-05-21",
-      "total_received": 21617.299556999995,
-      "total_sent": 480474.67766399996,
-      "net_capital": 20412.619556999998,
-      "roic": 2122.1175614839294
     },
     {
       "name": "manwithahat",
@@ -851,6 +851,22 @@
       "roic": 369.6851953503812
     },
     {
+      "name": "getbipped",
+      "wallet": "0x252d7bae5ec87553dcafb23e275c202ac0d3c456",
+      "profile_url": "https://polymarket.com/@getbipped",
+      "pnl": 402978.494271,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 2840,
+      "largest_win": 303512.875324,
+      "first_seen": "2025-09-05",
+      "total_received": 907072.2672829999,
+      "total_sent": 999999.999998,
+      "net_capital": 457072.267285,
+      "roic": 88.16515967260146
+    },
+    {
       "name": "0xb85e5c96b0fa57aa9d5ce7ca6ea72409034b6e0",
       "wallet": "0xb85e5c96b0fa57aa9d5ce7ca6ea72409034b6e0f",
       "profile_url": "https://polymarket.com/@0xb85e5c96b0fa57aa9d5ce7ca6ea72409034b6e0",
@@ -897,22 +913,6 @@
       "total_sent": 419665.999999,
       "net_capital": 20000.0,
       "roic": 2000.31154542
-    },
-    {
-      "name": "getbipped",
-      "wallet": "0x252d7bae5ec87553dcafb23e275c202ac0d3c456",
-      "profile_url": "https://polymarket.com/@getbipped",
-      "pnl": 389049.263605,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 2840,
-      "largest_win": 303512.875324,
-      "first_seen": "2025-09-05",
-      "total_received": 907072.2672829999,
-      "total_sent": 999999.999998,
-      "net_capital": 457072.267285,
-      "roic": 85.11766988532136
     },
     {
       "name": "stingo43",
@@ -1174,7 +1174,7 @@
       "name": "gabigol",
       "wallet": "0x885278f0e304bc2d53f805af2ab779cb6011c569",
       "profile_url": "https://polymarket.com/@gabigol",
-      "pnl": 317728.753807,
+      "pnl": 316211.259747,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -1184,7 +1184,7 @@
       "total_received": 7752.035901,
       "total_sent": 402004.999999,
       "net_capital": 7000.0,
-      "roic": 4538.982197242857
+      "roic": 4517.303710671429
     },
     {
       "name": "0xEB6789cA6b1425fF908a69a2a5469C38532C",
@@ -1350,7 +1350,7 @@
       "name": "BoneOhio",
       "wallet": "0x48ac40fc545cf327edd5365435c3a9f385614a7e",
       "profile_url": "https://polymarket.com/@BoneOhio",
-      "pnl": 281351.640714,
+      "pnl": 280808.178994,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -1358,15 +1358,15 @@
       "largest_win": 1020.19176,
       "first_seen": "2026-03-24",
       "total_received": 100992.403022,
-      "total_sent": 514197.59773000004,
+      "total_sent": 516824.82773,
       "net_capital": 23606.0,
-      "roic": 1191.8649526137422
+      "roic": 1189.562734025248
     },
     {
       "name": "pspspsps5",
       "wallet": "0xb0f85baa97990910a3e8ac2b4a58a322f01ecef5",
       "profile_url": "https://polymarket.com/@pspspsps5",
-      "pnl": 279757.026657,
+      "pnl": 280540.282753,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -1414,7 +1414,7 @@
       "name": "drfc4eybh7i8",
       "wallet": "0x20d2309cd92b797ae7ca175ed828ed8a27fbe29d",
       "profile_url": "https://polymarket.com/@drfc4eybh7i8",
-      "pnl": 273290.964822,
+      "pnl": 273240.634459,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -1430,7 +1430,7 @@
       "name": "PBot-6",
       "wallet": "0x21d0a97aac03917e752857a551bbe5103a00e8d7",
       "profile_url": "https://polymarket.com/@PBot-6",
-      "pnl": 270280.433507,
+      "pnl": 271121.133841,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -1440,7 +1440,7 @@
       "total_received": 87318.374626,
       "total_sent": 161564.0,
       "net_capital": 39780.0,
-      "roic": 679.4379927275013
+      "roic": 681.5513671216692
     },
     {
       "name": "0x547889b207c980f660774D06CD5Ca144377A014",
@@ -1661,7 +1661,7 @@
       "trades": 20377,
       "largest_win": 84206.487996,
       "first_seen": "2025-01-05",
-      "total_received": 53836.769777999994,
+      "total_received": 55833.769777999994,
       "total_sent": 262328.9036719999,
       "net_capital": 12212.896956999997,
       "roic": 1919.0102227438292
@@ -1734,7 +1734,7 @@
       "name": "0x424eb20Fcd25113e3b98f42522A54580350b263b",
       "wallet": "0x424eb20fcd25113e3b98f42522a54580350b263b",
       "profile_url": "https://polymarket.com/@0x424eb20Fcd25113e3b98f42522A54580350b263b",
-      "pnl": 223512.498594,
+      "pnl": 223979.723791,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -1744,7 +1744,7 @@
       "total_received": 151552.726698,
       "total_sent": 420253.51,
       "net_capital": 57265.0,
-      "roic": 390.3125794010303
+      "roic": 391.12847950929887
     },
     {
       "name": "lstxx",
@@ -1846,7 +1846,7 @@
       "name": "NihiIism",
       "wallet": "0x5c4600b33a02adf80dd07d6853f0c59e8d9e753d",
       "profile_url": "https://polymarket.com/@NihiIism",
-      "pnl": 214395.816988,
+      "pnl": 214448.324096,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -1875,26 +1875,10 @@
       "roic": 127.45858455532913
     },
     {
-      "name": "fiankee",
-      "wallet": "0xef104cc70851a4246e8e06790d7fad9708190b43",
-      "profile_url": "https://polymarket.com/@fiankee",
-      "pnl": 211866.431557,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 7354,
-      "largest_win": 27122.130188,
-      "first_seen": "2025-10-06",
-      "total_received": 301998.54552399996,
-      "total_sent": 416665.999997,
-      "net_capital": 271914.995525,
-      "roic": 77.91642058869861
-    },
-    {
       "name": "aswfadq1555",
       "wallet": "0x7e5d2991c2647de2348287e2f499329fc6a6c4c3",
       "profile_url": "https://polymarket.com/@aswfadq1555",
-      "pnl": 211396.126294,
+      "pnl": 212384.823853,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -1904,7 +1888,23 @@
       "total_received": 23995.510199999997,
       "total_sent": 30000.0,
       "net_capital": 22000.0,
-      "roic": 960.8914831545453
+      "roic": 965.3855629681818
+    },
+    {
+      "name": "fiankee",
+      "wallet": "0xef104cc70851a4246e8e06790d7fad9708190b43",
+      "profile_url": "https://polymarket.com/@fiankee",
+      "pnl": 211439.322196,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 7354,
+      "largest_win": 27122.130188,
+      "first_seen": "2025-10-06",
+      "total_received": 301998.54552399996,
+      "total_sent": 416665.999997,
+      "net_capital": 271914.995525,
+      "roic": 77.75934599993775
     },
     {
       "name": "hqb.prediction",
@@ -2051,22 +2051,6 @@
       "roic": 0.9585742877720725
     },
     {
-      "name": "0xba679aB701E6162CC2C932b8B498124F47394727",
-      "wallet": "0xba679ab701e6162cc2c932b8b498124f47394727",
-      "profile_url": "https://polymarket.com/@0xba679aB701E6162CC2C932b8B498124F47394727",
-      "pnl": 193737.379029,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 144080,
-      "largest_win": 3554.706088,
-      "first_seen": "2026-03-24",
-      "total_received": 87856.439999,
-      "total_sent": 333248.46590799995,
-      "net_capital": 57546.999999,
-      "roic": 336.6593897724757
-    },
-    {
       "name": "precision",
       "wallet": "0xfb334229be3446e7197c993e32f48101ea8dd6c0",
       "profile_url": "https://polymarket.com/@precision",
@@ -2083,10 +2067,26 @@
       "roic": 30.231147764639093
     },
     {
+      "name": "0xba679aB701E6162CC2C932b8B498124F47394727",
+      "wallet": "0xba679ab701e6162cc2c932b8b498124f47394727",
+      "profile_url": "https://polymarket.com/@0xba679aB701E6162CC2C932b8B498124F47394727",
+      "pnl": 193391.163925,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 144080,
+      "largest_win": 3554.706088,
+      "first_seen": "2026-03-24",
+      "total_received": 87856.439999,
+      "total_sent": 333248.46590799995,
+      "net_capital": 57546.999999,
+      "roic": 336.0577683082708
+    },
+    {
       "name": "SeniorLaghetto",
       "wallet": "0x05ab749a8554fb7c852238c271d384bae6798145",
       "profile_url": "https://polymarket.com/@SeniorLaghetto",
-      "pnl": 192892.471804,
+      "pnl": 193163.469479,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -2214,7 +2214,7 @@
       "name": "CoinTrick",
       "wallet": "0x731a241767938bb23d1b2fac4c9cd2f3cea9033f",
       "profile_url": "https://polymarket.com/@CoinTrick",
-      "pnl": 188415.289887,
+      "pnl": 188502.786883,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -2222,9 +2222,9 @@
       "largest_win": 75314.604292,
       "first_seen": "2025-08-31",
       "total_received": 10351103.86734999,
-      "total_sent": 10387528.120806998,
+      "total_sent": 10392528.120806998,
       "net_capital": 46138.83519599997,
-      "roic": 408.3659439745344
+      "roic": 408.55558247673827
     },
     {
       "name": "aenews2",
@@ -2237,8 +2237,8 @@
       "trades": 3358,
       "largest_win": 424684.145586,
       "first_seen": "2024-01-13",
-      "total_received": 3638513.359290999,
-      "total_sent": 5770636.293611,
+      "total_received": 3673513.359290999,
+      "total_sent": 6007636.293611,
       "net_capital": 185054.44039,
       "roic": 101.45079867218637
     },
@@ -2323,6 +2323,22 @@
       "roic": null
     },
     {
+      "name": "asdaefef",
+      "wallet": "0x75cc3b63a2f2423085e10706c78b494017b93ce1",
+      "profile_url": "https://polymarket.com/@asdaefef",
+      "pnl": 177666.215038,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 230840,
+      "largest_win": 1215.113819,
+      "first_seen": null,
+      "total_received": null,
+      "total_sent": null,
+      "net_capital": null,
+      "roic": null
+    },
+    {
       "name": "greater-fools",
       "wallet": "0x216b0f7fb8cc78d5035ba8d4ee67a1e71d91d8a5",
       "profile_url": "https://polymarket.com/@greater-fools",
@@ -2337,22 +2353,6 @@
       "total_sent": 0.0,
       "net_capital": 134631.04914000002,
       "roic": 131.83899628712348
-    },
-    {
-      "name": "asdaefef",
-      "wallet": "0x75cc3b63a2f2423085e10706c78b494017b93ce1",
-      "profile_url": "https://polymarket.com/@asdaefef",
-      "pnl": 177354.123885,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 230840,
-      "largest_win": 1215.113819,
-      "first_seen": null,
-      "total_received": null,
-      "total_sent": null,
-      "net_capital": null,
-      "roic": null
     },
     {
       "name": "dahndahn",
@@ -2387,26 +2387,10 @@
       "roic": null
     },
     {
-      "name": "GaleMartin",
-      "wallet": "0xaddaf5823edacd74c0d4555e3166971046234786",
-      "profile_url": "https://polymarket.com/@GaleMartin",
-      "pnl": 173128.506072,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 4707,
-      "largest_win": 9461.832263,
-      "first_seen": "2025-12-23",
-      "total_received": 314623.650098,
-      "total_sent": 488804.0,
-      "net_capital": 163093.649998,
-      "roic": 106.15281838019017
-    },
-    {
       "name": "x-MoneyForWhiskas",
       "wallet": "0x3048d65321be3497164cdfc2996f94f98a2e7537",
       "profile_url": "https://polymarket.com/@x-MoneyForWhiskas",
-      "pnl": 172985.841458,
+      "pnl": 173393.888051,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -2416,7 +2400,23 @@
       "total_received": 12896.25969,
       "total_sent": 334497.0,
       "net_capital": 9499.660520000001,
-      "roic": 1820.9686661308187
+      "roic": 1825.2640469198575
+    },
+    {
+      "name": "GaleMartin",
+      "wallet": "0xaddaf5823edacd74c0d4555e3166971046234786",
+      "profile_url": "https://polymarket.com/@GaleMartin",
+      "pnl": 173236.560401,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 4707,
+      "largest_win": 9461.832263,
+      "first_seen": "2025-12-23",
+      "total_received": 314623.650098,
+      "total_sent": 488804.0,
+      "net_capital": 163093.649998,
+      "roic": 106.21907131462467
     },
     {
       "name": "no-fuistes-baneado",
@@ -2547,6 +2547,22 @@
       "roic": 49.52942129114326
     },
     {
+      "name": "0xDB5",
+      "wallet": "0xdb5ad26b68d77ae966d29e7180147272ab7a3965",
+      "profile_url": "https://polymarket.com/@0xDB5",
+      "pnl": 167727.554545,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 13387,
+      "largest_win": 2669.54034,
+      "first_seen": "2025-02-11",
+      "total_received": 7617.6510450000005,
+      "total_sent": 56104.1,
+      "net_capital": 6972.481045,
+      "roic": 2405.5648694129936
+    },
+    {
       "name": "LambSaauce",
       "wallet": "0x1a4249cd596a8e51b267dfe3c56cacc25815a00b",
       "profile_url": "https://polymarket.com/@LambSaauce",
@@ -2593,22 +2609,6 @@
       "total_sent": 397000.0,
       "net_capital": 38200.492305,
       "roic": 434.0482575778155
-    },
-    {
-      "name": "0xDB5",
-      "wallet": "0xdb5ad26b68d77ae966d29e7180147272ab7a3965",
-      "profile_url": "https://polymarket.com/@0xDB5",
-      "pnl": 165589.402055,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 13387,
-      "largest_win": 2669.54034,
-      "first_seen": "2025-02-11",
-      "total_received": 7617.6510450000005,
-      "total_sent": 56104.1,
-      "net_capital": 6972.481045,
-      "roic": 2374.8992788405635
     },
     {
       "name": "guh123",
@@ -2707,22 +2707,6 @@
       "roic": 17.764598160029223
     },
     {
-      "name": "G-Penis-Monster",
-      "wallet": "0xd9013df863c1ba932780857b020dfdeacedf8e14",
-      "profile_url": "https://polymarket.com/@G-Penis-Monster",
-      "pnl": 162833.775863,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 108780,
-      "largest_win": 2068.515413,
-      "first_seen": "2026-03-24",
-      "total_received": 26491.712788000004,
-      "total_sent": 242594.79591000002,
-      "net_capital": 23040.5,
-      "roic": 706.7284818602026
-    },
-    {
       "name": "andy8980",
       "wallet": "0xa3eb7c5ff848d073ac9b6dd91c6a9eee6c3985e2",
       "profile_url": "https://polymarket.com/@andy8980",
@@ -2737,6 +2721,22 @@
       "total_sent": 353641.363437,
       "net_capital": 95000.0,
       "roic": 171.2394672926316
+    },
+    {
+      "name": "G-Penis-Monster",
+      "wallet": "0xd9013df863c1ba932780857b020dfdeacedf8e14",
+      "profile_url": "https://polymarket.com/@G-Penis-Monster",
+      "pnl": 161679.152864,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 108780,
+      "largest_win": 2068.515413,
+      "first_seen": "2026-03-24",
+      "total_received": 26491.712788000004,
+      "total_sent": 242594.79591000002,
+      "net_capital": 23040.5,
+      "roic": 701.7172060675767
     },
     {
       "name": "0xe56526b27b96f009b31ddb46558a134047bfce48",
@@ -2758,7 +2758,7 @@
       "name": "tphhh",
       "wallet": "0xf9151529abce6aa8357b99707ec06607cf238720",
       "profile_url": "https://polymarket.com/@tphhh",
-      "pnl": 160422.966503,
+      "pnl": 160440.701352,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -2768,7 +2768,7 @@
       "total_received": 3177217.241869999,
       "total_sent": 3278202.236516,
       "net_capital": 366481.46669399994,
-      "roic": 43.77382789644529
+      "roic": 43.77866711769159
     },
     {
       "name": "iamgone",
@@ -2883,6 +2883,22 @@
       "roic": 1.922638340804798
     },
     {
+      "name": "gobblewobble",
+      "wallet": "0x0fe40e887acbd0022f89d996acce26ab428501b7",
+      "profile_url": "https://polymarket.com/@gobblewobble",
+      "pnl": 154426.96998,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 2830,
+      "largest_win": 152280.458172,
+      "first_seen": "2025-12-10",
+      "total_received": 522306.801168,
+      "total_sent": 671105.0,
+      "net_capital": 275078.971168,
+      "roic": 56.139140452756095
+    },
+    {
       "name": "BadTattoo",
       "wallet": "0xa7011667f22c121c6cea7aab30192307c58c47cd",
       "profile_url": "https://polymarket.com/@BadTattoo",
@@ -2897,22 +2913,6 @@
       "total_sent": 392071.347215,
       "net_capital": 220260.47885400002,
       "roic": 69.94498237794156
-    },
-    {
-      "name": "gobblewobble",
-      "wallet": "0x0fe40e887acbd0022f89d996acce26ab428501b7",
-      "profile_url": "https://polymarket.com/@gobblewobble",
-      "pnl": 153489.45634,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 2830,
-      "largest_win": 152280.458172,
-      "first_seen": "2025-12-10",
-      "total_received": 522306.801168,
-      "total_sent": 651105.0,
-      "net_capital": 275078.971168,
-      "roic": 55.798324273307976
     },
     {
       "name": "Berinando",
@@ -2958,7 +2958,7 @@
       "largest_win": 184137.124071,
       "first_seen": "2024-07-15",
       "total_received": 2755627.4400330004,
-      "total_sent": 2460393.889354,
+      "total_sent": 2462179.619354,
       "net_capital": 649083.180547,
       "roic": 23.232313406568203
     },
@@ -2982,7 +2982,7 @@
       "name": "asidjasiodja",
       "wallet": "0x5e2b9261b0c4f697b55bf921ff2bc227183d9101",
       "profile_url": "https://polymarket.com/@asidjasiodja",
-      "pnl": 148503.92459,
+      "pnl": 148738.128044,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -3075,6 +3075,22 @@
       "roic": 35.24476391589681
     },
     {
+      "name": "0x502b532F55778c0985846Dc53a9bc71eB4F33b15",
+      "wallet": "0x502b532f55778c0985846dc53a9bc71eb4f33b15",
+      "profile_url": "https://polymarket.com/@0x502b532F55778c0985846Dc53a9bc71eB4F33b15",
+      "pnl": 142653.764605,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 84823,
+      "largest_win": 2558.572375,
+      "first_seen": "2025-10-24",
+      "total_received": 13020.276065,
+      "total_sent": 133351.499999,
+      "net_capital": 1966.14834,
+      "roic": null
+    },
+    {
       "name": "anon-fake",
       "wallet": "0x20ad75e19b155f8518eb9e0486158f9884879c9a",
       "profile_url": "https://polymarket.com/@anon-fake",
@@ -3089,38 +3105,6 @@
       "total_sent": 220709.0,
       "net_capital": 6499.989,
       "roic": 2171.5143424088874
-    },
-    {
-      "name": "0x502b532F55778c0985846Dc53a9bc71eB4F33b15",
-      "wallet": "0x502b532f55778c0985846dc53a9bc71eb4f33b15",
-      "profile_url": "https://polymarket.com/@0x502b532F55778c0985846Dc53a9bc71eB4F33b15",
-      "pnl": 139746.95518,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 84823,
-      "largest_win": 2558.572375,
-      "first_seen": "2025-10-24",
-      "total_received": 13020.276065,
-      "total_sent": 133351.499999,
-      "net_capital": 1966.14834,
-      "roic": null
-    },
-    {
-      "name": "tsihkodiives",
-      "wallet": "0x6db983ff1cbc85249e64e6ccd101aaa613ba4ab5",
-      "profile_url": "https://polymarket.com/@tsihkodiives",
-      "pnl": 139303.811934,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 1235,
-      "largest_win": 231327.203724,
-      "first_seen": "2025-09-25",
-      "total_received": 376768.3308459999,
-      "total_sent": 50.0,
-      "net_capital": 376768.3308459999,
-      "roic": 36.97333361888608
     },
     {
       "name": "0x6f06f9436fbc17cdd396e5943a14865065c5515",
@@ -3181,10 +3165,26 @@
       "trades": 9318,
       "largest_win": 45382.060625,
       "first_seen": "2024-02-09",
-      "total_received": 1903137.9667079996,
+      "total_received": 1953551.0107609995,
       "total_sent": 3243416.848828,
       "net_capital": 49836.63544500001,
       "roic": 274.9883374756379
+    },
+    {
+      "name": "tsihkodiives",
+      "wallet": "0x6db983ff1cbc85249e64e6ccd101aaa613ba4ab5",
+      "profile_url": "https://polymarket.com/@tsihkodiives",
+      "pnl": 136974.73151,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 1235,
+      "largest_win": 231327.203724,
+      "first_seen": "2025-09-25",
+      "total_received": 376768.3308459999,
+      "total_sent": 50.0,
+      "net_capital": 376768.3308459999,
+      "roic": 36.35516053125681
     },
     {
       "name": "Leeche",
@@ -3217,22 +3217,6 @@
       "total_sent": 157879.992875,
       "net_capital": 21466.328962,
       "roic": 635.2020023236239
-    },
-    {
-      "name": "ComTruise",
-      "wallet": "0xeee92f1cc6d6e0ad0b4ffda20b01cf3678e27ecb",
-      "profile_url": "https://polymarket.com/@ComTruise",
-      "pnl": 135763.456021,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 10176,
-      "largest_win": 12672.672168,
-      "first_seen": "2024-09-20",
-      "total_received": 1897.2734799999998,
-      "total_sent": 18005.0,
-      "net_capital": 830.9034800000001,
-      "roic": null
     },
     {
       "name": "Ktulhu",
@@ -3280,6 +3264,22 @@
       "total_received": 567.5615619999999,
       "total_sent": 136453.889998,
       "net_capital": 478.82886199999996,
+      "roic": null
+    },
+    {
+      "name": "ComTruise",
+      "wallet": "0xeee92f1cc6d6e0ad0b4ffda20b01cf3678e27ecb",
+      "profile_url": "https://polymarket.com/@ComTruise",
+      "pnl": 134526.814677,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 10176,
+      "largest_win": 12672.672168,
+      "first_seen": "2024-09-20",
+      "total_received": 1897.2734799999998,
+      "total_sent": 18005.0,
+      "net_capital": 830.9034800000001,
       "roic": null
     },
     {
@@ -3475,6 +3475,22 @@
       "roic": 645.9478771647699
     },
     {
+      "name": "0xdf0D2CcfE3d7C2EF120395534e43Afe283509F79",
+      "wallet": "0xdf0d2ccfe3d7c2ef120395534e43afe283509f79",
+      "profile_url": "https://polymarket.com/@0xdf0D2CcfE3d7C2EF120395534e43Afe283509F79",
+      "pnl": 130252.72445,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 83830,
+      "largest_win": 1313.1,
+      "first_seen": "2026-03-24",
+      "total_received": 225324.62929600003,
+      "total_sent": 422350.09590899997,
+      "net_capital": 224365.17999899999,
+      "roic": 58.053894303287414
+    },
+    {
       "name": "CramSchoolClub01",
       "wallet": "0x7dfc8aa22f2d4d6f9cbf55cf86682a4d2477f54e",
       "profile_url": "https://polymarket.com/@CramSchoolClub01",
@@ -3489,22 +3505,6 @@
       "total_sent": 163801.38015999997,
       "net_capital": 34400.640045,
       "roic": 376.7714470063721
-    },
-    {
-      "name": "0xdf0D2CcfE3d7C2EF120395534e43Afe283509F79",
-      "wallet": "0xdf0d2ccfe3d7c2ef120395534e43afe283509f79",
-      "profile_url": "https://polymarket.com/@0xdf0D2CcfE3d7C2EF120395534e43Afe283509F79",
-      "pnl": 129503.54744,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 83830,
-      "largest_win": 1313.1,
-      "first_seen": "2026-03-24",
-      "total_received": 225324.62929600003,
-      "total_sent": 422350.09590899997,
-      "net_capital": 224365.17999899999,
-      "roic": 57.7199846431506
     },
     {
       "name": "RetamzZ",
@@ -3660,10 +3660,10 @@
       "style": null,
       "trades": 49498,
       "largest_win": 759.013091,
-      "first_seen": "2026-04-10",
-      "total_received": 1961.720311,
-      "total_sent": 209847.0,
-      "net_capital": 1080.02031,
+      "first_seen": null,
+      "total_received": null,
+      "total_sent": null,
+      "net_capital": null,
       "roic": null
     },
     {
@@ -3763,6 +3763,22 @@
       "roic": 172.13292615577248
     },
     {
+      "name": "dvasdkasodk",
+      "wallet": "0x5d4aba8ad45bb5eab3499a0294b42da5d1e455d3",
+      "profile_url": "https://polymarket.com/@dvasdkasodk",
+      "pnl": 123368.692919,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 210534,
+      "largest_win": 963.585992,
+      "first_seen": null,
+      "total_received": null,
+      "total_sent": null,
+      "net_capital": null,
+      "roic": null
+    },
+    {
       "name": "JanAMEX",
       "wallet": "0x6765c1c000e3b99c7fffea752c561cb868f1fa0d",
       "profile_url": "https://polymarket.com/@JanAMEX",
@@ -3825,22 +3841,6 @@
       "total_sent": 175361.39157500002,
       "net_capital": 50099.9,
       "roic": 245.3802369226286
-    },
-    {
-      "name": "dvasdkasodk",
-      "wallet": "0x5d4aba8ad45bb5eab3499a0294b42da5d1e455d3",
-      "profile_url": "https://polymarket.com/@dvasdkasodk",
-      "pnl": 122868.685614,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 210534,
-      "largest_win": 963.585992,
-      "first_seen": null,
-      "total_received": null,
-      "total_sent": null,
-      "net_capital": null,
-      "roic": null
     },
     {
       "name": "0xb2A922",
@@ -3907,6 +3907,22 @@
       "roic": 13.57753026562231
     },
     {
+      "name": "Parz1vaI",
+      "wallet": "0xb10047d6a254b2ebb306d7a7d13bf59171ab6461",
+      "profile_url": "https://polymarket.com/@Parz1vaI",
+      "pnl": 121879.484043,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 6206,
+      "largest_win": 93023.865072,
+      "first_seen": "2024-08-03",
+      "total_received": 1823858.946304,
+      "total_sent": 1990366.1000100002,
+      "net_capital": 758.017248,
+      "roic": null
+    },
+    {
       "name": "0xd71304743e49f7254e5d9329c9e4b9ec5b6f7ff",
       "wallet": "0xd71304743e49f7254e5d9329c9e4b9ec5b6f7ff5",
       "profile_url": "https://polymarket.com/@0xd71304743e49f7254e5d9329c9e4b9ec5b6f7ff",
@@ -3955,36 +3971,20 @@
       "roic": null
     },
     {
-      "name": "dangerously-skip-permissions",
-      "wallet": "0xc53375ff94e96100f2b30a4b5775db35218d69a9",
-      "profile_url": "https://polymarket.com/@dangerously-skip-permissions",
-      "pnl": 120781.661858,
+      "name": "ArmageddonRewardsBilly",
+      "wallet": "0xc8ab97a9089a9ff7e6ef0688e6e591a066946418",
+      "profile_url": "https://polymarket.com/@ArmageddonRewardsBilly",
+      "pnl": 119938.444907,
       "volume": null,
       "efficiency": null,
       "style": null,
-      "trades": 33217,
-      "largest_win": 753.027893,
-      "first_seen": "2026-07-17",
-      "total_received": 4218.52,
-      "total_sent": 203843.0,
-      "net_capital": 4000.0,
-      "roic": null
-    },
-    {
-      "name": "Parz1vaI",
-      "wallet": "0xb10047d6a254b2ebb306d7a7d13bf59171ab6461",
-      "profile_url": "https://polymarket.com/@Parz1vaI",
-      "pnl": 120007.365374,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 6206,
-      "largest_win": 93023.865072,
-      "first_seen": "2024-08-03",
-      "total_received": 1823858.946304,
-      "total_sent": 1990366.1000100002,
-      "net_capital": 758.017248,
-      "roic": null
+      "trades": 51232,
+      "largest_win": 710881.380767,
+      "first_seen": "2025-01-25",
+      "total_received": 8558728.076401997,
+      "total_sent": 9036496.164984997,
+      "net_capital": 1655088.3796899994,
+      "roic": 7.246648963209122
     },
     {
       "name": "0xa82afc3751a2E58Ec985989eb7d51B3F0F179055",
@@ -4003,20 +4003,20 @@
       "roic": 17.108013818882682
     },
     {
-      "name": "ArmageddonRewardsBilly",
-      "wallet": "0xc8ab97a9089a9ff7e6ef0688e6e591a066946418",
-      "profile_url": "https://polymarket.com/@ArmageddonRewardsBilly",
-      "pnl": 119278.156124,
+      "name": "dangerously-skip-permissions",
+      "wallet": "0xc53375ff94e96100f2b30a4b5775db35218d69a9",
+      "profile_url": "https://polymarket.com/@dangerously-skip-permissions",
+      "pnl": 119357.692347,
       "volume": null,
       "efficiency": null,
       "style": null,
-      "trades": 51232,
-      "largest_win": 710881.380767,
-      "first_seen": "2025-01-25",
-      "total_received": 8558728.076401997,
-      "total_sent": 9036496.164984997,
-      "net_capital": 1655088.3796899994,
-      "roic": 7.206754490436396
+      "trades": 33217,
+      "largest_win": 753.027893,
+      "first_seen": "2026-07-17",
+      "total_received": 4218.52,
+      "total_sent": 203843.0,
+      "net_capital": 4000.0,
+      "roic": null
     },
     {
       "name": "0x203f6f1fa096197f735434c7000758964beb521e",
@@ -4115,6 +4115,22 @@
       "roic": 1.7455409049740558
     },
     {
+      "name": "OhioRiskManagement",
+      "wallet": "0x0c7c5204404e9d5402d258fedac59c7212bae4cb",
+      "profile_url": "https://polymarket.com/@OhioRiskManagement",
+      "pnl": 113989.351597,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 209770,
+      "largest_win": 1355.598116,
+      "first_seen": "2026-01-05",
+      "total_received": 16191.818316,
+      "total_sent": 218050.0,
+      "net_capital": 16000.0,
+      "roic": 712.4334474812499
+    },
+    {
       "name": "0xB96903067A7129D14931c5A7E82B1A7c8A3c66a1",
       "wallet": "0xb96903067a7129d14931c5a7e82b1a7c8a3c66a1",
       "profile_url": "https://polymarket.com/@0xB96903067A7129D14931c5A7E82B1A7c8A3c66a1",
@@ -4129,22 +4145,6 @@
       "total_sent": 144091.038237,
       "net_capital": 29964.001646,
       "roic": 380.33566017445946
-    },
-    {
-      "name": "OhioRiskManagement",
-      "wallet": "0x0c7c5204404e9d5402d258fedac59c7212bae4cb",
-      "profile_url": "https://polymarket.com/@OhioRiskManagement",
-      "pnl": 113956.338217,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 209770,
-      "largest_win": 1355.598116,
-      "first_seen": "2026-01-05",
-      "total_received": 16191.818316,
-      "total_sent": 218050.0,
-      "net_capital": 16000.0,
-      "roic": 712.22711385625
     },
     {
       "name": "Bidou28old",
@@ -4243,22 +4243,6 @@
       "roic": 382.96458693789555
     },
     {
-      "name": "0x0a2c53bd218c04da996cf96490e14",
-      "wallet": "0x3b8407699e832891203387d52c64d8f61ff2f487",
-      "profile_url": "https://polymarket.com/@0x0a2c53bd218c04da996cf96490e14",
-      "pnl": 112412.70562,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 17461,
-      "largest_win": 3510.146471,
-      "first_seen": "2026-02-17",
-      "total_received": 40740.963085999996,
-      "total_sent": 162248.915562,
-      "net_capital": 3305.1854209999997,
-      "roic": null
-    },
-    {
       "name": "23222222",
       "wallet": "0xa8e1bf10c79a9d4a4db827bfdcb26b0664261b41",
       "profile_url": "https://polymarket.com/@23222222",
@@ -4289,6 +4273,22 @@
       "total_sent": 190000.99999699998,
       "net_capital": 160011.0,
       "roic": 70.12626097330809
+    },
+    {
+      "name": "0x0a2c53bd218c04da996cf96490e14",
+      "wallet": "0x3b8407699e832891203387d52c64d8f61ff2f487",
+      "profile_url": "https://polymarket.com/@0x0a2c53bd218c04da996cf96490e14",
+      "pnl": 112117.99791,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 17461,
+      "largest_win": 3510.146471,
+      "first_seen": "2026-02-17",
+      "total_received": 40740.963085999996,
+      "total_sent": 162248.915562,
+      "net_capital": 3305.1854209999997,
+      "roic": null
     },
     {
       "name": "Olololo",
@@ -4323,22 +4323,6 @@
       "roic": 1850.8635607540225
     },
     {
-      "name": "antsaslyku",
-      "wallet": "0x3c58ef422754ff22c7e806336feba0064d8b776b",
-      "profile_url": "https://polymarket.com/@antsaslyku",
-      "pnl": 110504.674297,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 191658,
-      "largest_win": 2220.722937,
-      "first_seen": "2026-04-24",
-      "total_received": 79844.321299,
-      "total_sent": 250098.143432,
-      "net_capital": 3621.231299,
-      "roic": null
-    },
-    {
       "name": "0x13e0d447520ebe7f8eeaf7817211201b2c585204",
       "wallet": "0x13e0d447520ebe7f8eeaf7817211201b2c585204",
       "profile_url": "https://polymarket.com/@0x13e0d447520ebe7f8eeaf7817211201b2c585204",
@@ -4352,6 +4336,22 @@
       "total_received": null,
       "total_sent": null,
       "net_capital": null,
+      "roic": null
+    },
+    {
+      "name": "antsaslyku",
+      "wallet": "0x3c58ef422754ff22c7e806336feba0064d8b776b",
+      "profile_url": "https://polymarket.com/@antsaslyku",
+      "pnl": 109965.509079,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 191658,
+      "largest_win": 2220.722937,
+      "first_seen": "2026-04-24",
+      "total_received": 79844.321299,
+      "total_sent": 250098.143432,
+      "net_capital": 3621.231299,
       "roic": null
     },
     {
@@ -4518,7 +4518,7 @@
       "name": "ohioism",
       "wallet": "0x361528e242bc6cc789ac8da6fd5cb98046178fdf",
       "profile_url": "https://polymarket.com/@ohioism",
-      "pnl": 107897.147488,
+      "pnl": 108132.692688,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -4627,22 +4627,6 @@
       "roic": 522.3588353475023
     },
     {
-      "name": "NIULAI4",
-      "wallet": "0x44832d0d2ec11187c1e77d786feb15f6a50254c6",
-      "profile_url": "https://polymarket.com/@NIULAI4",
-      "pnl": 104050.488664,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 14641,
-      "largest_win": 4980.944478,
-      "first_seen": "2026-07-09",
-      "total_received": 2709.145658,
-      "total_sent": 87919.0,
-      "net_capital": 2102.145658,
-      "roic": null
-    },
-    {
       "name": "...",
       "wallet": "0x8b3eeb3ea135c9b2246b1b78adce71a4c580662c",
       "profile_url": "https://polymarket.com/@...",
@@ -4737,6 +4721,22 @@
       "total_sent": 1411980.7999910002,
       "net_capital": 1159999.999992,
       "roic": 8.796759661612393
+    },
+    {
+      "name": "NIULAI4",
+      "wallet": "0x44832d0d2ec11187c1e77d786feb15f6a50254c6",
+      "profile_url": "https://polymarket.com/@NIULAI4",
+      "pnl": 101633.034305,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 14641,
+      "largest_win": 4980.944478,
+      "first_seen": "2026-07-09",
+      "total_received": 2709.145658,
+      "total_sent": 87919.0,
+      "net_capital": 2102.145658,
+      "roic": null
     },
     {
       "name": "0xb6fef4c2c436ab8bbf07d017952e851dcf717394",
@@ -5123,22 +5123,6 @@
       "roic": 106.15625320858936
     },
     {
-      "name": "Hcrystallash",
-      "wallet": "0x576b0696fd5a9225d66fd9500fd98f5be10b0cab",
-      "profile_url": "https://polymarket.com/@Hcrystallash",
-      "pnl": 94919.951166,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 143441,
-      "largest_win": 2268.834995,
-      "first_seen": "2026-02-04",
-      "total_received": 36152.520667,
-      "total_sent": 185131.0,
-      "net_capital": 4014.662467,
-      "roic": null
-    },
-    {
       "name": "0x6075106cD4f0155a68A0eb4CFd3b78F241Aa3a62",
       "wallet": "0x6075106cd4f0155a68a0eb4cfd3b78f241aa3a62",
       "profile_url": "https://polymarket.com/@0x6075106cD4f0155a68A0eb4CFd3b78F241Aa3a62",
@@ -5185,6 +5169,22 @@
       "total_sent": 571061.8914709999,
       "net_capital": 295575.833653,
       "roic": 31.879777865947872
+    },
+    {
+      "name": "Hcrystallash",
+      "wallet": "0x576b0696fd5a9225d66fd9500fd98f5be10b0cab",
+      "profile_url": "https://polymarket.com/@Hcrystallash",
+      "pnl": 94007.968721,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 143441,
+      "largest_win": 2268.834995,
+      "first_seen": "2026-02-04",
+      "total_received": 36152.520667,
+      "total_sent": 185131.0,
+      "net_capital": 4014.662467,
+      "roic": null
     },
     {
       "name": "Nadin592",
@@ -5715,22 +5715,6 @@
       "roic": null
     },
     {
-      "name": "Eager47259",
-      "wallet": "0xab155a20ff29debee4128e9dd1ea6ab8541c46e5",
-      "profile_url": "https://polymarket.com/@Eager47259",
-      "pnl": 87708.895411,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 3888,
-      "largest_win": 17401.206962,
-      "first_seen": "2026-06-01",
-      "total_received": 46577.270000000004,
-      "total_sent": 16581.179297000002,
-      "net_capital": 29996.090703,
-      "roic": 292.4010874598001
-    },
-    {
       "name": "hkuhjiuhoih",
       "wallet": "0x8db25e5540eed5e0f457ef667edc4e21edd4c3a1",
       "profile_url": "https://polymarket.com/@hkuhjiuhoih",
@@ -5745,22 +5729,6 @@
       "total_sent": 109565.69973200001,
       "net_capital": 21920.218969,
       "roic": 399.5130899004661
-    },
-    {
-      "name": "SirMartingale",
-      "wallet": "0x9eb48be5d329b282b8a18473db7ca6eaeeec65a1",
-      "profile_url": "https://polymarket.com/@SirMartingale",
-      "pnl": 87408.042783,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 16519,
-      "largest_win": 1934.425992,
-      "first_seen": "2026-01-06",
-      "total_received": 2115.928348,
-      "total_sent": 98701.0,
-      "net_capital": 1749.078348,
-      "roic": null
     },
     {
       "name": "soicowboy",
@@ -5811,6 +5779,22 @@
       "roic": null
     },
     {
+      "name": "SirMartingale",
+      "wallet": "0x9eb48be5d329b282b8a18473db7ca6eaeeec65a1",
+      "profile_url": "https://polymarket.com/@SirMartingale",
+      "pnl": 86768.575697,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 16519,
+      "largest_win": 1934.425992,
+      "first_seen": "2026-01-06",
+      "total_received": 2115.928348,
+      "total_sent": 98701.0,
+      "net_capital": 1749.078348,
+      "roic": null
+    },
+    {
       "name": "mmmmmmmmonsterkill",
       "wallet": "0xe169f7ab9cd3d2cc593b28e4a00568a2eeaa2158",
       "profile_url": "https://polymarket.com/@mmmmmmmmonsterkill",
@@ -5843,6 +5827,22 @@
       "roic": null
     },
     {
+      "name": "shy-blue-rock",
+      "wallet": "0xba016b05c84c9f073e5c9059d247d37cea4b8535",
+      "profile_url": "https://polymarket.com/@shy-blue-rock",
+      "pnl": 86183.375225,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 78689,
+      "largest_win": 1708.928829,
+      "first_seen": "2026-03-06",
+      "total_received": 6921.991346,
+      "total_sent": 117785.16754099999,
+      "net_capital": 6582.4856469999995,
+      "roic": 1309.2831469260932
+    },
+    {
       "name": "1000monkeys",
       "wallet": "0xbc5887953750f812be60e57ba6e178c847d65e72",
       "profile_url": "https://polymarket.com/@1000monkeys",
@@ -5873,22 +5873,6 @@
       "total_sent": 170549.920392,
       "net_capital": 52000.9,
       "roic": 165.62075848687235
-    },
-    {
-      "name": "shy-blue-rock",
-      "wallet": "0xba016b05c84c9f073e5c9059d247d37cea4b8535",
-      "profile_url": "https://polymarket.com/@shy-blue-rock",
-      "pnl": 86122.761086,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 78689,
-      "largest_win": 1708.928829,
-      "first_seen": "2026-03-06",
-      "total_received": 6921.991346,
-      "total_sent": 117785.16754099999,
-      "net_capital": 6582.4856469999995,
-      "roic": 1308.3623072577589
     },
     {
       "name": "TTbilly",
@@ -5958,7 +5942,7 @@
       "name": "averagerandomman",
       "wallet": "0x8970b56535153baadee991ca25a178ac085636b5",
       "profile_url": "https://polymarket.com/@averagerandomman",
-      "pnl": 85249.07417,
+      "pnl": 85148.247852,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -5968,13 +5952,13 @@
       "total_received": 30946.273652000003,
       "total_sent": 74478.0,
       "net_capital": 14973.316024,
-      "roic": 569.3399780874084
+      "roic": 568.6666047488746
     },
     {
       "name": "HellsAngelx",
       "wallet": "0x8ff04326388b1c024c45d7a7ffdd12cdedd0a0ed",
       "profile_url": "https://polymarket.com/@HellsAngelx",
-      "pnl": 85029.055143,
+      "pnl": 85018.095771,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -6001,6 +5985,22 @@
       "total_sent": 168216.613268,
       "net_capital": 129499.999999,
       "roic": 65.25896832096724
+    },
+    {
+      "name": "sir-upalot",
+      "wallet": "0xc1b4bfdc36eaa5c09e7231c61e5e44c5463f624f",
+      "profile_url": "https://polymarket.com/@sir-upalot",
+      "pnl": 84485.228782,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 50106,
+      "largest_win": 854.955179,
+      "first_seen": "2026-03-26",
+      "total_received": 1386.657459,
+      "total_sent": 118000.0,
+      "net_capital": 1000.0,
+      "roic": null
     },
     {
       "name": "gasd4",
@@ -6033,22 +6033,6 @@
       "total_sent": 95043.20201000001,
       "net_capital": 10000.0,
       "roic": 842.16292281
-    },
-    {
-      "name": "sir-upalot",
-      "wallet": "0xc1b4bfdc36eaa5c09e7231c61e5e44c5463f624f",
-      "profile_url": "https://polymarket.com/@sir-upalot",
-      "pnl": 84210.178563,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 50106,
-      "largest_win": 854.955179,
-      "first_seen": "2026-03-26",
-      "total_received": 1386.657459,
-      "total_sent": 118000.0,
-      "net_capital": 1000.0,
-      "roic": null
     },
     {
       "name": "candor",
@@ -6115,22 +6099,6 @@
       "roic": 159.9283826152164
     },
     {
-      "name": "GoodFallen",
-      "wallet": "0x0ca4e9d27ff826a109ecbf74754fb66b93f277a6",
-      "profile_url": "https://polymarket.com/@GoodFallen",
-      "pnl": 83771.341036,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 30014,
-      "largest_win": 648.018982,
-      "first_seen": "2026-07-17",
-      "total_received": 4049.22,
-      "total_sent": 133912.0,
-      "net_capital": 4000.0,
-      "roic": null
-    },
-    {
       "name": "UnRektCapital",
       "wallet": "0xdb7513a3c54d579d64ee64c948c85d2f27620252",
       "profile_url": "https://polymarket.com/@UnRektCapital",
@@ -6147,22 +6115,6 @@
       "roic": 7.187640361443616
     },
     {
-      "name": "5f5a",
-      "wallet": "0xa42f127d7e8df9f16881ffcc9ed0bc0326875f5a",
-      "profile_url": "https://polymarket.com/@5f5a",
-      "pnl": 83591.198802,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 10117,
-      "largest_win": 8232.623025,
-      "first_seen": "2026-01-08",
-      "total_received": 142929.61455199998,
-      "total_sent": 204200.49999799998,
-      "net_capital": 114811.331631,
-      "roic": 72.80744645542435
-    },
-    {
       "name": "bratanbratishka",
       "wallet": "0xcbb1a3174d9ac5a0f57f5b86808204b9382e7afb",
       "profile_url": "https://polymarket.com/@bratanbratishka",
@@ -6177,6 +6129,22 @@
       "total_sent": 113691.143075,
       "net_capital": 29964.000436,
       "roic": 278.5384704597927
+    },
+    {
+      "name": "5f5a",
+      "wallet": "0xa42f127d7e8df9f16881ffcc9ed0bc0326875f5a",
+      "profile_url": "https://polymarket.com/@5f5a",
+      "pnl": 83334.923828,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 10117,
+      "largest_win": 8232.623025,
+      "first_seen": "2026-01-08",
+      "total_received": 142929.61455199998,
+      "total_sent": 204200.49999799998,
+      "net_capital": 114811.331631,
+      "roic": 72.58423244827071
     },
     {
       "name": "0xd293F90ddE89cd3C4c350fDfDd7c427Ed82C8940",
@@ -6259,6 +6227,22 @@
       "roic": 1221.660257940447
     },
     {
+      "name": "GoodFallen",
+      "wallet": "0x0ca4e9d27ff826a109ecbf74754fb66b93f277a6",
+      "profile_url": "https://polymarket.com/@GoodFallen",
+      "pnl": 82154.330507,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 30014,
+      "largest_win": 648.018982,
+      "first_seen": "2026-07-17",
+      "total_received": 4049.22,
+      "total_sent": 133912.0,
+      "net_capital": 4000.0,
+      "roic": null
+    },
+    {
       "name": "commeowder",
       "wallet": "0xd06f0f7719df1b3b75b607923536b3250825d4a6",
       "profile_url": "https://polymarket.com/@commeowder",
@@ -6307,22 +6291,6 @@
       "roic": 19.82531805207296
     },
     {
-      "name": "ponzisniper",
-      "wallet": "0x530e6c4f8250a4247173efb981d46d3081d1cc11",
-      "profile_url": "https://polymarket.com/@ponzisniper",
-      "pnl": 81911.596636,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 178,
-      "largest_win": 26221.99083,
-      "first_seen": "2025-10-06",
-      "total_received": 124858.2396710001,
-      "total_sent": 185566.03179799998,
-      "net_capital": 14288.986453999996,
-      "roic": 573.2498725483082
-    },
-    {
       "name": "Mantronix",
       "wallet": "0x073a1caba3c22e9e361ceae83aaa5405706f91e7",
       "profile_url": "https://polymarket.com/@Mantronix",
@@ -6368,6 +6336,22 @@
       "total_received": 7100.0,
       "total_sent": 100356.54220899999,
       "net_capital": 2100.0,
+      "roic": null
+    },
+    {
+      "name": "foxriua",
+      "wallet": "0x090a9efe46c0e42e4fd598cd81be011ad72f27e7",
+      "profile_url": "https://polymarket.com/@foxriua",
+      "pnl": 81741.364935,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 3914,
+      "largest_win": 7412.91679,
+      "first_seen": "2026-02-14",
+      "total_received": 15446.020156,
+      "total_sent": 96520.369916,
+      "net_capital": 200.857124,
       "roic": null
     },
     {
@@ -6419,22 +6403,6 @@
       "roic": 238.6098964770266
     },
     {
-      "name": "foxriua",
-      "wallet": "0x090a9efe46c0e42e4fd598cd81be011ad72f27e7",
-      "profile_url": "https://polymarket.com/@foxriua",
-      "pnl": 81522.068753,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 3914,
-      "largest_win": 7412.91679,
-      "first_seen": "2026-02-14",
-      "total_received": 15446.020156,
-      "total_sent": 96520.369916,
-      "net_capital": 200.857124,
-      "roic": null
-    },
-    {
       "name": "scrooge",
       "wallet": "0x1fd50e9298ab99e6e427a2a3363bff480657cf04",
       "profile_url": "https://polymarket.com/@scrooge",
@@ -6467,22 +6435,6 @@
       "roic": 90.61593331203383
     },
     {
-      "name": "0xf9b7876ba2c35370e0bedb7f8ee772da722aa37c",
-      "wallet": "0xf9b7876ba2c35370e0bedb7f8ee772da722aa37c",
-      "profile_url": "https://polymarket.com/@0xf9b7876ba2c35370e0bedb7f8ee772da722aa37c",
-      "pnl": 81111.191584,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 46661,
-      "largest_win": 598.700061,
-      "first_seen": null,
-      "total_received": null,
-      "total_sent": null,
-      "net_capital": null,
-      "roic": null
-    },
-    {
       "name": "justinbeaver",
       "wallet": "0x86a29f88fcc23ea2b0e01b4e186b043e26c873a8",
       "profile_url": "https://polymarket.com/@justinbeaver",
@@ -6499,20 +6451,36 @@
       "roic": 529.5019538196021
     },
     {
-      "name": "coinfilippe",
-      "wallet": "0x997cda7b31612e3c394bfb55440619f3f689251e",
-      "profile_url": "https://polymarket.com/@coinfilippe",
-      "pnl": 80648.392374,
+      "name": "0xf9b7876ba2c35370e0bedb7f8ee772da722aa37c",
+      "wallet": "0xf9b7876ba2c35370e0bedb7f8ee772da722aa37c",
+      "profile_url": "https://polymarket.com/@0xf9b7876ba2c35370e0bedb7f8ee772da722aa37c",
+      "pnl": 80790.768914,
       "volume": null,
       "efficiency": null,
       "style": null,
-      "trades": 8421,
-      "largest_win": 2574.390409,
-      "first_seen": "2025-11-10",
-      "total_received": 80714.890344,
-      "total_sent": 86941.99999899999,
-      "net_capital": 5778.397289,
-      "roic": 1395.6879103402198
+      "trades": 46661,
+      "largest_win": 598.700061,
+      "first_seen": null,
+      "total_received": null,
+      "total_sent": null,
+      "net_capital": null,
+      "roic": null
+    },
+    {
+      "name": "ponzisniper",
+      "wallet": "0x530e6c4f8250a4247173efb981d46d3081d1cc11",
+      "profile_url": "https://polymarket.com/@ponzisniper",
+      "pnl": 80642.328349,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 178,
+      "largest_win": 26221.99083,
+      "first_seen": "2025-10-06",
+      "total_received": 124858.2396710001,
+      "total_sent": 185566.03179799998,
+      "net_capital": 14288.986453999996,
+      "roic": 564.3670291703953
     },
     {
       "name": "Adam888",
@@ -6547,6 +6515,22 @@
       "roic": null
     },
     {
+      "name": "coinfilippe",
+      "wallet": "0x997cda7b31612e3c394bfb55440619f3f689251e",
+      "profile_url": "https://polymarket.com/@coinfilippe",
+      "pnl": 80319.402581,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 8421,
+      "largest_win": 2574.390409,
+      "first_seen": "2025-11-10",
+      "total_received": 80714.890344,
+      "total_sent": 86941.99999899999,
+      "net_capital": 5778.397289,
+      "roic": 1389.9944666992592
+    },
+    {
       "name": "JDDance",
       "wallet": "0x2ca792f6c6d58796c5a04b9adc7fb23a18484dcb",
       "profile_url": "https://polymarket.com/@JDDance",
@@ -6563,6 +6547,22 @@
       "roic": 376.0638938703107
     },
     {
+      "name": "0xF3Ce251F9c4ae0f3940A9f32dE5Dd1A1d05B8Bc6",
+      "wallet": "0xf3ce251f9c4ae0f3940a9f32de5dd1a1d05b8bc6",
+      "profile_url": "https://polymarket.com/@0xF3Ce251F9c4ae0f3940A9f32dE5Dd1A1d05B8Bc6",
+      "pnl": 79996.523753,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 39741,
+      "largest_win": 1258.2975,
+      "first_seen": "2026-06-21",
+      "total_received": 7632.129140000001,
+      "total_sent": 0.0,
+      "net_capital": 7632.129140000001,
+      "roic": 1048.1547453611352
+    },
+    {
       "name": "arbfinder2026",
       "wallet": "0x22a4827ca94ba6e9f77f5dd9f49e6512b8e163eb",
       "profile_url": "https://polymarket.com/@arbfinder2026",
@@ -6577,22 +6577,6 @@
       "total_sent": 95206.02107,
       "net_capital": 390.19647599999996,
       "roic": null
-    },
-    {
-      "name": "0xF3Ce251F9c4ae0f3940A9f32dE5Dd1A1d05B8Bc6",
-      "wallet": "0xf3ce251f9c4ae0f3940a9f32de5dd1a1d05b8bc6",
-      "profile_url": "https://polymarket.com/@0xF3Ce251F9c4ae0f3940A9f32dE5Dd1A1d05B8Bc6",
-      "pnl": 79833.434631,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 39741,
-      "largest_win": 1258.2975,
-      "first_seen": "2026-06-21",
-      "total_received": 7632.129140000001,
-      "total_sent": 0.0,
-      "net_capital": 7632.129140000001,
-      "roic": 1046.0178695430195
     },
     {
       "name": "0x336848A1A1cb00348020c9457676F34d882F21Cd",
@@ -6726,7 +6710,7 @@
       "name": "kukubaja",
       "wallet": "0xa0c37cb0587b0dd1542f794bcfa345762bba5b9a",
       "profile_url": "https://polymarket.com/@kukubaja",
-      "pnl": 78853.959339,
+      "pnl": 78855.036339,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -6736,7 +6720,7 @@
       "total_received": 31858.842787000005,
       "total_sent": 31303.99888,
       "net_capital": 31802.442787000004,
-      "roic": 247.9493788170052
+      "roic": 247.95276534931415
     },
     {
       "name": "lowellqua",
@@ -6819,22 +6803,6 @@
       "roic": 34.134299261211446
     },
     {
-      "name": "Atomforge",
-      "wallet": "0x84389cfc4a652ea14d8d8be969769b1f69de3680",
-      "profile_url": "https://polymarket.com/@Atomforge",
-      "pnl": 78410.593006,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 9144,
-      "largest_win": 5626.090811,
-      "first_seen": "2025-10-29",
-      "total_received": 29484.540342,
-      "total_sent": 100219.92647899999,
-      "net_capital": 4950.268241999999,
-      "roic": null
-    },
-    {
       "name": "suntoria",
       "wallet": "0x960bf404c1eca257411203164357a925e33fae8d",
       "profile_url": "https://polymarket.com/@suntoria",
@@ -6870,7 +6838,7 @@
       "name": "gydmasg",
       "wallet": "0xc4567fe2a835b23f40db07f567ba0efbbdc98996",
       "profile_url": "https://polymarket.com/@gydmasg",
-      "pnl": 77807.538953,
+      "pnl": 77829.583822,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -6880,7 +6848,23 @@
       "total_received": 85469.17192999998,
       "total_sent": 113407.454334,
       "net_capital": 30665.521247,
-      "roic": 253.72971268379106
+      "roic": 253.80160081125004
+    },
+    {
+      "name": "Atomforge",
+      "wallet": "0x84389cfc4a652ea14d8d8be969769b1f69de3680",
+      "profile_url": "https://polymarket.com/@Atomforge",
+      "pnl": 77665.010508,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 9144,
+      "largest_win": 5626.090811,
+      "first_seen": "2025-10-29",
+      "total_received": 29484.540342,
+      "total_sent": 100219.92647899999,
+      "net_capital": 4950.268241999999,
+      "roic": null
     },
     {
       "name": "0x5532c66fa9Fbdc89b136e7e8c42e76fE18953F46",
@@ -7014,7 +6998,7 @@
       "name": "de-eznuts",
       "wallet": "0xa3d043b2da34f58045c6485d3f89b798b2b0ec04",
       "profile_url": "https://polymarket.com/@de-eznuts",
-      "pnl": 76468.099384,
+      "pnl": 76470.722724,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -7091,6 +7075,22 @@
       "roic": null
     },
     {
+      "name": "haveanedge.xyz",
+      "wallet": "0x38169304184f4e1a86cf4e7ea91e5e7cc0b150b4",
+      "profile_url": "https://polymarket.com/@haveanedge.xyz",
+      "pnl": 75903.394,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 0,
+      "largest_win": 163.5,
+      "first_seen": "2026-11-12",
+      "total_received": 328.42724599999997,
+      "total_sent": 199826.00000200002,
+      "net_capital": 10.0,
+      "roic": null
+    },
+    {
       "name": "dorothyoco",
       "wallet": "0x583866433d0742ae9dba76e6c34d708861d1dbf1",
       "profile_url": "https://polymarket.com/@dorothyoco",
@@ -7142,17 +7142,17 @@
       "name": "HandsomeLi",
       "wallet": "0x9bbf8abf929eddbb4da10535cf4c02db33f4c59f",
       "profile_url": "https://polymarket.com/@HandsomeLi",
-      "pnl": 74915.607578,
+      "pnl": 74577.594024,
       "volume": null,
       "efficiency": null,
       "style": null,
       "trades": 289,
       "largest_win": 10449.464866,
       "first_seen": "2025-07-15",
-      "total_received": 1665191.2024970008,
+      "total_received": 1700173.750367001,
       "total_sent": 1512609.7630730001,
       "net_capital": 274724.90382300003,
-      "roic": 27.26931797426952
+      "roic": 27.14628087450307
     },
     {
       "name": "cocac",
@@ -7395,6 +7395,22 @@
       "roic": null
     },
     {
+      "name": "0x568b079891fcc8bef2e557fa2a8a7ecca1700b3b",
+      "wallet": "0x568b079891fcc8bef2e557fa2a8a7ecca1700b3b",
+      "profile_url": "https://polymarket.com/@0x568b079891fcc8bef2e557fa2a8a7ecca1700b3b",
+      "pnl": 71875.701322,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 52506,
+      "largest_win": 729.302177,
+      "first_seen": null,
+      "total_received": null,
+      "total_sent": null,
+      "net_capital": null,
+      "roic": null
+    },
+    {
       "name": "NouvelleVision",
       "wallet": "0xbc6148ae94b9b0581ed4e270913e7b7c3cd3d368",
       "profile_url": "https://polymarket.com/@NouvelleVision",
@@ -7537,22 +7553,6 @@
       "total_sent": 91459.421919,
       "net_capital": 19968.010925,
       "roic": 357.80516203318336
-    },
-    {
-      "name": "0x568b079891fcc8bef2e557fa2a8a7ecca1700b3b",
-      "wallet": "0x568b079891fcc8bef2e557fa2a8a7ecca1700b3b",
-      "profile_url": "https://polymarket.com/@0x568b079891fcc8bef2e557fa2a8a7ecca1700b3b",
-      "pnl": 71441.102776,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 52506,
-      "largest_win": 729.302177,
-      "first_seen": null,
-      "total_received": null,
-      "total_sent": null,
-      "net_capital": null,
-      "roic": null
     },
     {
       "name": "m8m",
@@ -7734,7 +7734,7 @@
       "name": "pbshine",
       "wallet": "0x9def9524630e31ff90f884eed32c3eecfbf8d1a5",
       "profile_url": "https://polymarket.com/@pbshine",
-      "pnl": 70508.460775,
+      "pnl": 70525.531921,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -7744,7 +7744,7 @@
       "total_received": 259059.15705099993,
       "total_sent": 372069.549999,
       "net_capital": 11491.200627,
-      "roic": 613.5865438580163
+      "roic": 613.7351022772287
     },
     {
       "name": "0x30a616EB07E4a56aFB0a06B4422655a6682Da389",
@@ -7763,22 +7763,6 @@
       "roic": null
     },
     {
-      "name": "Petyaaa",
-      "wallet": "0x56d55bd3a96be201c65c260d66205dd4358310a6",
-      "profile_url": "https://polymarket.com/@Petyaaa",
-      "pnl": 70301.251533,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 1067,
-      "largest_win": 15370.667724,
-      "first_seen": "2025-10-31",
-      "total_received": 25385.189613000002,
-      "total_sent": 94059.02742400001,
-      "net_capital": 300.556633,
-      "roic": null
-    },
-    {
       "name": "kingdeserun",
       "wallet": "0xe790950382f11f714a13965a7703501d6e2edb42",
       "profile_url": "https://polymarket.com/@kingdeserun",
@@ -7792,6 +7776,22 @@
       "total_received": 1864.6,
       "total_sent": 71227.508257,
       "net_capital": 1864.6,
+      "roic": null
+    },
+    {
+      "name": "Petyaaa",
+      "wallet": "0x56d55bd3a96be201c65c260d66205dd4358310a6",
+      "profile_url": "https://polymarket.com/@Petyaaa",
+      "pnl": 70290.299721,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 1067,
+      "largest_win": 15370.667724,
+      "first_seen": "2025-10-31",
+      "total_received": 25385.189613000002,
+      "total_sent": 94059.02742400001,
+      "net_capital": 300.556633,
       "roic": null
     },
     {
@@ -7891,6 +7891,22 @@
       "roic": null
     },
     {
+      "name": "Eager47259",
+      "wallet": "0xab155a20ff29debee4128e9dd1ea6ab8541c46e5",
+      "profile_url": "https://polymarket.com/@Eager47259",
+      "pnl": 69453.513572,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 3888,
+      "largest_win": 17401.206962,
+      "first_seen": "2026-06-01",
+      "total_received": 46577.270000000004,
+      "total_sent": 16581.179297000002,
+      "net_capital": 29996.090703,
+      "roic": 231.54188410643036
+    },
+    {
       "name": "citispec",
       "wallet": "0x6837a149d2278bc60fbe30a4b77246afd4029ca9",
       "profile_url": "https://polymarket.com/@citispec",
@@ -7921,22 +7937,6 @@
       "total_sent": 9037317.152557,
       "net_capital": 170967.838847,
       "roic": 40.59371480685814
-    },
-    {
-      "name": "En11006",
-      "wallet": "0xb87532a1a04c654700aa8153b3a95675ac4f4b16",
-      "profile_url": "https://polymarket.com/@En11006",
-      "pnl": 69043.952815,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 106,
-      "largest_win": 49926.130564,
-      "first_seen": "2026-08-01",
-      "total_received": 72082.78708,
-      "total_sent": 80025.0,
-      "net_capital": 48740.374746,
-      "roic": 141.6565899930145
     },
     {
       "name": "asdaasda",
@@ -8022,7 +8022,7 @@
       "name": "Rock.San",
       "wallet": "0xba8c5fbcc5f58b0e4ae0c1413e0413f8c803e77d",
       "profile_url": "https://polymarket.com/@Rock.San",
-      "pnl": 68614.645241,
+      "pnl": 68616.011731,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -8032,7 +8032,7 @@
       "total_received": 681500.979996,
       "total_sent": 133000.0,
       "net_capital": 679491.979996,
-      "roic": 10.097933053073552
+      "roic": 10.09813415772824
     },
     {
       "name": "rfergert",
@@ -8049,6 +8049,22 @@
       "total_sent": 69120.110582,
       "net_capital": 572.6506499999999,
       "roic": null
+    },
+    {
+      "name": "En11006",
+      "wallet": "0xb87532a1a04c654700aa8153b3a95675ac4f4b16",
+      "profile_url": "https://polymarket.com/@En11006",
+      "pnl": 68547.787062,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 106,
+      "largest_win": 49926.130564,
+      "first_seen": "2026-08-01",
+      "total_received": 72082.78708,
+      "total_sent": 80025.0,
+      "net_capital": 48740.374746,
+      "roic": 140.6386130989392
     },
     {
       "name": "geniusMC",
@@ -8102,7 +8118,7 @@
       "name": "iliiiiiiiiiiiiiiiii675",
       "wallet": "0x8d7e554437fffe375af49d88ae32caf3ecde2fea",
       "profile_url": "https://polymarket.com/@iliiiiiiiiiiiiiiiii675",
-      "pnl": 68183.625642,
+      "pnl": 68160.93796,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -8145,6 +8161,22 @@
       "total_sent": 92263.148823,
       "net_capital": 10114.661462,
       "roic": 671.6863425557129
+    },
+    {
+      "name": "spartacray",
+      "wallet": "0x4c9497941333332d29f1c235dd23200f3623ffad",
+      "profile_url": "https://polymarket.com/@spartacray",
+      "pnl": 67914.182929,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 62194,
+      "largest_win": 783.987585,
+      "first_seen": null,
+      "total_received": null,
+      "total_sent": null,
+      "net_capital": null,
+      "roic": null
     },
     {
       "name": "werwerwerwer",
@@ -8259,38 +8291,6 @@
       "roic": null
     },
     {
-      "name": "spartacray",
-      "wallet": "0x4c9497941333332d29f1c235dd23200f3623ffad",
-      "profile_url": "https://polymarket.com/@spartacray",
-      "pnl": 67285.859661,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 62194,
-      "largest_win": 783.987585,
-      "first_seen": null,
-      "total_received": null,
-      "total_sent": null,
-      "net_capital": null,
-      "roic": null
-    },
-    {
-      "name": "CleanCoinFlip",
-      "wallet": "0x646404ea0d3bd89a4c96af6f155a20b2545186bc",
-      "profile_url": "https://polymarket.com/@CleanCoinFlip",
-      "pnl": 67267.487708,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 1130,
-      "largest_win": 18106.865977,
-      "first_seen": "2026-10-17",
-      "total_received": 14010.0,
-      "total_sent": 0.0,
-      "net_capital": 14010.0,
-      "roic": 480.1390985581727
-    },
-    {
       "name": "anon9032485",
       "wallet": "0xb563eb0184543459596fd1011d013b7451600115",
       "profile_url": "https://polymarket.com/@anon9032485",
@@ -8403,6 +8403,22 @@
       "roic": 333.85816238832535
     },
     {
+      "name": "gansinimen",
+      "wallet": "0x9412cdfc1e3171e1aabb013d0f494986445d0cd0",
+      "profile_url": "https://polymarket.com/@gansinimen",
+      "pnl": 66661.932066,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 39386,
+      "largest_win": 6138.111672,
+      "first_seen": "2026-03-31",
+      "total_received": 123301.09279499998,
+      "total_sent": 268580.113565,
+      "net_capital": 41839.48338,
+      "roic": 159.32780876033848
+    },
+    {
       "name": "btc5mScour",
       "wallet": "0x68f6c51dbb0ecb12ee66a937434e6190c9f19533",
       "profile_url": "https://polymarket.com/@btc5mScour",
@@ -8419,19 +8435,19 @@
       "roic": 659.9961498866957
     },
     {
-      "name": "98euf98a",
-      "wallet": "0xdf4c6a942bd95bf903d6066b4ba7051e6f914f22",
-      "profile_url": "https://polymarket.com/@98euf98a",
-      "pnl": 66585.851045,
+      "name": "FairValueMachine",
+      "wallet": "0xd84403efd50b49a1d8a7181627e00307e6ea5908",
+      "profile_url": "https://polymarket.com/@FairValueMachine",
+      "pnl": 66564.943234,
       "volume": null,
       "efficiency": null,
       "style": null,
-      "trades": 66345,
-      "largest_win": 1144.062304,
-      "first_seen": "2026-06-21",
-      "total_received": 103.09,
-      "total_sent": 0.0,
-      "net_capital": 103.09,
+      "trades": 27849,
+      "largest_win": 1984.0,
+      "first_seen": "2026-07-17",
+      "total_received": 35595.253399,
+      "total_sent": 119664.0,
+      "net_capital": 4000.0,
       "roic": null
     },
     {
@@ -8483,6 +8499,22 @@
       "roic": 147.91406517376117
     },
     {
+      "name": "98euf98a",
+      "wallet": "0xdf4c6a942bd95bf903d6066b4ba7051e6f914f22",
+      "profile_url": "https://polymarket.com/@98euf98a",
+      "pnl": 66363.363613,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 66345,
+      "largest_win": 1144.062304,
+      "first_seen": "2026-06-21",
+      "total_received": 103.09,
+      "total_sent": 0.0,
+      "net_capital": 103.09,
+      "roic": null
+    },
+    {
       "name": "likebot",
       "wallet": "0x03c3b0236c5a01051381482e77f2210349073a1d",
       "profile_url": "https://polymarket.com/@likebot",
@@ -8493,32 +8525,16 @@
       "trades": 27971,
       "largest_win": 1524.831896,
       "first_seen": "2025-11-15",
-      "total_received": 1753.4373970000001,
+      "total_received": 1903.4373970000001,
       "total_sent": 80009.65058799997,
       "net_capital": 818.019998,
-      "roic": null
-    },
-    {
-      "name": "FairValueMachine",
-      "wallet": "0xd84403efd50b49a1d8a7181627e00307e6ea5908",
-      "profile_url": "https://polymarket.com/@FairValueMachine",
-      "pnl": 66139.97985,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 27849,
-      "largest_win": 1984.0,
-      "first_seen": "2026-07-17",
-      "total_received": 35595.253399,
-      "total_sent": 119664.0,
-      "net_capital": 4000.0,
       "roic": null
     },
     {
       "name": "tradewife",
       "wallet": "0xb8d14d0488bee8a3f1403d118ba876f2e6ee40c3",
       "profile_url": "https://polymarket.com/@tradewife",
-      "pnl": 66127.649667,
+      "pnl": 66176.106194,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -8528,23 +8544,7 @@
       "total_received": 74878.0,
       "total_sent": 161204.08000000002,
       "net_capital": 16000.0,
-      "roic": 413.29781041875
-    },
-    {
-      "name": "gansinimen",
-      "wallet": "0x9412cdfc1e3171e1aabb013d0f494986445d0cd0",
-      "profile_url": "https://polymarket.com/@gansinimen",
-      "pnl": 66117.250129,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 39386,
-      "largest_win": 6138.111672,
-      "first_seen": "2026-03-31",
-      "total_received": 123301.09279499998,
-      "total_sent": 268580.113565,
-      "net_capital": 41839.48338,
-      "roic": 158.02597161274988
+      "roic": 413.6006637125001
     },
     {
       "name": "rigober-578",
@@ -8561,22 +8561,6 @@
       "total_sent": 72802.237703,
       "net_capital": 6480.0,
       "roic": 1019.7458862808643
-    },
-    {
-      "name": "lkkdnfa",
-      "wallet": "0x95fa4cc0be88b13a60529a651d82f940f38466b3",
-      "profile_url": "https://polymarket.com/@lkkdnfa",
-      "pnl": 66038.800774,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 66954,
-      "largest_win": 917.300629,
-      "first_seen": "2026-06-21",
-      "total_received": 56.480000000000004,
-      "total_sent": 0.0,
-      "net_capital": 56.480000000000004,
-      "roic": null
     },
     {
       "name": "sheridangerlach",
@@ -8643,6 +8627,22 @@
       "roic": 1096.848420106822
     },
     {
+      "name": "lkkdnfa",
+      "wallet": "0x95fa4cc0be88b13a60529a651d82f940f38466b3",
+      "profile_url": "https://polymarket.com/@lkkdnfa",
+      "pnl": 65646.154335,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 66954,
+      "largest_win": 917.300629,
+      "first_seen": "2026-06-21",
+      "total_received": 56.480000000000004,
+      "total_sent": 0.0,
+      "net_capital": 56.480000000000004,
+      "roic": null
+    },
+    {
       "name": "Uuuu4545545",
       "wallet": "0x98714cf2ee0b2b06802124529750a1aefb5736eb",
       "profile_url": "https://polymarket.com/@Uuuu4545545",
@@ -8657,6 +8657,38 @@
       "total_sent": 119593.79494899999,
       "net_capital": 44734.137813999994,
       "roic": 146.66509063569544
+    },
+    {
+      "name": "0x82aad706e75a6cd9dac807109649a6ded01d2777",
+      "wallet": "0x82aad706e75a6cd9dac807109649a6ded01d2777",
+      "profile_url": "https://polymarket.com/@0x82aad706e75a6cd9dac807109649a6ded01d2777",
+      "pnl": 65526.913211,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 35,
+      "largest_win": 10631.016198,
+      "first_seen": "2026-11-08",
+      "total_received": 19999.0,
+      "total_sent": 50000.0,
+      "net_capital": 19999.0,
+      "roic": 327.6509486024301
+    },
+    {
+      "name": "0x18C18e0c8c3154360B4F730eC8B9D8013Ceb2183",
+      "wallet": "0x18c18e0c8c3154360b4f730ec8b9d8013ceb2183",
+      "profile_url": "https://polymarket.com/@0x18C18e0c8c3154360B4F730eC8B9D8013Ceb2183",
+      "pnl": 65452.523566,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 19411,
+      "largest_win": 724.923498,
+      "first_seen": "2025-12-18",
+      "total_received": 342.617612,
+      "total_sent": 81879.37,
+      "net_capital": 303.720635,
+      "roic": null
     },
     {
       "name": "vfhjghj1231234",
@@ -8707,20 +8739,20 @@
       "roic": 11.617207883977605
     },
     {
-      "name": "0x18C18e0c8c3154360B4F730eC8B9D8013Ceb2183",
-      "wallet": "0x18c18e0c8c3154360b4f730ec8b9d8013ceb2183",
-      "profile_url": "https://polymarket.com/@0x18C18e0c8c3154360B4F730eC8B9D8013Ceb2183",
-      "pnl": 64877.118093,
+      "name": "0x6fc44EC445D73c635ae9029CDaFf52F8eB62c89D",
+      "wallet": "0x6fc44ec445d73c635ae9029cdaff52f8eb62c89d",
+      "profile_url": "https://polymarket.com/@0x6fc44EC445D73c635ae9029CDaFf52F8eB62c89D",
+      "pnl": 64851.420661,
       "volume": null,
       "efficiency": null,
       "style": null,
-      "trades": 19411,
-      "largest_win": 724.923498,
-      "first_seen": "2025-12-18",
-      "total_received": 342.617612,
-      "total_sent": 81879.37,
-      "net_capital": 303.720635,
-      "roic": null
+      "trades": 17028,
+      "largest_win": 2182.736,
+      "first_seen": "2026-03-24",
+      "total_received": 75678.25591,
+      "total_sent": 111639.10999999999,
+      "net_capital": 72047.6,
+      "roic": 90.01190971107988
     },
     {
       "name": "haus-tier-mensch",
@@ -8737,22 +8769,6 @@
       "total_sent": 68857.081507,
       "net_capital": 2997.3300090000002,
       "roic": null
-    },
-    {
-      "name": "0x6fc44EC445D73c635ae9029CDaFf52F8eB62c89D",
-      "wallet": "0x6fc44ec445d73c635ae9029cdaff52f8eb62c89d",
-      "profile_url": "https://polymarket.com/@0x6fc44EC445D73c635ae9029CDaFf52F8eB62c89D",
-      "pnl": 64619.149675,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 17028,
-      "largest_win": 2182.736,
-      "first_seen": "2026-03-24",
-      "total_received": 75678.25591,
-      "total_sent": 111534.64999999998,
-      "net_capital": 72047.6,
-      "roic": 89.68952425202227
     },
     {
       "name": "Eknih",
@@ -8787,22 +8803,6 @@
       "roic": 625.8181042026762
     },
     {
-      "name": "quantbarbie",
-      "wallet": "0xd4fa2e10c74ab94bc23414989a516b07386ddcc8",
-      "profile_url": "https://polymarket.com/@quantbarbie",
-      "pnl": 64376.764917,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 35642,
-      "largest_win": 873.189134,
-      "first_seen": "2025-08-15",
-      "total_received": 2114.3058579999997,
-      "total_sent": 95140.0,
-      "net_capital": 1529.9122429999998,
-      "roic": null
-    },
-    {
       "name": "smartttt",
       "wallet": "0xbca17b0d255c88c972d859a76676e43432de7181",
       "profile_url": "https://polymarket.com/@smartttt",
@@ -8833,6 +8833,22 @@
       "total_sent": 84472.810559,
       "net_capital": 18632.66098,
       "roic": 344.8269706026712
+    },
+    {
+      "name": "quantbarbie",
+      "wallet": "0xd4fa2e10c74ab94bc23414989a516b07386ddcc8",
+      "profile_url": "https://polymarket.com/@quantbarbie",
+      "pnl": 64211.845373,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 35642,
+      "largest_win": 873.189134,
+      "first_seen": "2025-08-15",
+      "total_received": 2114.3058579999997,
+      "total_sent": 95140.0,
+      "net_capital": 1529.9122429999998,
+      "roic": null
     },
     {
       "name": "Besiege",
@@ -8982,7 +8998,7 @@
       "name": "alanhutton",
       "wallet": "0xa3e9a711841e655def080044768452b60f4263d0",
       "profile_url": "https://polymarket.com/@alanhutton",
-      "pnl": 63090.279274,
+      "pnl": 63153.80692,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -8992,7 +9008,7 @@
       "total_received": 442268.3531859998,
       "total_sent": 373259.615662,
       "net_capital": 93148.294603,
-      "roic": 67.73100843433807
+      "roic": 67.79920898086526
     },
     {
       "name": "not-gOaTbAnKeR",
@@ -9363,36 +9379,20 @@
       "roic": 305.8717684690331
     },
     {
-      "name": "tradexplorer",
-      "wallet": "0x6138b966436f811bc0e3f0d35f1fb14b869b97a0",
-      "profile_url": "https://polymarket.com/@tradexplorer",
-      "pnl": 60815.509512,
+      "name": "ftrxc64afn",
+      "wallet": "0x726fd4fd2d3f3a48fcbd54d1cecdd933d207d8e7",
+      "profile_url": "https://polymarket.com/@ftrxc64afn",
+      "pnl": 60660.623583,
       "volume": null,
       "efficiency": null,
       "style": null,
-      "trades": 670,
-      "largest_win": 22782.045577,
-      "first_seen": "2025-12-08",
-      "total_received": 262979.346935,
-      "total_sent": 212999.999997,
-      "net_capital": 249791.90773799995,
-      "roic": 24.346469052067036
-    },
-    {
-      "name": "Alpharo28",
-      "wallet": "0x7cf89836b082aab85b137d45bfc6b991cf2104ae",
-      "profile_url": "https://polymarket.com/@Alpharo28",
-      "pnl": 60781.88029,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 84272,
-      "largest_win": 577.039438,
-      "first_seen": "2026-07-10",
-      "total_received": 13410.140000000001,
-      "total_sent": 93171.796218,
-      "net_capital": 10000.0,
-      "roic": 607.8188028999999
+      "trades": 3545,
+      "largest_win": 5708.599892,
+      "first_seen": "2026-03-30",
+      "total_received": 215367.032474,
+      "total_sent": 185472.0,
+      "net_capital": 145183.800002,
+      "roic": 41.78195059101936
     },
     {
       "name": "Nk9",
@@ -9411,6 +9411,22 @@
       "roic": 41.75301809494663
     },
     {
+      "name": "RLWG",
+      "wallet": "0xc38904e5da4c2e962e2a3c72511bfdddaa42d228",
+      "profile_url": "https://polymarket.com/@RLWG",
+      "pnl": 60566.163778,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 20835,
+      "largest_win": 13086.974418,
+      "first_seen": "2026-04-14",
+      "total_received": 14163.277497,
+      "total_sent": 51677.729663,
+      "net_capital": 14143.277497,
+      "roic": 428.2328745288848
+    },
+    {
       "name": "thelastrabbit",
       "wallet": "0xb3232cf73dff177df9ce70818276b90d3c4427df",
       "profile_url": "https://polymarket.com/@thelastrabbit",
@@ -9427,6 +9443,22 @@
       "roic": 44.15034729287248
     },
     {
+      "name": "Alpharo28",
+      "wallet": "0x7cf89836b082aab85b137d45bfc6b991cf2104ae",
+      "profile_url": "https://polymarket.com/@Alpharo28",
+      "pnl": 60395.356599,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 84272,
+      "largest_win": 577.039438,
+      "first_seen": "2026-07-10",
+      "total_received": 13410.140000000001,
+      "total_sent": 93171.796218,
+      "net_capital": 10000.0,
+      "roic": 603.95356599
+    },
+    {
       "name": "Erka-RoadTo1M",
       "wallet": "0x22e645acff2bbb2cd7a74462f8779eb6f53d409f",
       "profile_url": "https://polymarket.com/@Erka-RoadTo1M",
@@ -9438,7 +9470,7 @@
       "largest_win": 5101.019666,
       "first_seen": "2025-10-20",
       "total_received": 127499.30729399998,
-      "total_sent": 108404.131597,
+      "total_sent": 113404.131597,
       "net_capital": 90874.79963200001,
       "roic": 66.44197636474189
     },
@@ -9494,17 +9526,17 @@
       "name": "yen4u",
       "wallet": "0xf0d5eb1cbe7350f1f896ade6c172e6700414c665",
       "profile_url": "https://polymarket.com/@yen4u",
-      "pnl": 59934.152261,
+      "pnl": 59932.122941,
       "volume": null,
       "efficiency": null,
       "style": null,
       "trades": 2459,
       "largest_win": 305019.073418,
       "first_seen": "2026-03-25",
-      "total_received": 779194.816661,
-      "total_sent": 780226.7084480003,
+      "total_received": 780744.816661,
+      "total_sent": 782476.7084480003,
       "net_capital": 46084.729999,
-      "roic": 130.05208506657306
+      "roic": 130.04768161232684
     },
     {
       "name": "ss88ss",
@@ -9521,22 +9553,6 @@
       "total_sent": 215808.41292099998,
       "net_capital": 155965.456407,
       "roic": 38.35387450212035
-    },
-    {
-      "name": "ftrxc64afn",
-      "wallet": "0x726fd4fd2d3f3a48fcbd54d1cecdd933d207d8e7",
-      "profile_url": "https://polymarket.com/@ftrxc64afn",
-      "pnl": 59800.107514,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 3545,
-      "largest_win": 5708.599892,
-      "first_seen": "2026-03-30",
-      "total_received": 215367.032474,
-      "total_sent": 185472.0,
-      "net_capital": 145183.800002,
-      "roic": 41.1892425416446
     },
     {
       "name": "0x9D32aD42A0077Da197FaAA861A65346A11250Fb9",
@@ -9747,10 +9763,42 @@
       "roic": 492.38047178361813
     },
     {
+      "name": "tradexplorer",
+      "wallet": "0x6138b966436f811bc0e3f0d35f1fb14b869b97a0",
+      "profile_url": "https://polymarket.com/@tradexplorer",
+      "pnl": 58787.114877,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 670,
+      "largest_win": 22782.045577,
+      "first_seen": "2025-12-08",
+      "total_received": 262979.346935,
+      "total_sent": 212999.999997,
+      "net_capital": 249791.90773799995,
+      "roic": 23.534435286294475
+    },
+    {
+      "name": "CleanCoinFlip",
+      "wallet": "0x646404ea0d3bd89a4c96af6f155a20b2545186bc",
+      "profile_url": "https://polymarket.com/@CleanCoinFlip",
+      "pnl": 58753.985927,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 1130,
+      "largest_win": 18106.865977,
+      "first_seen": "2026-10-17",
+      "total_received": 14010.0,
+      "total_sent": 0.0,
+      "net_capital": 14010.0,
+      "roic": 419.37177678087085
+    },
+    {
       "name": "0xbB2068ED21DdBc3C7d428A2455c195D8366c1f06",
       "wallet": "0xbb2068ed21ddbc3c7d428a2455c195d8366c1f06",
       "profile_url": "https://polymarket.com/@0xbB2068ED21DdBc3C7d428A2455c195D8366c1f06",
-      "pnl": 58919.365073,
+      "pnl": 58667.947357,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -9760,7 +9808,7 @@
       "total_received": 12218.57591,
       "total_sent": 71516.13,
       "net_capital": 10000.0,
-      "roic": 589.1936507300001
+      "roic": 586.67947357
     },
     {
       "name": "nervem13",
@@ -9840,6 +9888,22 @@
       "total_received": 2297.895745,
       "total_sent": 60614.022542,
       "net_capital": 2297.895745,
+      "roic": null
+    },
+    {
+      "name": "arcsine-barrister",
+      "wallet": "0x56f609c609975454bf851f0d91079fbc4a5fe251",
+      "profile_url": "https://polymarket.com/@arcsine-barrister",
+      "pnl": 57982.929851,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 15191,
+      "largest_win": 2656.605263,
+      "first_seen": "2026-06-03",
+      "total_received": 2117.606083,
+      "total_sent": 30806.074,
+      "net_capital": 2117.606083,
       "roic": null
     },
     {
@@ -9937,22 +10001,6 @@
       "total_sent": null,
       "net_capital": null,
       "roic": null
-    },
-    {
-      "name": "RememberAmalek",
-      "wallet": "0x6139c42e48cf190e67a0a85d492413b499336b7a",
-      "profile_url": "https://polymarket.com/@RememberAmalek",
-      "pnl": 57470.337817,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 2283,
-      "largest_win": 209663.519297,
-      "first_seen": "2024-07-05",
-      "total_received": 609169.985247,
-      "total_sent": 1106303.900785,
-      "net_capital": 40725.608011000004,
-      "roic": 141.11597253864753
     },
     {
       "name": "4638507823",
@@ -10067,26 +10115,10 @@
       "roic": 190.57949204422255
     },
     {
-      "name": "arcsine-barrister",
-      "wallet": "0x56f609c609975454bf851f0d91079fbc4a5fe251",
-      "profile_url": "https://polymarket.com/@arcsine-barrister",
-      "pnl": 56919.936101,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 15191,
-      "largest_win": 2656.605263,
-      "first_seen": "2026-06-03",
-      "total_received": 2117.606083,
-      "total_sent": 30806.074,
-      "net_capital": 2117.606083,
-      "roic": null
-    },
-    {
       "name": "QQQ9000",
       "wallet": "0x7d8a547ecae47a031ea46fff45876e400c28217a",
       "profile_url": "https://polymarket.com/@QQQ9000",
-      "pnl": 56910.065816,
+      "pnl": 56861.13825,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -10097,22 +10129,6 @@
       "total_sent": null,
       "net_capital": null,
       "roic": null
-    },
-    {
-      "name": "machinelearned",
-      "wallet": "0x86b14772a4da70f3e6d5eee06933ebef143efc87",
-      "profile_url": "https://polymarket.com/@machinelearned",
-      "pnl": 56862.909907,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 23050,
-      "largest_win": 8148.787635,
-      "first_seen": "2025-09-17",
-      "total_received": 24530.854476,
-      "total_sent": 82310.706488,
-      "net_capital": 6105.617402999999,
-      "roic": 931.3212105144416
     },
     {
       "name": "sigridbeahanr",
@@ -10163,19 +10179,19 @@
       "roic": null
     },
     {
-      "name": "flippingsharks",
-      "wallet": "0xc387c2a40d389f17b723b6bba9b18b7dbd2de4f4",
-      "profile_url": "https://polymarket.com/@flippingsharks",
-      "pnl": 56618.223583,
+      "name": "okeledokelee",
+      "wallet": "0x2011550a8fd844aa22b78d0f039bb72befcb71fa",
+      "profile_url": "https://polymarket.com/@okeledokelee",
+      "pnl": 56641.75339,
       "volume": null,
       "efficiency": null,
       "style": null,
-      "trades": 40240,
-      "largest_win": 692.728423,
-      "first_seen": "2026-04-14",
-      "total_received": 50319.975182999995,
-      "total_sent": 142772.6826219999,
-      "net_capital": 436.10335599999996,
+      "trades": 35371,
+      "largest_win": 204.155047,
+      "first_seen": "2024-09-15",
+      "total_received": 116294.68857400001,
+      "total_sent": 228980.0,
+      "net_capital": 60.008574,
       "roic": null
     },
     {
@@ -10195,20 +10211,20 @@
       "roic": 17.302757104759824
     },
     {
-      "name": "Eisregen",
-      "wallet": "0x5d3cc45e538130b02c8f3c821638ec9cd350c298",
-      "profile_url": "https://polymarket.com/@Eisregen",
-      "pnl": 56535.3018,
+      "name": "machinelearned",
+      "wallet": "0x86b14772a4da70f3e6d5eee06933ebef143efc87",
+      "profile_url": "https://polymarket.com/@machinelearned",
+      "pnl": 56509.396085,
       "volume": null,
       "efficiency": null,
       "style": null,
-      "trades": 56537,
-      "largest_win": 1679.726267,
-      "first_seen": "2024-07-10",
-      "total_received": 28278.694695,
-      "total_sent": 79489.914976,
-      "net_capital": 9764.204467,
-      "roic": 579.005714096544
+      "trades": 23050,
+      "largest_win": 8148.787635,
+      "first_seen": "2025-09-17",
+      "total_received": 24530.854476,
+      "total_sent": 88310.706488,
+      "net_capital": 6105.617402999999,
+      "roic": 925.5312338639834
     },
     {
       "name": "hmmmmm-365",
@@ -10243,20 +10259,52 @@
       "roic": 804.6373903418804
     },
     {
-      "name": "okeledokelee",
-      "wallet": "0x2011550a8fd844aa22b78d0f039bb72befcb71fa",
-      "profile_url": "https://polymarket.com/@okeledokelee",
-      "pnl": 56458.757045,
+      "name": "Eisregen",
+      "wallet": "0x5d3cc45e538130b02c8f3c821638ec9cd350c298",
+      "profile_url": "https://polymarket.com/@Eisregen",
+      "pnl": 56445.41313,
       "volume": null,
       "efficiency": null,
       "style": null,
-      "trades": 35371,
-      "largest_win": 204.155047,
-      "first_seen": "2024-09-15",
-      "total_received": 116294.68857400001,
-      "total_sent": 228980.0,
-      "net_capital": 60.008574,
+      "trades": 56537,
+      "largest_win": 1679.726267,
+      "first_seen": "2024-07-10",
+      "total_received": 28278.694695,
+      "total_sent": 79489.914976,
+      "net_capital": 9764.204467,
+      "roic": 578.085120203782
+    },
+    {
+      "name": "flippingsharks",
+      "wallet": "0xc387c2a40d389f17b723b6bba9b18b7dbd2de4f4",
+      "profile_url": "https://polymarket.com/@flippingsharks",
+      "pnl": 56433.11647,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 40240,
+      "largest_win": 692.728423,
+      "first_seen": "2026-04-14",
+      "total_received": 50629.364024999995,
+      "total_sent": 142772.6826219999,
+      "net_capital": 436.10335599999996,
       "roic": null
+    },
+    {
+      "name": "RememberAmalek",
+      "wallet": "0x6139c42e48cf190e67a0a85d492413b499336b7a",
+      "profile_url": "https://polymarket.com/@RememberAmalek",
+      "pnl": 56405.337817,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 2283,
+      "largest_win": 209663.519297,
+      "first_seen": "2024-07-05",
+      "total_received": 609169.985247,
+      "total_sent": 1106303.900785,
+      "net_capital": 40725.608011000004,
+      "roic": 138.5009102915416
     },
     {
       "name": "Kevindoto",
@@ -10483,22 +10531,6 @@
       "roic": null
     },
     {
-      "name": "ilyho",
-      "wallet": "0x3526087ea139532d71198813c2dd55defaefaaba",
-      "profile_url": "https://polymarket.com/@ilyho",
-      "pnl": 55667.559569,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 86,
-      "largest_win": 26909.8277,
-      "first_seen": "2026-01-16",
-      "total_received": 72537.93031199997,
-      "total_sent": 106996.14489,
-      "net_capital": 1213.149373,
-      "roic": null
-    },
-    {
       "name": "sobolevs",
       "wallet": "0xa4b8acd82d21d7ef33811d20f2dc4a40b8e498b9",
       "profile_url": "https://polymarket.com/@sobolevs",
@@ -10526,7 +10558,7 @@
       "largest_win": 1560.376116,
       "first_seen": "2026-02-11",
       "total_received": 128059.91093,
-      "total_sent": 193736.24970000001,
+      "total_sent": 200758.1761,
       "net_capital": 12.0,
       "roic": null
     },
@@ -10627,6 +10659,22 @@
       "roic": 29.169543782675134
     },
     {
+      "name": "ilyho",
+      "wallet": "0x3526087ea139532d71198813c2dd55defaefaaba",
+      "profile_url": "https://polymarket.com/@ilyho",
+      "pnl": 55220.851458,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 86,
+      "largest_win": 26909.8277,
+      "first_seen": "2026-01-16",
+      "total_received": 72537.93031199997,
+      "total_sent": 106996.14489,
+      "net_capital": 1213.149373,
+      "roic": null
+    },
+    {
       "name": "Blablablablabla7",
       "wallet": "0x8cb0e35148f57403e8e785ed13c7bbb2f34f9811",
       "profile_url": "https://polymarket.com/@Blablablablabla7",
@@ -10675,6 +10723,22 @@
       "roic": 273.69412972416256
     },
     {
+      "name": "0x9AD6c5316aEA1F5DAde839e607BfB5437fb54251",
+      "wallet": "0x9ad6c5316aea1f5dade839e607bfb5437fb54251",
+      "profile_url": "https://polymarket.com/@0x9AD6c5316aEA1F5DAde839e607BfB5437fb54251",
+      "pnl": 55008.404999,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 14550,
+      "largest_win": 2655.243,
+      "first_seen": "2026-03-24",
+      "total_received": 78716.23,
+      "total_sent": 100434.14590999998,
+      "net_capital": 77679.0,
+      "roic": 70.81502722614863
+    },
+    {
       "name": "brantut",
       "wallet": "0x45642ba37038647ede5b9388578edcb7e9cd63be",
       "profile_url": "https://polymarket.com/@brantut",
@@ -10705,22 +10769,6 @@
       "total_sent": 66651.92084,
       "net_capital": 500.0,
       "roic": null
-    },
-    {
-      "name": "0x9AD6c5316aEA1F5DAde839e607BfB5437fb54251",
-      "wallet": "0x9ad6c5316aea1f5dade839e607bfb5437fb54251",
-      "profile_url": "https://polymarket.com/@0x9AD6c5316aEA1F5DAde839e607BfB5437fb54251",
-      "pnl": 54812.825659,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 14550,
-      "largest_win": 2655.243,
-      "first_seen": "2026-03-24",
-      "total_received": 78716.23,
-      "total_sent": 100313.72590999998,
-      "net_capital": 77679.0,
-      "roic": 70.56324831550354
     },
     {
       "name": "thebtcbear",
@@ -10819,22 +10867,6 @@
       "roic": null
     },
     {
-      "name": "ponymarketsucks",
-      "wallet": "0x42861b2fa5afb1934375d8aeea9991750e816dba",
-      "profile_url": "https://polymarket.com/@ponymarketsucks",
-      "pnl": 54230.876782,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 2111,
-      "largest_win": 2400.962344,
-      "first_seen": "2026-03-24",
-      "total_received": 29621.655936,
-      "total_sent": 83239.69822600001,
-      "net_capital": 9995.994539,
-      "roic": 542.5260745232986
-    },
-    {
       "name": "liming123456",
       "wallet": "0xffe697dd6fdcd23a08db4971983d199d762457bb",
       "profile_url": "https://polymarket.com/@liming123456",
@@ -10851,20 +10883,20 @@
       "roic": 108.43971638143277
     },
     {
-      "name": "haveanedge.xyz",
-      "wallet": "0x38169304184f4e1a86cf4e7ea91e5e7cc0b150b4",
-      "profile_url": "https://polymarket.com/@haveanedge.xyz",
-      "pnl": 54118.0,
+      "name": "ponymarketsucks",
+      "wallet": "0x42861b2fa5afb1934375d8aeea9991750e816dba",
+      "profile_url": "https://polymarket.com/@ponymarketsucks",
+      "pnl": 54195.357171,
       "volume": null,
       "efficiency": null,
       "style": null,
-      "trades": 0,
-      "largest_win": 163.5,
-      "first_seen": "2026-11-12",
-      "total_received": 328.42724599999997,
-      "total_sent": 113498.000002,
-      "net_capital": 10.0,
-      "roic": null
+      "trades": 2111,
+      "largest_win": 2400.962344,
+      "first_seen": "2026-03-24",
+      "total_received": 29621.655936,
+      "total_sent": 83239.69822600001,
+      "net_capital": 9995.994539,
+      "roic": 542.1707360838726
     },
     {
       "name": "AllByMyseIf",
@@ -11190,7 +11222,7 @@
       "name": "sfkjbsr457",
       "wallet": "0x3387ac6178b871d26dc701ba458105b513acbe96",
       "profile_url": "https://polymarket.com/@sfkjbsr457",
-      "pnl": 52509.268223,
+      "pnl": 52564.193906,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -11200,6 +11232,22 @@
       "total_received": 6382.697195000001,
       "total_sent": 64340.81031200001,
       "net_capital": 1982.6971950000002,
+      "roic": null
+    },
+    {
+      "name": "OhioAI",
+      "wallet": "0x129246beaac356e104c397f0985c11b7469be5a6",
+      "profile_url": "https://polymarket.com/@OhioAI",
+      "pnl": 52560.08642,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 21503,
+      "largest_win": 2448.914811,
+      "first_seen": null,
+      "total_received": null,
+      "total_sent": null,
+      "net_capital": null,
       "roic": null
     },
     {
@@ -11217,6 +11265,22 @@
       "total_sent": 77487.720669,
       "net_capital": 24996.212089,
       "roic": 210.0137667582902
+    },
+    {
+      "name": "hot-garbage",
+      "wallet": "0x31393e2f8333d4a6e2e31ca6424defe8b6cb9e2e",
+      "profile_url": "https://polymarket.com/@hot-garbage",
+      "pnl": 52431.84191,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 74986,
+      "largest_win": 6740.365923,
+      "first_seen": "2026-03-24",
+      "total_received": 281549.15365999995,
+      "total_sent": 99999.999999,
+      "net_capital": 199999.999999,
+      "roic": 26.215920955131082
     },
     {
       "name": "0x8d2D7BAe900cC62bBAC531f900dBf58a6F8c5517",
@@ -11267,6 +11331,22 @@
       "roic": 10.81078435165643
     },
     {
+      "name": "0x478fhs7832bfs8f7dfdsfesh",
+      "wallet": "0xcf0c70317fd5e4e4429758b3d80a7b7f3762f2bb",
+      "profile_url": "https://polymarket.com/@0x478fhs7832bfs8f7dfdsfesh",
+      "pnl": 52287.060072,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 1535,
+      "largest_win": 18874.388536,
+      "first_seen": "2026-10-13",
+      "total_received": 36939.865565,
+      "total_sent": 0.0,
+      "net_capital": 36939.865565,
+      "roic": 141.54642761218182
+    },
+    {
       "name": "suko-tikovka",
       "wallet": "0x851946b13d7da4c1ddcaefd6bef605fd642f37c7",
       "profile_url": "https://polymarket.com/@suko-tikovka",
@@ -11297,38 +11377,6 @@
       "total_sent": 55838.567740000006,
       "net_capital": 3499.9531020000004,
       "roic": null
-    },
-    {
-      "name": "OhioAI",
-      "wallet": "0x129246beaac356e104c397f0985c11b7469be5a6",
-      "profile_url": "https://polymarket.com/@OhioAI",
-      "pnl": 52176.472714,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 21503,
-      "largest_win": 2448.914811,
-      "first_seen": null,
-      "total_received": null,
-      "total_sent": null,
-      "net_capital": null,
-      "roic": null
-    },
-    {
-      "name": "hot-garbage",
-      "wallet": "0x31393e2f8333d4a6e2e31ca6424defe8b6cb9e2e",
-      "profile_url": "https://polymarket.com/@hot-garbage",
-      "pnl": 52170.78156,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 74986,
-      "largest_win": 6740.365923,
-      "first_seen": "2026-03-24",
-      "total_received": 281549.15365999995,
-      "total_sent": 99999.999999,
-      "net_capital": 199999.999999,
-      "roic": 26.085390780130428
     },
     {
       "name": "0x676Cdce125a5C668D2ffb09d4e10Ec92EeC89d6A",
@@ -11379,6 +11427,22 @@
       "roic": 20.849173493750225
     },
     {
+      "name": "wzbbb",
+      "wallet": "0x19b3823092892c026517fd0ff58df4889abe0b9b",
+      "profile_url": "https://polymarket.com/@wzbbb",
+      "pnl": 51852.213664,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 51176,
+      "largest_win": 1451.708823,
+      "first_seen": "2025-02-24",
+      "total_received": 13998.375853999996,
+      "total_sent": 57848.0,
+      "net_capital": 4999.853243,
+      "roic": null
+    },
+    {
       "name": "teenag3er",
       "wallet": "0xd399de75de083bb2b722489e4f2e9643a3f6927f",
       "profile_url": "https://polymarket.com/@teenag3er",
@@ -11398,7 +11462,7 @@
       "name": "pppppppppo65",
       "wallet": "0x1e9611c3bde3aa2ea36eb3f063834b1a23c6e72a",
       "profile_url": "https://polymarket.com/@pppppppppo65",
-      "pnl": 51652.412539,
+      "pnl": 51626.938003,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -11430,7 +11494,7 @@
       "name": "purpledeer",
       "wallet": "0x79a67a08cba29ab262025124f4b43ba3e1bb7477",
       "profile_url": "https://polymarket.com/@purpledeer",
-      "pnl": 51449.205293,
+      "pnl": 51445.736062,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -11473,22 +11537,6 @@
       "total_sent": 57780.166471,
       "net_capital": 6149.0,
       "roic": 835.5356466417303
-    },
-    {
-      "name": "wzbbb",
-      "wallet": "0x19b3823092892c026517fd0ff58df4889abe0b9b",
-      "profile_url": "https://polymarket.com/@wzbbb",
-      "pnl": 51362.040262,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 51176,
-      "largest_win": 1451.708823,
-      "first_seen": "2025-02-24",
-      "total_received": 13998.375853999996,
-      "total_sent": 57848.0,
-      "net_capital": 4999.853243,
-      "roic": null
     },
     {
       "name": "EtEatmyorder",
@@ -11587,22 +11635,6 @@
       "roic": 925.8769923816798
     },
     {
-      "name": "tsybka",
-      "wallet": "0xd5ccdf772f795547e299de57f47966e24de8dea4",
-      "profile_url": "https://polymarket.com/@tsybka",
-      "pnl": 50879.587092,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 882,
-      "largest_win": 18071.046452,
-      "first_seen": "2024-07-27",
-      "total_received": 13325787.62716599,
-      "total_sent": 13459311.902138982,
-      "net_capital": 557930.116574,
-      "roic": 9.119347671071935
-    },
-    {
       "name": "3daysgrays",
       "wallet": "0xf5b4adda2310d05d7d7e9e685943b88dad289c70",
       "profile_url": "https://polymarket.com/@3daysgrays",
@@ -11651,6 +11683,22 @@
       "roic": 253.83465858499997
     },
     {
+      "name": "tsybka",
+      "wallet": "0xd5ccdf772f795547e299de57f47966e24de8dea4",
+      "profile_url": "https://polymarket.com/@tsybka",
+      "pnl": 50729.587092,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 882,
+      "largest_win": 18071.046452,
+      "first_seen": "2024-07-27",
+      "total_received": 13325787.62716599,
+      "total_sent": 13459311.902138982,
+      "net_capital": 557930.116574,
+      "roic": 9.092462583577271
+    },
+    {
       "name": "aaaaajony",
       "wallet": "0x8a8f89ebb3717149a27c0c99f379d2c6d4ed5e3f",
       "profile_url": "https://polymarket.com/@aaaaajony",
@@ -11665,22 +11713,6 @@
       "total_sent": 70774.63054700001,
       "net_capital": 9895.835184,
       "roic": 511.87544448901167
-    },
-    {
-      "name": "snoopdoge",
-      "wallet": "0x38e598961dd0456a7fb2e758bd433d3e59fb8a4a",
-      "profile_url": "https://polymarket.com/@snoopdoge",
-      "pnl": 50635.747074,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 153390,
-      "largest_win": 1178.692946,
-      "first_seen": "2026-01-26",
-      "total_received": 46868.465358,
-      "total_sent": 178348.0,
-      "net_capital": 7987.474984,
-      "roic": 633.9393509892712
     },
     {
       "name": "iroracap1",
@@ -11741,8 +11773,8 @@
       "trades": 6812,
       "largest_win": 13878.293039,
       "first_seen": "2024-10-08",
-      "total_received": 806124.6014979999,
-      "total_sent": 757677.1316350001,
+      "total_received": 806257.9008219999,
+      "total_sent": 757777.1316350001,
       "net_capital": 113136.407578,
       "roic": 44.63150259052324
     },
@@ -11761,22 +11793,6 @@
       "total_sent": 258322.163991,
       "net_capital": 72183.62678400001,
       "roic": 69.78893472164276
-    },
-    {
-      "name": "imjustalarp",
-      "wallet": "0x57e4bd0fa030e6a6fdde7ee0b58aa497b4f6835e",
-      "profile_url": "https://polymarket.com/@imjustalarp",
-      "pnl": 50301.330193,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 524,
-      "largest_win": 15901.82023,
-      "first_seen": "2025-11-10",
-      "total_received": 104981.44908600001,
-      "total_sent": 50200.0,
-      "net_capital": 104981.44908600001,
-      "roic": 47.91449406627407
     },
     {
       "name": "washeduptrader",
@@ -11811,22 +11827,6 @@
       "roic": 810.1404070764399
     },
     {
-      "name": "a89ydaa",
-      "wallet": "0x77b2a944f148660b76691f10819892d002c524bd",
-      "profile_url": "https://polymarket.com/@a89ydaa",
-      "pnl": 50206.202115,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 65880,
-      "largest_win": 1144.642416,
-      "first_seen": "2026-06-21",
-      "total_received": 38.035881,
-      "total_sent": 0.0,
-      "net_capital": 38.035881,
-      "roic": null
-    },
-    {
       "name": "8xdsag32d45gd",
       "wallet": "0x2fc26fa727e3fa7aa5011564ac5f55599826cfce",
       "profile_url": "https://polymarket.com/@8xdsag32d45gd",
@@ -11857,6 +11857,38 @@
       "total_sent": 121374.784056,
       "net_capital": 51529.141827,
       "roic": 97.10106308578715
+    },
+    {
+      "name": "a89ydaa",
+      "wallet": "0x77b2a944f148660b76691f10819892d002c524bd",
+      "profile_url": "https://polymarket.com/@a89ydaa",
+      "pnl": 50024.358969,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 65880,
+      "largest_win": 1144.642416,
+      "first_seen": "2026-06-21",
+      "total_received": 38.035881,
+      "total_sent": 0.0,
+      "net_capital": 38.035881,
+      "roic": null
+    },
+    {
+      "name": "snoopdoge",
+      "wallet": "0x38e598961dd0456a7fb2e758bd433d3e59fb8a4a",
+      "profile_url": "https://polymarket.com/@snoopdoge",
+      "pnl": 49962.499915,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 153390,
+      "largest_win": 1178.692946,
+      "first_seen": "2026-01-26",
+      "total_received": 56868.251788,
+      "total_sent": 178348.0,
+      "net_capital": 7987.474984,
+      "roic": 625.5105651671108
     },
     {
       "name": "j3s0s",
@@ -12131,6 +12163,22 @@
       "roic": 227.58232800392264
     },
     {
+      "name": "0x8B4bcA1D794779E66e023D44391B2A86C5ab541B",
+      "wallet": "0x8b4bca1d794779e66e023d44391b2a86c5ab541b",
+      "profile_url": "https://polymarket.com/@0x8B4bcA1D794779E66e023D44391B2A86C5ab541B",
+      "pnl": 48949.519228,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 949,
+      "largest_win": 37144.743563,
+      "first_seen": null,
+      "total_received": null,
+      "total_sent": null,
+      "net_capital": null,
+      "roic": null
+    },
+    {
       "name": "JAHODA",
       "wallet": "0x0e5bd76779e74304d08e759072abf126d87da593",
       "profile_url": "https://polymarket.com/@JAHODA",
@@ -12163,19 +12211,19 @@
       "roic": null
     },
     {
-      "name": "0x8B4bcA1D794779E66e023D44391B2A86C5ab541B",
-      "wallet": "0x8b4bca1d794779e66e023d44391b2a86c5ab541b",
-      "profile_url": "https://polymarket.com/@0x8B4bcA1D794779E66e023D44391B2A86C5ab541B",
-      "pnl": 48884.964771,
+      "name": "noxme",
+      "wallet": "0x88f2963c93ec4cc070a9d41a3765dc4357baa6c1",
+      "profile_url": "https://polymarket.com/@noxme",
+      "pnl": 48840.276569,
       "volume": null,
       "efficiency": null,
       "style": null,
-      "trades": 949,
-      "largest_win": 37144.743563,
-      "first_seen": null,
-      "total_received": null,
-      "total_sent": null,
-      "net_capital": null,
+      "trades": 8302,
+      "largest_win": 3576.630987,
+      "first_seen": "2026-04-02",
+      "total_received": 22776.958646999996,
+      "total_sent": 70208.80196599998,
+      "net_capital": 430.92612800000006,
       "roic": null
     },
     {
@@ -12205,8 +12253,8 @@
       "trades": 3067,
       "largest_win": 3051614.097812,
       "first_seen": "2026-03-26",
-      "total_received": 24301067.861302994,
-      "total_sent": 27890708.500099003,
+      "total_received": 24401067.861302994,
+      "total_sent": 27980708.500099003,
       "net_capital": 7714496.636695001,
       "roic": 0.630531563700818
     },
@@ -12243,22 +12291,6 @@
       "roic": 972.69210914
     },
     {
-      "name": "noxme",
-      "wallet": "0x88f2963c93ec4cc070a9d41a3765dc4357baa6c1",
-      "profile_url": "https://polymarket.com/@noxme",
-      "pnl": 48628.319593,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 8302,
-      "largest_win": 3576.630987,
-      "first_seen": "2026-04-02",
-      "total_received": 22776.958646999996,
-      "total_sent": 70208.80196599998,
-      "net_capital": 430.92612800000006,
-      "roic": null
-    },
-    {
       "name": "PaulToy",
       "wallet": "0xadb4e00b535ae36532764ddfcdbafe48a23f3214",
       "profile_url": "https://polymarket.com/@PaulToy",
@@ -12278,7 +12310,7 @@
       "name": "ebfliuba",
       "wallet": "0xc0176130731377d7d601304271f5a713384a7242",
       "profile_url": "https://polymarket.com/@ebfliuba",
-      "pnl": 48622.51826,
+      "pnl": 48591.683114,
       "volume": null,
       "efficiency": null,
       "style": null,
@@ -12366,7 +12398,7 @@
       "largest_win": 9999.9,
       "first_seen": "2025-09-23",
       "total_received": 101035.39238399996,
-      "total_sent": 149992.19839900002,
+      "total_sent": 150192.19839900002,
       "net_capital": 5283.360468999999,
       "roic": 917.3425552804167
     },
@@ -12531,6 +12563,22 @@
       "roic": 119.70467420348798
     },
     {
+      "name": "imjustalarp",
+      "wallet": "0x57e4bd0fa030e6a6fdde7ee0b58aa497b4f6835e",
+      "profile_url": "https://polymarket.com/@imjustalarp",
+      "pnl": 47788.838135,
+      "volume": null,
+      "efficiency": null,
+      "style": null,
+      "trades": 524,
+      "largest_win": 15901.82023,
+      "first_seen": "2025-11-10",
+      "total_received": 104981.44908600001,
+      "total_sent": 80743.16890399999,
+      "net_capital": 104981.44908600001,
+      "roic": 45.52122165493424
+    },
+    {
       "name": "l-3-x",
       "wallet": "0xded004ccdb5e4b6abe764061c4123076c495e7cd",
       "profile_url": "https://polymarket.com/@l-3-x",
@@ -12691,22 +12739,6 @@
       "roic": 3.4473339903418965
     },
     {
-      "name": "0xBadB9af986EE66437BD39E6cd3D3036CbbDc31a",
-      "wallet": "0xbadb9af986ee66437bd39e6cd3d3036cbbdc31a7",
-      "profile_url": "https://polymarket.com/@0xBadB9af986EE66437BD39E6cd3D3036CbbDc31a",
-      "pnl": 47249.019345,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 3566,
-      "largest_win": 11622.042882,
-      "first_seen": "2026-05-14",
-      "total_received": 217622.18351800003,
-      "total_sent": 229976.925651,
-      "net_capital": 6339.375651,
-      "roic": 745.3260690987248
-    },
-    {
       "name": "VibeyQuant",
       "wallet": "0x1f85e6e3e41e5f1fe03f6cf22a52ae4e352ea51b",
       "profile_url": "https://polymarket.com/@VibeyQuant",
@@ -12769,38 +12801,6 @@
       "total_sent": 52366.862488,
       "net_capital": 2061.167929,
       "roic": null
-    },
-    {
-      "name": "SilverLin",
-      "wallet": "0xb461dcd1ba2b0338e244b226063d2db1d6bc8e86",
-      "profile_url": "https://polymarket.com/@SilverLin",
-      "pnl": 47145.340105,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 28,
-      "largest_win": 25168.0,
-      "first_seen": "2024-10-25",
-      "total_received": 6142.277,
-      "total_sent": 51837.176105,
-      "net_capital": 4662.277,
-      "roic": null
-    },
-    {
-      "name": "ivikt",
-      "wallet": "0xdfc983d8c361103661167a59df7bb1e8059e7552",
-      "profile_url": "https://polymarket.com/@ivikt",
-      "pnl": 47106.307892,
-      "volume": null,
-      "efficiency": null,
-      "style": null,
-      "trades": 368,
-      "largest_win": 14621.164453,
-      "first_seen": "2025-10-16",
-      "total_received": 424696.3665980001,
-      "total_sent": 380255.06966399995,
-      "net_capital": 59403.337944,
-      "roic": 79.29909247929382
     }
   ]
 }
